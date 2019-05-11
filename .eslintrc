@@ -4,7 +4,9 @@
     "airbnb-base"
   ],
   "rules": {
-    "semi": 0
+    "semi": 0,
+    "no-unused-vars": 0,
+    "max-len": ["error", 120]
   },
   "env": {
     "browser": true
