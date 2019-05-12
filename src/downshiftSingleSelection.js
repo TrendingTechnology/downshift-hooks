@@ -1,4 +1,6 @@
 import { useRef, useEffect } from 'react'
+import * as keyboardKey from 'keyboard-key'
+
 import useDownshiftAbstract from './downshiftAbstract'
 import { defaultIds, callAllEventHandlers } from './utils'
 
@@ -9,6 +11,7 @@ const useDownshiftSingleSelection = (props) => {
   } = props
   const {
     toggleMenu,
+    closeMenu,
     isOpen,
     getLabelProps,
     getMenuProps: baseGetMenuProps,
@@ -17,12 +20,24 @@ const useDownshiftSingleSelection = (props) => {
     getItemNavigationKeyDownHandler,
     getItemProps,
   } = useDownshiftAbstract(props)
-  const isInitialMount = useRef(true);
 
+  // refs
+  const isInitialMount = useRef(true)
+  const triggerButtonRef = useRef(null)
+
+  // handlers
   const handleTriggerButtonClick = () => {
     toggleMenu()
   }
 
+  const handleTriggerButtonKeyDown = (e) => {
+    if (keyboardKey.getCode(e) === keyboardKey.Escape) {
+      closeMenu()
+      triggerButtonRef.current.focus()
+    }
+  }
+
+  // focus list but not on firs render.
   useEffect(() => {
     if (isInitialMount.current) {
       isInitialMount.current = false
@@ -31,6 +46,7 @@ const useDownshiftSingleSelection = (props) => {
     }
   }, [isOpen])
 
+  // returns
   const getTriggerButtonProps = ({
     onClick,
   } = {}) => {
@@ -38,6 +54,7 @@ const useDownshiftSingleSelection = (props) => {
       onClick: callAllEventHandlers(onClick, handleTriggerButtonClick),
     }
     return {
+      ref: triggerButtonRef,
       'aria-haspopup': 'listbox',
       'aria-expanded': isOpen,
       'aria-labelledby': `${labelId || defaultIds.label} ${triggerButtonId || defaultIds.triggerButton}`,
@@ -49,7 +66,11 @@ const useDownshiftSingleSelection = (props) => {
     onKeyDown,
   } = {}) => {
     const menuEventHandlers = {
-      onKeyDown: callAllEventHandlers(onKeyDown, getItemNavigationKeyDownHandler),
+      onKeyDown: callAllEventHandlers(
+        onKeyDown,
+        handleTriggerButtonKeyDown,
+        getItemNavigationKeyDownHandler,
+      ),
     }
     return {
       tabIndex: -1,

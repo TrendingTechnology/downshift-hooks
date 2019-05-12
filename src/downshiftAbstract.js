@@ -1,15 +1,49 @@
-import { useReducer, useRef } from 'react'
+import { useReducer, useRef, useEffect } from 'react'
 import * as keyboardKey from 'keyboard-key'
-import { actionTypes, defaultIds } from './utils'
+
+import {
+  actionTypes,
+  defaultIds,
+  getNextHighlightedIndexOnArrowDown,
+  getNextHighlightedIndexOnArrowUp,
+} from './utils'
 
 const downshiftReducer = (state, action) => {
   switch (action.type) {
     case actionTypes.KeyDownArrowDown:
-      return { ...state, highlightedIndex: (state.highlightedIndex || 0) + 1 }
+      return {
+        ...state,
+        highlightedIndex: getNextHighlightedIndexOnArrowDown(
+          state.highlightedIndex,
+          action.payload.itemsLength,
+          action.payload.shiftKeyModifier,
+        ),
+      }
     case actionTypes.KeyDownArrowUp:
-      return { ...state, highlightedIndex: (state.highlightedIndex || 0) - 1 }
-    case actionTypes.TriggerClick:
+      return {
+        ...state,
+        highlightedIndex: getNextHighlightedIndexOnArrowUp(
+          state.highlightedIndex,
+          action.payload.itemsLength,
+          action.payload.shiftKeyModifier,
+        ),
+      }
+    case actionTypes.keyDownEnd:
+      return {
+        ...state,
+        highlightedIndex: action.payload.itemsLength - 1,
+      }
+    case actionTypes.keyDownHome:
+      return {
+        ...state,
+        highlightedIndex: 0,
+      }
+    case actionTypes.ToggleMenu:
       return { ...state, isOpen: !state.isOpen }
+    case actionTypes.CloseMenu:
+      return { ...state, isOpen: false }
+    case actionTypes.OpenMenu:
+      return { ...state, isOpen: true }
     default:
       throw new Error();
   }
@@ -31,8 +65,14 @@ const useDownshiftAbstract = (props) => {
   const initialState = {
     highlightedIndex: propsHighlightedIndex || initialHighlightedIndex || defaultHighlightedIndex || null,
     isOpen: propsIsOpen || initialIsOpen || defaultIsOpen || false,
-    items: [],
   }
+  const items = []
+  let itemsCleanup
+
+  // items cleanup effect.
+  useEffect(() => {
+    itemsCleanup = true
+  })
 
   // reducer setup
   const [{ isOpen, highlightedIndex }, dispatch] = useReducer((state, action) => {
@@ -47,20 +87,33 @@ const useDownshiftAbstract = (props) => {
   const labelId = propsLabelId || defaultIds.label
   const itemId = index => `${propsItemId || defaultIds.item}-${index}`
 
-  // helpers
+  // returns
   const toggleMenu = () => {
-    dispatch({ type: actionTypes.TriggerClick })
+    dispatch({ type: actionTypes.ToggleMenu })
   }
 
-  // returns
+  const closeMenu = () => {
+    dispatch({ type: actionTypes.CloseMenu })
+  }
+
+  const openMenu = () => {
+    dispatch({ type: actionTypes.OpenMenu })
+  }
+
   const getItemNavigationKeyDownHandler = (e) => {
     const keyCode = keyboardKey.getCode(e)
     switch (keyCode) {
       case keyboardKey.ArrowDown:
-        dispatch({ type: actionTypes.KeyDownArrowDown })
+        dispatch({ type: actionTypes.KeyDownArrowDown, payload: { itemsLength: items.length } })
         break
       case keyboardKey.ArrowUp:
-        dispatch({ type: actionTypes.KeyDownArrowUp })
+        dispatch({ type: actionTypes.KeyDownArrowUp, payload: { itemsLength: items.length } })
+        break
+      case keyboardKey.End:
+        dispatch({ type: actionTypes.keyDownEnd, payload: { itemsLength: items.length } })
+        break
+      case keyboardKey.Home:
+        dispatch({ type: actionTypes.keyDownHome })
         break
       default:
     }
@@ -78,13 +131,22 @@ const useDownshiftAbstract = (props) => {
   const getItemProps = ({
     item,
     index,
-  }) => ({
-    role: 'option',
-    id: itemId(index),
-  })
+  }) => {
+    if (itemsCleanup) {
+      items.length = 0
+      itemsCleanup = false
+    }
+    items.push(item)
+    return {
+      role: 'option',
+      id: itemId(index || items.length - 1),
+    }
+  }
 
   return {
     toggleMenu,
+    closeMenu,
+    openMenu,
     isOpen,
     getLabelProps,
     getMenuProps,

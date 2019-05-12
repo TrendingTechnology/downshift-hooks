@@ -1,7 +1,13 @@
+import * as _ from 'lodash'
+
 const actionTypes = {
   KeyDownArrowDown: 'KeyDownArrowDown',
   KeyDownArrowUp: 'KeyDownArrowUp',
-  TriggerClick: 'TriggerClick',
+  keyDownEnd: 'keyDownEnd',
+  keyDownHome: 'keyDownHome',
+  ToggleMenu: 'ToggleMenu',
+  OpenMenu: 'OpenMenu',
+  CloseMenu: 'CloseMenu',
 }
 
 const id = 'downshift'
@@ -34,9 +40,33 @@ function callAllEventHandlers(...fns) {
   })
 }
 
+const getNextHighlightedIndexOnArrowDown = (highlightedIndex, itemsLength, shiftKeyModifier) => {
+  if (_.isNumber(highlightedIndex)) {
+    const newHighlightedIndex = highlightedIndex + (shiftKeyModifier ? 5 : 1)
+    if (newHighlightedIndex >= itemsLength) {
+      return 0
+    }
+    return newHighlightedIndex
+  }
+  return 0
+}
+
+const getNextHighlightedIndexOnArrowUp = (highlightedIndex, itemsLength, shiftKeyModifier) => {
+  if (_.isNumber(highlightedIndex)) {
+    const newHighlightedIndex = highlightedIndex - (shiftKeyModifier ? 5 : 1)
+    if (newHighlightedIndex < 0) {
+      return itemsLength - 1
+    }
+    return newHighlightedIndex
+  }
+  return 0
+}
+
 export {
   actionTypes,
   id,
   defaultIds,
   callAllEventHandlers,
+  getNextHighlightedIndexOnArrowDown,
+  getNextHighlightedIndexOnArrowUp,
 }
