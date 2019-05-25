@@ -15,7 +15,6 @@ const useDownshiftSingleSelection = (props) => {
     isOpen,
     getLabelProps,
     getMenuProps: baseGetMenuProps,
-    menuRef,
     highlightedIndex,
     getItemNavigationKeyDownHandler,
     getItemProps,
@@ -24,6 +23,7 @@ const useDownshiftSingleSelection = (props) => {
   // refs
   const isInitialMount = useRef(true)
   const triggerButtonRef = useRef(null)
+  const menuRef = useRef(null)
 
   // handlers
   const handleTriggerButtonClick = () => {
@@ -74,6 +74,7 @@ const useDownshiftSingleSelection = (props) => {
     }
     return {
       tabIndex: -1,
+      ref: menuRef,
       ...baseGetMenuProps(),
       ...menuEventHandlers,
     }

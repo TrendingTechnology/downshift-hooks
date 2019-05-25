@@ -4,8 +4,7 @@ import * as keyboardKey from 'keyboard-key'
 import {
   actionTypes,
   defaultIds,
-  getNextHighlightedIndexOnArrowDown,
-  getNextHighlightedIndexOnArrowUp,
+  getNextWrappingIndex,
 } from './utils'
 
 const downshiftReducer = (state, action) => {
@@ -13,19 +12,19 @@ const downshiftReducer = (state, action) => {
     case actionTypes.KeyDownArrowDown:
       return {
         ...state,
-        highlightedIndex: getNextHighlightedIndexOnArrowDown(
+        highlightedIndex: getNextWrappingIndex(
+          action.shiftKey ? 5 : 1,
           state.highlightedIndex,
-          action.payload.itemsLength,
-          action.payload.shiftKeyModifier,
+          action.itemsLength,
         ),
       }
     case actionTypes.KeyDownArrowUp:
       return {
         ...state,
-        highlightedIndex: getNextHighlightedIndexOnArrowUp(
+        highlightedIndex: getNextWrappingIndex(
+          action.shiftKey ? -5 : -1,
           state.highlightedIndex,
-          action.payload.itemsLength,
-          action.payload.shiftKeyModifier,
+          action.itemsLength,
         ),
       }
     case actionTypes.keyDownEnd:
@@ -51,14 +50,19 @@ const downshiftReducer = (state, action) => {
 
 const useDownshiftAbstract = (props) => {
   const {
+    // highlightedIndex
     propsHighlightedIndex,
     initialHighlightedIndex,
     defaultHighlightedIndex,
+    // isOpen
     isOpen: propsIsOpen,
     initialIsOpen,
     defaultIsOpen,
+    // ids
     labelId: propsLabelId,
-    itemId: propsItemId,
+    menuId: propsMenuId,
+    getItemId,
+    // reducer
     stateReducer = (s, a) => a.changes,
   } = props || {}
   // initial state
@@ -66,13 +70,8 @@ const useDownshiftAbstract = (props) => {
     highlightedIndex: propsHighlightedIndex || initialHighlightedIndex || defaultHighlightedIndex || null,
     isOpen: propsIsOpen || initialIsOpen || defaultIsOpen || false,
   }
-  const items = []
-  let itemsCleanup
-
-  // items cleanup effect.
-  useEffect(() => {
-    itemsCleanup = true
-  })
+  const itemsRef = useRef()
+  itemsRef.current = []
 
   // reducer setup
   const [{ isOpen, highlightedIndex }, dispatch] = useReducer((state, action) => {
@@ -80,12 +79,10 @@ const useDownshiftAbstract = (props) => {
     return stateReducer(state, { ...action, changes })
   }, initialState)
 
-  // refs
-  const menuRef = useRef(null)
-
   // element ids
   const labelId = propsLabelId || defaultIds.label
-  const itemId = index => `${propsItemId || defaultIds.item}-${index}`
+  const itemId = getItemId || defaultIds.getItem
+  const menuId = propsMenuId || defaultIds.menu
 
   // returns
   const toggleMenu = () => {
@@ -100,17 +97,28 @@ const useDownshiftAbstract = (props) => {
     dispatch({ type: actionTypes.OpenMenu })
   }
 
-  const getItemNavigationKeyDownHandler = (e) => {
-    const keyCode = keyboardKey.getCode(e)
+  const getItemNavigationKeyDownHandler = (event) => {
+    const keyCode = keyboardKey.getCode(event)
     switch (keyCode) {
       case keyboardKey.ArrowDown:
-        dispatch({ type: actionTypes.KeyDownArrowDown, payload: { itemsLength: items.length } })
+        dispatch({
+          type: actionTypes.KeyDownArrowDown,
+          itemsLength: itemsRef.current.length,
+          shiftKey: event.shiftKey,
+        })
         break
       case keyboardKey.ArrowUp:
-        dispatch({ type: actionTypes.KeyDownArrowUp, payload: { itemsLength: items.length } })
+        dispatch({
+          type: actionTypes.KeyDownArrowUp,
+          itemsLength: itemsRef.current.length,
+          shiftKey: event.shiftKey,
+        })
         break
       case keyboardKey.End:
-        dispatch({ type: actionTypes.keyDownEnd, payload: { itemsLength: items.length } })
+        dispatch({
+          type: actionTypes.keyDownEnd,
+          itemsLength: itemsRef.current.length,
+        })
         break
       case keyboardKey.Home:
         dispatch({ type: actionTypes.keyDownHome })
@@ -124,22 +132,17 @@ const useDownshiftAbstract = (props) => {
   })
 
   const getMenuProps = () => ({
-    ref: menuRef,
+    id: menuId,
     'aria-labelledby': labelId,
   })
 
   const getItemProps = ({
     item,
-    index,
   }) => {
-    if (itemsCleanup) {
-      items.length = 0
-      itemsCleanup = false
-    }
-    items.push(item)
+    itemsRef.current.push(item)
     return {
       role: 'option',
-      id: itemId(index || items.length - 1),
+      id: itemId(itemsRef.current.length - 1),
     }
   }
 
@@ -150,7 +153,6 @@ const useDownshiftAbstract = (props) => {
     isOpen,
     getLabelProps,
     getMenuProps,
-    menuRef,
     highlightedIndex,
     getItemNavigationKeyDownHandler,
     getItemProps,

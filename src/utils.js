@@ -14,7 +14,8 @@ const id = 'downshift'
 
 const defaultIds = {
   label: `${id}-label`,
-  item: `${id}-item`,
+  menu: `${id}-menu`,
+  getItem: index => `${id}-item-${index}`,
   triggerButton: `${id}-triggerButton`,
 }
 
@@ -40,26 +41,20 @@ function callAllEventHandlers(...fns) {
   })
 }
 
-const getNextHighlightedIndexOnArrowDown = (highlightedIndex, itemsLength, shiftKeyModifier) => {
-  if (_.isNumber(highlightedIndex)) {
-    const newHighlightedIndex = highlightedIndex + (shiftKeyModifier ? 5 : 1)
-    if (newHighlightedIndex >= itemsLength) {
-      return 0
-    }
-    return newHighlightedIndex
+function getNextWrappingIndex(moveAmount, baseIndex, itemsLength) {
+  if (!_.isNumber(baseIndex)) {
+    return 0
   }
-  return 0
-}
+  const nextIndex = baseIndex + moveAmount
 
-const getNextHighlightedIndexOnArrowUp = (highlightedIndex, itemsLength, shiftKeyModifier) => {
-  if (_.isNumber(highlightedIndex)) {
-    const newHighlightedIndex = highlightedIndex - (shiftKeyModifier ? 5 : 1)
-    if (newHighlightedIndex < 0) {
-      return itemsLength - 1
-    }
-    return newHighlightedIndex
+  if (nextIndex < 0) {
+    return itemsLength - 1
   }
-  return 0
+  if (nextIndex >= itemsLength) {
+    return 0
+  }
+
+  return nextIndex
 }
 
 export {
@@ -67,6 +62,5 @@ export {
   id,
   defaultIds,
   callAllEventHandlers,
-  getNextHighlightedIndexOnArrowDown,
-  getNextHighlightedIndexOnArrowUp,
+  getNextWrappingIndex,
 }
