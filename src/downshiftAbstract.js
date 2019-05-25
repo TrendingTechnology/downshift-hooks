@@ -48,27 +48,26 @@ const downshiftReducer = (state, action) => {
   }
 }
 
-const useDownshiftAbstract = (props) => {
-  const {
-    // highlightedIndex
-    propsHighlightedIndex,
-    initialHighlightedIndex,
-    defaultHighlightedIndex,
-    // isOpen
-    isOpen: propsIsOpen,
-    initialIsOpen,
-    defaultIsOpen,
-    // ids
-    labelId: propsLabelId,
-    menuId: propsMenuId,
-    getItemId,
-    // reducer
-    stateReducer = (s, a) => a.changes,
-  } = props || {}
+const useDownshiftAbstract = ({
+  // highlightedIndex
+  propsHighlightedIndex: highlightedIndexFromProps,
+  initialHighlightedIndex,
+  defaultHighlightedIndex,
+  // isOpen
+  isOpen: isOpenFromProps,
+  initialIsOpen,
+  defaultIsOpen,
+  // ids
+  labelId: labelIdFromProps,
+  menuId: menuIdFromProps,
+  getItemId,
+  // reducer
+  stateReducer = (s, a) => a.changes,
+}) => {
   // initial state
   const initialState = {
-    highlightedIndex: propsHighlightedIndex || initialHighlightedIndex || defaultHighlightedIndex || null,
-    isOpen: propsIsOpen || initialIsOpen || defaultIsOpen || false,
+    highlightedIndex: highlightedIndexFromProps || initialHighlightedIndex || defaultHighlightedIndex || null,
+    isOpen: isOpenFromProps || initialIsOpen || defaultIsOpen || false,
   }
   const itemsRef = useRef()
   itemsRef.current = []
@@ -80,9 +79,9 @@ const useDownshiftAbstract = (props) => {
   }, initialState)
 
   // element ids
-  const labelId = propsLabelId || defaultIds.label
+  const labelId = labelIdFromProps || defaultIds.label
   const itemId = getItemId || defaultIds.getItem
-  const menuId = propsMenuId || defaultIds.menu
+  const menuId = menuIdFromProps || defaultIds.menu
 
   // returns
   const toggleMenu = () => {
