@@ -1,6 +1,6 @@
 import ReactDOM from 'react-dom'
 import React from 'react'
-import useDownshiftSingleSelection from './downshiftSingleSelection'
+import useDownshiftSelection from './downshiftSelection'
 
 const options = [
   'Neptunium',
@@ -39,7 +39,7 @@ const Dropdown = () => {
     getMenuProps,
     highlightedIndex,
     getItemProps,
-  } = useDownshiftSingleSelection({ initialIsOpen: true })
+  } = useDownshiftSelection({ initialIsOpen: true })
   return (
     <div id="exp_wrapper">
       <label {...getLabelProps()}>

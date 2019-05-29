@@ -10,12 +10,17 @@ const actionTypes = {
   CloseMenu: 'CloseMenu',
 }
 
+const singleSelectActionTypes = {
+  ...actionTypes,
+  TriggerButtonClick: 'TriggerButtonClick',
+}
+
 const id = 'downshift'
 
 const defaultIds = {
   label: `${id}-label`,
   menu: `${id}-menu`,
-  getItem: index => `${id}-item-${index}`,
+  item: index => `${id}-item-${index}`,
   triggerButton: `${id}-triggerButton`,
 }
 
@@ -58,7 +63,7 @@ function getNextWrappingIndex(moveAmount, baseIndex, itemsLength) {
 }
 
 export {
-  actionTypes,
+  singleSelectActionTypes,
   id,
   defaultIds,
   callAllEventHandlers,
