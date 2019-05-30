@@ -1,4 +1,4 @@
-import { useReducer, useRef, useEffect } from 'react'
+import { useReducer, useRef } from 'react'
 import * as keyboardKey from 'keyboard-key'
 
 import {
@@ -10,7 +10,7 @@ import {
 
 function downshiftSelectionReducer(state, action) {
   switch (action.type) {
-    case actionTypes.KeyDownArrowDown:
+    case actionTypes.MenuKeyDownArrowDown:
       return {
         ...state,
         highlightedIndex: getNextWrappingIndex(
@@ -19,7 +19,7 @@ function downshiftSelectionReducer(state, action) {
           action.itemsLength,
         ),
       }
-    case actionTypes.KeyDownArrowUp:
+    case actionTypes.MenuKeyDownArrowUp:
       return {
         ...state,
         highlightedIndex: getNextWrappingIndex(
@@ -28,22 +28,44 @@ function downshiftSelectionReducer(state, action) {
           action.itemsLength,
         ),
       }
-    case actionTypes.keyDownEnd:
+    case actionTypes.MenuKeyDownEnd:
       return {
         ...state,
         highlightedIndex: action.itemsLength - 1,
       }
-    case actionTypes.keyDownHome:
+    case actionTypes.MenuKeyDownHome:
       return {
         ...state,
         highlightedIndex: 0,
       }
-    case actionTypes.ToggleMenu:
+    case actionTypes.MenuKeyDownEscape:
+      return {
+        ...state,
+        isOpen: false,
+        highlightedIndex: -1,
+      }
+    case actionTypes.TriggerButtonKeyDownArrowDown:
+      return {
+        ...state,
+        isOpen: true,
+        highlightedIndex: 0,
+      }
+    case actionTypes.TriggerButtonKeyDownArrowUp:
+      return {
+        ...state,
+        isOpen: true,
+        highlightedIndex: action.itemsLength - 1,
+      }
     case actionTypes.TriggerButtonClick:
-      return { ...state, isOpen: !state.isOpen }
-    case actionTypes.CloseMenu:
+    case actionTypes.FunctionToggleMenu:
+      return {
+        ...state,
+        isOpen: !state.isOpen,
+        highlightedIndex: state.isOpen ? -1 : -1,
+      }
+    case actionTypes.FunctionCloseMenu:
       return { ...state, isOpen: false }
-    case actionTypes.OpenMenu:
+    case actionTypes.FunctionOpenMenu:
       return { ...state, isOpen: true }
     default:
       throw new Error();
@@ -82,7 +104,7 @@ function useDownshiftSelection(props) {
 
   // Initial state.
   const initialState = {
-    highlightedIndex: highlightedIndexFromProps || initialHighlightedIndex || defaultHighlightedIndex || null,
+    highlightedIndex: highlightedIndexFromProps || initialHighlightedIndex || defaultHighlightedIndex || -1,
     isOpen: isOpenFromProps || initialIsOpen || defaultIsOpen || false,
   }
 
@@ -102,48 +124,58 @@ function useDownshiftSelection(props) {
 
   // Refs
   const itemsRef = useRef()
-  const isInitialMount = useRef(true)
   const triggerButtonRef = useRef(null)
   const menuRef = useRef(null)
   itemsRef.current = []
-
-  // Focus list but not on firs render.
-  useEffect(() => {
-    if (isInitialMount.current) {
-      isInitialMount.current = false
-    } else if (isOpen) {
-      menuRef.current.focus()
-    }
-  }, [isOpen])
 
   // Event handler functions
   const keyDownHandlers = {
     ArrowDown(event) {
       dispatch({
-        type: actionTypes.KeyDownArrowDown,
+        type: actionTypes.MenuKeyDownArrowDown,
         itemsLength: itemsRef.current.length,
         shiftKey: event.shiftKey,
       })
     },
     ArrowUp(event) {
       dispatch({
-        type: actionTypes.KeyDownArrowUp,
+        type: actionTypes.MenuKeyDownArrowUp,
         itemsLength: itemsRef.current.length,
         shiftKey: event.shiftKey,
       })
     },
   }
-
   const menuKeyDownHandlers = {
     ...keyDownHandlers,
     Home() {
-      dispatch({ type: actionTypes.keyDownHome })
+      dispatch({ type: actionTypes.MenuKeyDownHome })
     },
     End() {
       dispatch({
-        type: actionTypes.keyDownEnd,
+        type: actionTypes.MenuKeyDownEnd,
         itemsLength: itemsRef.current.length,
       })
+    },
+    Escape() {
+      dispatch({
+        type: actionTypes.MenuKeyDownEscape,
+      })
+      triggerButtonRef.current.focus()
+    },
+  }
+  const triggerButtonKeyDownHandlers = {
+    ArrowDown() {
+      dispatch({
+        type: actionTypes.TriggerButtonKeyDownArrowDown,
+      })
+      menuRef.current.focus()
+    },
+    ArrowUp() {
+      dispatch({
+        type: actionTypes.TriggerButtonKeyDownArrowUp,
+        itemsLength: itemsRef.current.length,
+      })
+      menuRef.current.focus()
     },
   }
 
@@ -156,25 +188,28 @@ function useDownshiftSelection(props) {
   }
   const triggerButtonHandleClick = () => {
     dispatch({ type: actionTypes.TriggerButtonClick })
+    menuRef.current.focus()
+  }
+  const triggerButtonHandleKeyDown = (event) => {
+    const key = keyboardKey.getKey(event)
+    if (key && triggerButtonKeyDownHandlers[key]) {
+      triggerButtonKeyDownHandlers[key].call(this, event)
+    }
   }
 
   // returns
   const toggleMenu = () => {
-    dispatch({ type: actionTypes.ToggleMenu })
+    dispatch({ type: actionTypes.FunctionToggleMenu })
   }
-
   const closeMenu = () => {
-    dispatch({ type: actionTypes.CloseMenu })
+    dispatch({ type: actionTypes.FunctionCloseMenu })
   }
-
   const openMenu = () => {
-    dispatch({ type: actionTypes.OpenMenu })
+    dispatch({ type: actionTypes.FunctionOpenMenu })
   }
-
   const getLabelProps = () => ({
     id: labelId,
   })
-
   const getMenuProps = ({
     onKeyDown,
   } = {}) => ({
@@ -187,9 +222,9 @@ function useDownshiftSelection(props) {
       menuHandleKeyDown,
     ),
   })
-
   const getTriggerButtonProps = ({
     onClick,
+    onKeyDown,
   } = {}) => ({
     ref: triggerButtonRef,
     'aria-haspopup': 'listbox',
@@ -199,8 +234,11 @@ function useDownshiftSelection(props) {
       onClick,
       triggerButtonHandleClick,
     ),
+    onKeyDown: callAllEventHandlers(
+      onKeyDown,
+      triggerButtonHandleKeyDown,
+    ),
   })
-
   const getItemProps = ({
     item,
   } = {}) => {

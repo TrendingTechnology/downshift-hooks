@@ -1,18 +1,17 @@
 import * as _ from 'lodash'
 
-const actionTypes = {
-  KeyDownArrowDown: 'KeyDownArrowDown',
-  KeyDownArrowUp: 'KeyDownArrowUp',
-  keyDownEnd: 'keyDownEnd',
-  keyDownHome: 'keyDownHome',
-  ToggleMenu: 'ToggleMenu',
-  OpenMenu: 'OpenMenu',
-  CloseMenu: 'CloseMenu',
-}
-
 const singleSelectActionTypes = {
-  ...actionTypes,
+  MenuKeyDownArrowDown: 'KeyDownArrowDown',
+  MenuKeyDownArrowUp: 'KeyDownArrowUp',
+  MenuKeyDownEnd: 'keyDownEnd',
+  MenuKeyDownHome: 'keyDownHome',
+  MenuKeyDownEscape: 'keyDownEscape',
   TriggerButtonClick: 'TriggerButtonClick',
+  TriggerButtonKeyDownArrowDown: 'TriggerButtonKeyDownArrowDown',
+  TriggerButtonKeyDownArrowUp: 'TriggerButtonKeyDownArrowUp',
+  FunctionToggleMenu: 'ToggleMenu',
+  FunctionOpenMenu: 'OpenMenu',
+  FunctionCloseMenu: 'CloseMenu',
 }
 
 const id = 'downshift'
@@ -47,8 +46,8 @@ function callAllEventHandlers(...fns) {
 }
 
 function getNextWrappingIndex(moveAmount, baseIndex, itemsLength) {
-  if (!_.isNumber(baseIndex)) {
-    return 0
+  if (baseIndex === -1) {
+    return moveAmount > 0 ? 0 : itemsLength - 1
   }
   const nextIndex = baseIndex + moveAmount
 
