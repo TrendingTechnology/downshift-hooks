@@ -1,72 +1,127 @@
-import { useReducer, useRef } from 'react'
+import { useReducer, useRef, useEffect } from 'react'
 import * as keyboardKey from 'keyboard-key'
 
 import {
-  singleSelectActionTypes as actionTypes,
+  actionTypes,
   defaultIds,
   getNextWrappingIndex,
   callAllEventHandlers,
 } from './utils'
 
 function downshiftSelectionReducer(state, action) {
-  switch (action.type) {
-    case actionTypes.MenuKeyDownArrowDown:
-      return {
-        ...state,
-        highlightedIndex: getNextWrappingIndex(
-          action.shiftKey ? 5 : 1,
-          state.highlightedIndex,
-          action.itemsLength,
-        ),
-      }
-    case actionTypes.MenuKeyDownArrowUp:
-      return {
-        ...state,
-        highlightedIndex: getNextWrappingIndex(
-          action.shiftKey ? -5 : -1,
-          state.highlightedIndex,
-          action.itemsLength,
-        ),
-      }
-    case actionTypes.MenuKeyDownEnd:
-      return {
-        ...state,
-        highlightedIndex: action.itemsLength - 1,
-      }
-    case actionTypes.MenuKeyDownHome:
-      return {
-        ...state,
-        highlightedIndex: 0,
-      }
-    case actionTypes.MenuKeyDownEscape:
+  const {
+    type,
+    props,
+    key,
+    shiftKey,
+  } = action
+  switch (type) {
+    case actionTypes.SingleSelect.Menu.Blur:
       return {
         ...state,
         isOpen: false,
-        highlightedIndex: -1,
+        ...(state.highlightedIndex >= 0 && {
+          selectedItem: props.items[state.highlightedIndex],
+        }),
       }
-    case actionTypes.TriggerButtonKeyDownArrowDown:
-      return {
-        ...state,
-        isOpen: true,
-        highlightedIndex: 0,
+    case actionTypes.SingleSelect.Menu.KeyDown:
+      switch (key) {
+        case keyboardKey.ArrowDown:
+          return {
+            ...state,
+            highlightedIndex: getNextWrappingIndex(
+              shiftKey ? 5 : 1,
+              state.highlightedIndex,
+              props.items.length,
+              props.circularNavigation,
+            ),
+          }
+        case keyboardKey.ArrowUp:
+          return {
+            ...state,
+            highlightedIndex: getNextWrappingIndex(
+              shiftKey ? -5 : -1,
+              state.highlightedIndex,
+              props.items.length,
+              props.circularNavigation,
+            ),
+          }
+        case keyboardKey.Home:
+          return {
+            ...state,
+            highlightedIndex: 0,
+          }
+        case keyboardKey.End:
+          return {
+            ...state,
+            highlightedIndex: props.items.length - 1,
+          }
+        case keyboardKey.Escape:
+          return {
+            ...state,
+            isOpen: false,
+            highlightedIndex: -1,
+          }
+        case keyboardKey.Enter:
+          return {
+            ...state,
+            isOpen: false,
+            highlightedIndex: -1,
+            selectedItem: props.items[state.highlightedIndex],
+          }
+        default:
+          return state
       }
-    case actionTypes.TriggerButtonKeyDownArrowUp:
-      return {
-        ...state,
-        isOpen: true,
-        highlightedIndex: action.itemsLength - 1,
+    case actionTypes.SingleSelect.TriggerButton.KeyDown:
+      switch (key) {
+        case keyboardKey.ArrowDown:
+          return {
+            ...state,
+            isOpen: true,
+            highlightedIndex: state.selectedItem
+              ? getNextWrappingIndex(
+                1,
+                props.items.indexOf(state.selectedItem),
+                props.items.length,
+                false,
+              )
+              : 0,
+          }
+        case keyboardKey.ArrowUp:
+          return {
+            ...state,
+            isOpen: true,
+            highlightedIndex: state.selectedItem
+              ? getNextWrappingIndex(
+                -1,
+                props.items.indexOf(state.selectedItem),
+                props.items.length,
+                false,
+              )
+              : 0,
+          }
+        default:
+          return state
       }
-    case actionTypes.TriggerButtonClick:
-    case actionTypes.FunctionToggleMenu:
+    case actionTypes.SingleSelect.TriggerButton.Click:
+    case actionTypes.SingleSelect.Function.ToggleMenu:
       return {
         ...state,
         isOpen: !state.isOpen,
-        highlightedIndex: state.isOpen ? -1 : -1,
+        highlightedIndex: state.selectedItem
+          ? props.items.indexOf(state.selectedItem)
+          : 0,
       }
-    case actionTypes.FunctionCloseMenu:
-      return { ...state, isOpen: false }
-    case actionTypes.FunctionOpenMenu:
-      return { ...state, isOpen: true }
+    case actionTypes.SingleSelect.Function.OpenMenu:
+      return {
+        ...state,
+        isOpen: true,
+      }
+    case actionTypes.SingleSelect.Function.CloseMenu:
+      return {
+        ...state,
+        isOpen: false,
+      }
     default:
       throw new Error();
   }
@@ -85,6 +140,7 @@ function getState(state, props) {
 function useDownshiftSelection(props) {
   // Props destructuring.
   const {
+    items,
     // highlightedIndex
     highlightedIndex: highlightedIndexFromProps,
     initialHighlightedIndex,
@@ -109,7 +165,7 @@ function useDownshiftSelection(props) {
   }
 
   // Reducer init.
-  const [{ isOpen, highlightedIndex }, dispatch] = useReducer((state, action) => {
+  const [{ isOpen, highlightedIndex, selectedItem }, dispatch] = useReducer((state, action) => {
     // eslint-disable-next-line no-param-reassign
     state = getState(state, props)
     const changes = downshiftSelectionReducer(state, action)
@@ -123,95 +179,76 @@ function useDownshiftSelection(props) {
   const triggerButtonId = triggerButtonIdFromProps || defaultIds.triggerButton
 
   // Refs
-  const itemsRef = useRef()
   const triggerButtonRef = useRef(null)
   const menuRef = useRef(null)
-  itemsRef.current = []
+  const isInitialMount = useRef(true)
 
-  // Event handler functions
-  const keyDownHandlers = {
-    ArrowDown(event) {
-      dispatch({
-        type: actionTypes.MenuKeyDownArrowDown,
-        itemsLength: itemsRef.current.length,
-        shiftKey: event.shiftKey,
-      })
-    },
-    ArrowUp(event) {
-      dispatch({
-        type: actionTypes.MenuKeyDownArrowUp,
-        itemsLength: itemsRef.current.length,
-        shiftKey: event.shiftKey,
-      })
-    },
-  }
-  const menuKeyDownHandlers = {
-    ...keyDownHandlers,
-    Home() {
-      dispatch({ type: actionTypes.MenuKeyDownHome })
-    },
-    End() {
-      dispatch({
-        type: actionTypes.MenuKeyDownEnd,
-        itemsLength: itemsRef.current.length,
-      })
-    },
-    Escape() {
-      dispatch({
-        type: actionTypes.MenuKeyDownEscape,
-      })
+  // Effects.
+  useEffect(() => {
+    if (isInitialMount.current) {
+      isInitialMount.current = false
+      return
+    }
+    if (isOpen) {
+      menuRef.current.focus()
+    } else {
       triggerButtonRef.current.focus()
-    },
-  }
-  const triggerButtonKeyDownHandlers = {
-    ArrowDown() {
-      dispatch({
-        type: actionTypes.TriggerButtonKeyDownArrowDown,
-      })
-      menuRef.current.focus()
-    },
-    ArrowUp() {
-      dispatch({
-        type: actionTypes.TriggerButtonKeyDownArrowUp,
-        itemsLength: itemsRef.current.length,
-      })
-      menuRef.current.focus()
-    },
-  }
+    }
+  }, [isOpen])
 
   // Event handlers.
   const menuHandleKeyDown = (event) => {
-    const key = keyboardKey.getKey(event)
-    if (key && menuKeyDownHandlers[key]) {
-      menuKeyDownHandlers[key].call(this, event)
+    dispatch({
+      type: actionTypes.SingleSelect.Menu.KeyDown,
+      props,
+      key: keyboardKey.getCode(event),
+      shiftKey: event.shiftKey,
+    })
+  }
+  const menuHandleBlur = (event) => {
+    if (event.relatedTarget !== triggerButtonRef.current) {
+      dispatch({
+        type: actionTypes.SingleSelect.Menu.Blur,
+        props,
+      })
     }
   }
   const triggerButtonHandleClick = () => {
-    dispatch({ type: actionTypes.TriggerButtonClick })
-    menuRef.current.focus()
+    dispatch({
+      type: actionTypes.SingleSelect.TriggerButton.Click,
+      props,
+    })
   }
   const triggerButtonHandleKeyDown = (event) => {
-    const key = keyboardKey.getKey(event)
-    if (key && triggerButtonKeyDownHandlers[key]) {
-      triggerButtonKeyDownHandlers[key].call(this, event)
-    }
+    dispatch({
+      type: actionTypes.SingleSelect.TriggerButton.KeyDown,
+      props,
+      key: keyboardKey.getCode(event),
+    })
   }
 
   // returns
   const toggleMenu = () => {
-    dispatch({ type: actionTypes.FunctionToggleMenu })
+    dispatch({
+      type: actionTypes.SingleSelect.Function.ToggleMenu,
+    })
   }
   const closeMenu = () => {
-    dispatch({ type: actionTypes.FunctionCloseMenu })
+    dispatch({
+      type: actionTypes.SingleSelect.Function.CloseMenu,
+    })
   }
   const openMenu = () => {
-    dispatch({ type: actionTypes.FunctionOpenMenu })
+    dispatch({
+      type: actionTypes.SingleSelect.Function.OpenMenu,
+    })
   }
   const getLabelProps = () => ({
     id: labelId,
   })
   const getMenuProps = ({
     onKeyDown,
+    onBlur,
   } = {}) => ({
     id: menuId,
     'aria-labelledby': labelId,
@@ -220,6 +257,10 @@ function useDownshiftSelection(props) {
     onKeyDown: callAllEventHandlers(
       onKeyDown,
       menuHandleKeyDown,
+    ),
+    onBlur: callAllEventHandlers(
+      onBlur,
+      menuHandleBlur,
     ),
   })
   const getTriggerButtonProps = ({
@@ -241,11 +282,15 @@ function useDownshiftSelection(props) {
   })
   const getItemProps = ({
     item,
+    index,
   } = {}) => {
-    itemsRef.current.push(item)
+    const itemIndex = index || items.indexOf(item)
+    if (itemIndex < 0) {
+      throw new Error('Pass either item or item index in getItemProps!')
+    }
     return {
       role: 'option',
-      id: itemId(itemsRef.current.length - 1),
+      id: itemId(itemIndex),
     }
   }
 
@@ -259,6 +304,7 @@ function useDownshiftSelection(props) {
     getItemProps,
     highlightedIndex,
     isOpen,
+    selectedItem,
   }
 }
 

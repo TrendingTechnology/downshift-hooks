@@ -1,17 +1,21 @@
 import * as _ from 'lodash'
 
-const singleSelectActionTypes = {
-  MenuKeyDownArrowDown: 'KeyDownArrowDown',
-  MenuKeyDownArrowUp: 'KeyDownArrowUp',
-  MenuKeyDownEnd: 'keyDownEnd',
-  MenuKeyDownHome: 'keyDownHome',
-  MenuKeyDownEscape: 'keyDownEscape',
-  TriggerButtonClick: 'TriggerButtonClick',
-  TriggerButtonKeyDownArrowDown: 'TriggerButtonKeyDownArrowDown',
-  TriggerButtonKeyDownArrowUp: 'TriggerButtonKeyDownArrowUp',
-  FunctionToggleMenu: 'ToggleMenu',
-  FunctionOpenMenu: 'OpenMenu',
-  FunctionCloseMenu: 'CloseMenu',
+const actionTypes = {
+  SingleSelect: {
+    Menu: {
+      KeyDown: 'SingleSelectMenuKeyDown',
+      Blur: 'SingleSelectMenuBlur',
+    },
+    TriggerButton: {
+      KeyDown: 'SingleSelectTriggerButtonKeyDown',
+      Click: 'SingleSelectTriggerButtonClick',
+    },
+    Function: {
+      ToggleMenu: 'SingleSelectFunctionToggleMenu',
+      CloseMenu: 'SingleSelectFunctionCloseMenu',
+      OpenMenu: 'SingleSelectFunctionOpenMenu',
+    },
+  },
 }
 
 const id = 'downshift'
@@ -45,24 +49,27 @@ function callAllEventHandlers(...fns) {
   })
 }
 
-function getNextWrappingIndex(moveAmount, baseIndex, itemsLength) {
+function getNextWrappingIndex(moveAmount, baseIndex, itemsLength, circular) {
   if (baseIndex === -1) {
+    if (!circular) {
+      return 0
+    }
     return moveAmount > 0 ? 0 : itemsLength - 1
   }
   const nextIndex = baseIndex + moveAmount
 
   if (nextIndex < 0) {
-    return itemsLength - 1
+    return circular ? itemsLength - 1 : 0
   }
   if (nextIndex >= itemsLength) {
-    return 0
+    return circular ? 0 : itemsLength - 1
   }
 
   return nextIndex
 }
 
 export {
-  singleSelectActionTypes,
+  actionTypes,
   id,
   defaultIds,
   callAllEventHandlers,

@@ -34,33 +34,37 @@ const options = [
 const Dropdown = () => {
   const {
     isOpen,
+    selectedItem,
     getTriggerButtonProps,
     getLabelProps,
     getMenuProps,
     highlightedIndex,
     getItemProps,
-  } = useDownshiftSelection({ initialIsOpen: true })
+  } = useDownshiftSelection({ items: options })
   return (
-    <div id="exp_wrapper">
-      <label {...getLabelProps()}>
-        Choose an element:
+    <>
+      <div id="exp_wrapper">
+        <label {...getLabelProps()}>
+          Choose an element:
       </label>
-      <button
-        {...getTriggerButtonProps()}>
-        {options[0]}
-      </button>
-      <ul {...getMenuProps()}>
-        {isOpen && options.map((option, index) => (
-          <li
-            style={highlightedIndex === index ? { backgroundColor: 'blue' } : {}}
-            key={`${option}${index}`}
-            {...getItemProps({ item: option, index })}
-          >
-            {option}
-          </li>
-        ))}
-      </ul>
-    </div>
+        <button
+          {...getTriggerButtonProps()}>
+          {selectedItem || 'Elements'}
+        </button>
+        <ul {...getMenuProps()}>
+          {isOpen && options.map((option, index) => (
+            <li
+              style={highlightedIndex === index ? { backgroundColor: 'blue' } : {}}
+              key={`${option}${index}`}
+              {...getItemProps({ item: option, index })}
+            >
+              {option}
+            </li>
+          ))}
+        </ul>
+      </div>
+      <button>Give Focus!</button>
+    </>
   )
 }
 
