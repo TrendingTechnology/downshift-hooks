@@ -2,19 +2,19 @@ import * as _ from 'lodash'
 
 const actionTypes = {
   SingleSelect: {
-    Menu: {
-      KeyDown: 'SingleSelectMenuKeyDown',
-      Blur: 'SingleSelectMenuBlur',
-    },
-    TriggerButton: {
-      KeyDown: 'SingleSelectTriggerButtonKeyDown',
-      Click: 'SingleSelectTriggerButtonClick',
-    },
-    Function: {
-      ToggleMenu: 'SingleSelectFunctionToggleMenu',
-      CloseMenu: 'SingleSelectFunctionCloseMenu',
-      OpenMenu: 'SingleSelectFunctionOpenMenu',
-    },
+    MenuKeyDownArrowDown: 'MenuKeyDownArrowDown',
+    MenuKeyDownArrowUp: 'MenuKeyDownArrowUp',
+    MenuKeyDownEscape: 'MenuKeyDownEscape',
+    MenuKeyDownHome: 'MenuKeyDownHome',
+    MenuKeyDownEnd: 'MenuKeyDownEnd',
+    MenuKeyDownEnter: 'MenuKeyDownEnter',
+    MenuBlur: 'MenuBlur',
+    TriggerButtonKeyDownArrowDown: 'TriggerButtonKeyDownArrowDown',
+    TriggerButtonKeyDownArrowUp: 'TriggerButtonKeyDownArrowUp',
+    TriggerButtonClick: 'TriggerButtonClick',
+    FunctionToggleMenu: 'FunctionToggleMenu',
+    FunctionOpenMenu: 'FunctionOpenMenu',
+    FunctionCloseMenu: 'FunctionCloseMenu',
   },
 }
 
