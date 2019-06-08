@@ -16,6 +16,18 @@ function downshiftSelectionReducer(state, action) {
   } = action
 
   switch (type) {
+    case actionTypes.SingleSelect.ItemHover:
+      return {
+        ...state,
+        highlightedIndex: action.index,
+      }
+    case actionTypes.SingleSelect.ItemClick:
+      return {
+        ...state,
+        isOpen: false,
+        highlightedIndex: -1,
+        selectedItem: props.items[action.index],
+      }
     case actionTypes.SingleSelect.MenuBlur:
       return {
         ...state,
@@ -258,6 +270,7 @@ function useDownshiftSelection(props) {
     }
   }
   const menuHandleBlur = (event) => {
+    // Shift Tab and Click are two blur cases that are handled separately.
     if (event.relatedTarget !== triggerButtonRef.current) {
       dispatch({
         type: actionTypes.SingleSelect.MenuBlur,
@@ -276,6 +289,20 @@ function useDownshiftSelection(props) {
     if (key && triggerButtonKeyDownHandlers[key]) {
       triggerButtonKeyDownHandlers[key].call(this, event)
     }
+  }
+  const itemHandleMouseOver = (index) => {
+    dispatch({
+      type: actionTypes.SingleSelect.ItemHover,
+      props,
+      index,
+    })
+  }
+  const itemHandleClick = (index) => {
+    dispatch({
+      type: actionTypes.SingleSelect.ItemClick,
+      props,
+      index,
+    })
   }
 
   // returns
@@ -334,6 +361,8 @@ function useDownshiftSelection(props) {
   const getItemProps = ({
     item,
     index,
+    onMouseOver,
+    onClick,
   } = {}) => {
     const itemIndex = index || items.indexOf(item)
     if (itemIndex < 0) {
@@ -342,6 +371,14 @@ function useDownshiftSelection(props) {
     return {
       role: 'option',
       id: itemId(itemIndex),
+      onMouseOver: callAllEventHandlers(
+        onMouseOver,
+        () => itemHandleMouseOver(itemIndex),
+      ),
+      onClick: callAllEventHandlers(
+        onClick,
+        () => itemHandleClick(itemIndex),
+      ),
     }
   }
 

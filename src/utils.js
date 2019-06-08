@@ -9,6 +9,8 @@ const actionTypes = {
     MenuKeyDownEnd: 'MenuKeyDownEnd',
     MenuKeyDownEnter: 'MenuKeyDownEnter',
     MenuBlur: 'MenuBlur',
+    ItemHover: 'ItemHover',
+    ItemClick: 'ItemClick',
     TriggerButtonKeyDownArrowDown: 'TriggerButtonKeyDownArrowDown',
     TriggerButtonKeyDownArrowUp: 'TriggerButtonKeyDownArrowUp',
     TriggerButtonClick: 'TriggerButtonClick',
