@@ -1,4 +1,5 @@
 import { useReducer, useRef, useEffect } from 'react'
+import scrollIntoView from 'scroll-into-view-if-needed'
 import * as keyboardKey from 'keyboard-key'
 
 import {
@@ -183,6 +184,8 @@ function useDownshiftSelection(props) {
   // Refs
   const triggerButtonRef = useRef(null)
   const menuRef = useRef(null)
+  const itemRefs = useRef()
+  itemRefs.current = []
   const isInitialMount = useRef(true)
 
   // Effects.
@@ -198,9 +201,21 @@ function useDownshiftSelection(props) {
     }
   }, [isOpen])
 
+  useEffect(() => {
+    if (highlightedIndex < 0) {
+      return
+    }
+    scrollIntoView(itemRefs.current[highlightedIndex], {
+      scrollMode: 'if-needed',
+      block: 'nearest',
+      inline: 'nearest',
+    })
+  }, [highlightedIndex])
+
   // Event handler functions
   const menuKeyDownHandlers = {
     ArrowDown(event) {
+      event.preventDefault()
       dispatch({
         type: actionTypes.SingleSelect.MenuKeyDownArrowDown,
         props,
@@ -208,6 +223,7 @@ function useDownshiftSelection(props) {
       })
     },
     ArrowUp(event) {
+      event.preventDefault()
       dispatch({
         type: actionTypes.SingleSelect.MenuKeyDownArrowUp,
         props,
@@ -369,6 +385,11 @@ function useDownshiftSelection(props) {
       throw new Error('Pass either item or item index in getItemProps!')
     }
     return {
+      ref: (itemElement) => {
+        if (itemElement) {
+          itemRefs.current.push(itemElement)
+        }
+      },
       role: 'option',
       id: itemId(itemIndex),
       onMouseOver: callAllEventHandlers(
