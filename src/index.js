@@ -30,6 +30,13 @@ const options = [
   'Tennessine',
   'Oganesson',
 ]
+const menuStyles = {
+  maxHeight: '200px',
+  overflowY: 'auto',
+  width: '150px',
+  position: 'absolute',
+  margin: 0,
+}
 
 const Dropdown = () => {
   const {
@@ -51,7 +58,7 @@ const Dropdown = () => {
           {...getTriggerButtonProps()}>
           {selectedItem || 'Elements'}
         </button>
-        <ul {...getMenuProps()}>
+        <ul {...getMenuProps()} style={menuStyles}>
           {isOpen && options.map((option, index) => (
             <li
               style={highlightedIndex === index ? { backgroundColor: 'blue' } : {}}
