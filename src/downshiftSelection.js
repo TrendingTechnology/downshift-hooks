@@ -12,9 +12,9 @@ function downshiftSelectionReducer(state, action) {
   const {
     type,
     props,
-    key,
     shiftKey,
   } = action
+
   switch (type) {
     case actionTypes.SingleSelect.MenuBlur:
       return {
@@ -181,7 +181,7 @@ function useDownshiftSelection(props) {
     }
     if (isOpen) {
       menuRef.current.focus()
-    } else {
+    } else if (document.activeElement === menuRef.current) {
       triggerButtonRef.current.focus()
     }
   }, [isOpen])
@@ -225,6 +225,14 @@ function useDownshiftSelection(props) {
         type: actionTypes.SingleSelect.MenuKeyDownEnter,
         props,
       })
+    },
+    Tab(event) {
+      if (event.shiftKey) {
+        dispatch({
+          type: actionTypes.SingleSelect.MenuBlur,
+          props,
+        })
+      }
     },
   }
   const triggerButtonKeyDownHandlers = {
