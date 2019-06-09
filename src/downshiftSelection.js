@@ -33,6 +33,7 @@ function downshiftSelectionReducer(state, action) {
       return {
         ...state,
         isOpen: false,
+        highlightedIndex: -1,
         ...(state.highlightedIndex >= 0 && {
           selectedItem: props.items[state.highlightedIndex],
         }),
@@ -351,8 +352,10 @@ function useDownshiftSelection(props) {
     onBlur,
   } = {}) => ({
     id: menuId,
+    role: 'listbox',
     'aria-labelledby': labelId,
     tabIndex: -1,
+    ...(highlightedIndex > -1 && { 'aria-activedescendant': itemId(highlightedIndex) }),
     ref: menuRef,
     onKeyDown: callAllEventHandlers(
       onKeyDown,
@@ -397,6 +400,7 @@ function useDownshiftSelection(props) {
         }
       },
       role: 'option',
+      'aria-selected': index === highlightedIndex,
       id: itemId(itemIndex),
       onMouseOver: callAllEventHandlers(
         onMouseOver,
