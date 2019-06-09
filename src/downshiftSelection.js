@@ -169,10 +169,11 @@ function useDownshiftSelection(props) {
 
   // Reducer init.
   const [{ isOpen, highlightedIndex, selectedItem }, dispatch] = useReducer((state, action) => {
-    // eslint-disable-next-line no-param-reassign
-    state = getState(state, props)
     const changes = downshiftSelectionReducer(state, action)
-    return stateReducer(state, { ...action, changes })
+    return getState(
+      stateReducer(state, { ...action, changes }),
+      props,
+    )
   }, initialState)
 
   // IDs generation.
@@ -324,17 +325,17 @@ function useDownshiftSelection(props) {
   // returns
   const toggleMenu = () => {
     dispatch({
-      type: actionTypes.SingleSelect.Function.ToggleMenu,
+      type: actionTypes.SingleSelect.FunctionToggleMenu,
     })
   }
   const closeMenu = () => {
     dispatch({
-      type: actionTypes.SingleSelect.Function.CloseMenu,
+      type: actionTypes.SingleSelect.FunctionCloseMenu,
     })
   }
   const openMenu = () => {
     dispatch({
-      type: actionTypes.SingleSelect.Function.OpenMenu,
+      type: actionTypes.SingleSelect.FunctionOpenMenu,
     })
   }
   const getLabelProps = () => ({
