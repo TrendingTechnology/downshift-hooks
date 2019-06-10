@@ -126,6 +126,16 @@ function downshiftSelectionReducer(state, action) {
         ...state,
         isOpen: false,
       }
+    case actionTypes.SingleSelect.FunctionSetHighlightedIndex:
+      return {
+        ...state,
+        highlightedIndex: action.highlightedIndex,
+      }
+    case actionTypes.SingleSelect.FUnctionSetSelectedItem:
+      return {
+        ...state,
+        selectedItem: action.selectedItem,
+      }
     default:
       throw new Error();
   }
@@ -344,6 +354,18 @@ function useDownshiftSelection(props) {
       type: actionTypes.SingleSelect.FunctionOpenMenu,
     })
   }
+  const setHighlightedIndex = (newHighlightedIndex) => {
+    dispatch({
+      type: actionTypes.SingleSelect.FunctionSetHighlightedIndex,
+      highlightedIndex: newHighlightedIndex,
+    })
+  }
+  const setSelectedItem = (newSelectedItem) => {
+    dispatch({
+      type: actionTypes.SingleSelect.FUnctionSetSelectedItem,
+      selectedItem: newSelectedItem,
+    })
+  }
   const getLabelProps = () => ({
     id: labelId,
   })
@@ -417,6 +439,8 @@ function useDownshiftSelection(props) {
     toggleMenu,
     openMenu,
     closeMenu,
+    setHighlightedIndex,
+    setSelectedItem,
     getTriggerButtonProps,
     getLabelProps,
     getMenuProps,
