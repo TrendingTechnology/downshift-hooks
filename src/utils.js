@@ -18,7 +18,7 @@ const actionTypes = {
     FunctionOpenMenu: 'FunctionOpenMenu',
     FunctionCloseMenu: 'FunctionCloseMenu',
     FunctionSetHighlightedIndex: 'FunctionSetHighlightedIndex',
-    FUnctionSetSelectedItem: 'FUnctionSetSelectedItem,'
+    FUnctionSetSelectedItem: 'FUnctionSetSelectedItem',
   },
 }
 
