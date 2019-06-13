@@ -8,6 +8,7 @@ const actionTypes = {
     MenuKeyDownHome: 'MenuKeyDownHome',
     MenuKeyDownEnd: 'MenuKeyDownEnd',
     MenuKeyDownEnter: 'MenuKeyDownEnter',
+    MenuKeyDownCharacter: 'MenuKeyDownCharacter',
     MenuBlur: 'MenuBlur',
     ItemHover: 'ItemHover',
     ItemClick: 'ItemClick',
@@ -18,7 +19,8 @@ const actionTypes = {
     FunctionOpenMenu: 'FunctionOpenMenu',
     FunctionCloseMenu: 'FunctionCloseMenu',
     FunctionSetHighlightedIndex: 'FunctionSetHighlightedIndex',
-    FUnctionSetSelectedItem: 'FUnctionSetSelectedItem',
+    FunctionSetSelectedItem: 'FunctionSetSelectedItem',
+    FunctionClearKeysSoFar: ' FunctionClearKeysSoFar',
   },
 }
 
@@ -72,10 +74,38 @@ function getNextWrappingIndex(moveAmount, baseIndex, itemsLength, circular) {
   return nextIndex
 }
 
+function getItemIndexByCharacterKey(
+  keysSoFar,
+  highlightedIndex,
+  items,
+  itemToString,
+) {
+  let newHighlightedIndex = -1
+  const itemStrings = items.map(item => itemToString(item).toLowerCase())
+
+  if (highlightedIndex > -1) {
+    newHighlightedIndex = _.findIndex(
+      itemStrings,
+      itemString => itemString.startsWith(keysSoFar),
+      highlightedIndex + (keysSoFar > 1 ? 0 : 1),
+    )
+  }
+
+  if (newHighlightedIndex === -1) {
+    newHighlightedIndex = _.findIndex(
+      itemStrings,
+      itemString => itemString.startsWith(keysSoFar),
+    )
+  }
+
+  return newHighlightedIndex
+}
+
 export {
   actionTypes,
   id,
   defaultIds,
   callAllEventHandlers,
   getNextWrappingIndex,
+  getItemIndexByCharacterKey,
 }

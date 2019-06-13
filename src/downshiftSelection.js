@@ -1,12 +1,14 @@
 import { useReducer, useRef, useEffect } from 'react'
 import scrollIntoView from 'scroll-into-view-if-needed'
 import * as keyboardKey from 'keyboard-key'
+import * as _ from 'lodash'
 
 import {
   actionTypes,
   defaultIds,
   getNextWrappingIndex,
   callAllEventHandlers,
+  getItemIndexByCharacterKey,
 } from './utils'
 
 function downshiftSelectionReducer(state, action) {
@@ -81,6 +83,23 @@ function downshiftSelectionReducer(state, action) {
         highlightedIndex: -1,
         selectedItem: props.items[state.highlightedIndex],
       }
+    case actionTypes.SingleSelect.MenuKeyDownCharacter: {
+      const lowercasedKey = action.key
+      const keysSoFar = `${state.keysSoFar}${lowercasedKey}`
+      const highlightedIndex = getItemIndexByCharacterKey(
+        keysSoFar,
+        state.highlightedIndex,
+        props.items,
+        props.itemToString,
+      )
+      return {
+        ...state,
+        keysSoFar,
+        ...(highlightedIndex >= 0 && {
+          highlightedIndex,
+        }),
+      }
+    }
     case actionTypes.SingleSelect.TriggerButtonKeyDownArrowDown:
       return {
         ...state,
@@ -131,10 +150,15 @@ function downshiftSelectionReducer(state, action) {
         ...state,
         highlightedIndex: action.highlightedIndex,
       }
-    case actionTypes.SingleSelect.FUnctionSetSelectedItem:
+    case actionTypes.SingleSelect.FunctionSetSelectedItem:
       return {
         ...state,
         selectedItem: action.selectedItem,
+      }
+    case actionTypes.SingleSelect.FunctionClearKeysSoFar:
+      return {
+        ...state,
+        keysSoFar: '',
       }
     default:
       throw new Error();
@@ -151,8 +175,15 @@ function getState(state, props) {
   }, {})
 }
 
-function useDownshiftSelection(props) {
-  // Props destructuring.
+let keyClear = null
+
+function useDownshiftSelection(userProps) {
+  // Props defaults and destructuring.
+  const props = {
+    itemToString: item => (item ? String(item) : ''),
+    stateReducer: (s, a) => a.changes,
+    ...userProps,
+  }
   const {
     items,
     // highlightedIndex
@@ -173,7 +204,7 @@ function useDownshiftSelection(props) {
     itemId: itemIdFromProps,
     triggerButtonId: triggerButtonIdFromProps,
     // reducer
-    stateReducer = (s, a) => a.changes,
+    stateReducer,
   } = props
 
   // Initial state.
@@ -184,7 +215,12 @@ function useDownshiftSelection(props) {
   }
 
   // Reducer init.
-  const [{ isOpen, highlightedIndex, selectedItem }, dispatch] = useReducer((state, action) => {
+  const [{
+    isOpen,
+    highlightedIndex,
+    selectedItem,
+    keysSoFar,
+  }, dispatch] = useReducer((state, action) => {
     const changes = downshiftSelectionReducer(state, action)
     return getState(
       stateReducer(state, { ...action, changes }),
@@ -207,6 +243,17 @@ function useDownshiftSelection(props) {
 
   // Effects.
   useEffect(() => {
+    if (keyClear) {
+      clearTimeout(keyClear)
+      keyClear = null
+    }
+    keyClear = setTimeout(() => {
+      dispatch({
+        type: actionTypes.SingleSelect.FunctionClearKeysSoFar,
+      })
+    }, 500)
+  }, [keysSoFar])
+  useEffect(() => {
     if (isInitialMount.current) {
       isInitialMount.current = false
       return
@@ -217,7 +264,6 @@ function useDownshiftSelection(props) {
       triggerButtonRef.current.focus()
     }
   }, [isOpen])
-
   useEffect(() => {
     if (highlightedIndex < 0) {
       return
@@ -300,6 +346,12 @@ function useDownshiftSelection(props) {
     const key = keyboardKey.getKey(event)
     if (key && menuKeyDownHandlers[key]) {
       menuKeyDownHandlers[key].call(this, event)
+    } else if (/^\S{1}$/.test(key)) {
+      dispatch({
+        type: actionTypes.SingleSelect.MenuKeyDownCharacter,
+        key,
+        props,
+      })
     }
   }
   const menuHandleBlur = (event) => {
