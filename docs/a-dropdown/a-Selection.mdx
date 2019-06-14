@@ -1,0 +1,136 @@
+---
+name: Selection
+menu: Dropdown
+route: /dropdown
+---
+
+import { Playground } from 'docz'
+import useDownshiftSelection from '../../src/downshiftSelection'
+
+### Selection
+
+The `useDownshiftSelection` hook provides functionality and accessibility to Selection Dropdown, as described by the corresponding [ARIA docs](https://www.w3.org/TR/wai-aria-practices/examples/listbox/listbox-collapsible.html).
+
+<Playground style={{ height: '200px' }}>
+  {() => {
+    const DropdownSelection = () => {
+      const {
+        isOpen,
+        selectedItem,
+        getTriggerButtonProps,
+        getLabelProps,
+        getMenuProps,
+        highlightedIndex,
+        getItemProps,
+      } = useDownshiftSelection({ items: options })
+      return (
+        <>
+          <div>
+            <label {...getLabelProps()}>
+              Choose an element:
+          </label>
+            <button
+              {...getTriggerButtonProps()}>
+              {selectedItem || 'Elements'}
+            </button>
+            <ul {...getMenuProps()} style={menuStyles}>
+              {isOpen && options.map((option, index) => (
+                <li
+                  style={highlightedIndex === index ? { backgroundColor: 'blue' } : {}}
+                  key={`${option}${index}`}
+                  {...getItemProps({ item: option, index })}
+                >
+                  {option}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </>
+      )
+    }
+    const options = [
+      'Neptunium',
+      'Plutonium',
+      'Americium',
+      'Curium',
+      'Berkelium',
+      'Californium',
+      'Einsteinium',
+      'Fermium',
+      'Mendelevium',
+      'Nobelium',
+      'Lawrencium',
+      'Rutherfordium',
+      'Dubnium',
+      'Seaborgium',
+      'Bohrium',
+      'Hassium',
+      'Meitnerium',
+      'Darmstadtium',
+      'Roentgenium',
+      'Copernicium',
+      'Nihonium',
+      'Flerovium',
+      'Moscovium',
+      'Livermorium',
+      'Tennessine',
+      'Oganesson',
+    ]
+    const menuStyles = {
+      maxHeight: '200px',
+      overflowY: 'auto',
+      width: '150px',
+      position: 'absolute',
+      margin: 0,
+      borderTop: 0,
+      background: 'white',
+    }
+    return <DropdownSelection />
+  }}
+</Playground>
+
+#### Usage
+
+```
+import ReactDOM from 'react-dom'
+import React from 'react'
+import useDownshiftSelection from 'downshift-hooks'
+
+const options = [...] // your dropdown items here
+const menuStyles = {...} // your styles here
+
+const DropdownSelection = () => {
+  const {
+    isOpen,
+    selectedItem,
+    getTriggerButtonProps,
+    getLabelProps,
+    getMenuProps,
+    highlightedIndex,
+    getItemProps,
+  } = useDownshiftSelection({ items: options })
+  return (
+    <>
+      <div id="exp_wrapper">
+        <label {...getLabelProps()}>
+          Choose an element:
+      </label>
+        <button
+          {...getTriggerButtonProps()}>
+          {selectedItem || 'Elements'}
+        </button>
+        <ul {...getMenuProps()} style={menuStyles}>
+          {isOpen && options.map((option, index) => (
+            <li
+              style={highlightedIndex === index ? { backgroundColor: 'blue' } : {}}
+              key={`${option}${index}`}
+              {...getItemProps({ item: option, index })}
+            >
+              {option}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </>
+  )
+```

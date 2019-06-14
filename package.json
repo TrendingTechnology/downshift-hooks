@@ -1,5 +1,5 @@
 {
-  "name": "react-scaffold-app",
+  "name": "downshift-hooks",
   "version": "1.0.0",
   "description": "Will use this to scaffold future React apps.",
   "main": "index.js",
@@ -7,7 +7,9 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack --mode production",
     "dev": "webpack --mode development",
-    "start": "webpack-dev-server --config ./webpack.config.js --mode development"
+    "start": "webpack-dev-server --config ./webpack.config.js --mode development",
+    "docz:dev": "docz dev",
+    "docz:build": "docz build"
   },
   "repository": {
     "type": "git",
@@ -26,6 +28,8 @@
     "@babel/preset-react": "^7.0.0",
     "babel-eslint": "10.0.1",
     "babel-loader": "^8.0.5",
+    "docz": "^1.2.0",
+    "docz-theme-default": "^1.2.0",
     "eslint": "5.16.0",
     "eslint-config-airbnb": "17.1.0",
     "eslint-loader": "2.1.2",
