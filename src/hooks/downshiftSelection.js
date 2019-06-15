@@ -125,7 +125,7 @@ function downshiftSelectionReducer(state, action) {
             props.items.length,
             false,
           )
-          : 0,
+          : props.items.length - 1,
       }
     case actionTypes.SingleSelect.TriggerButtonClick:
     case actionTypes.SingleSelect.FunctionToggleMenu:
@@ -371,13 +371,15 @@ function useDownshiftSelection(userProps = {}) {
     },
   }
   const triggerButtonKeyDownHandlers = {
-    ArrowDown() {
+    ArrowDown(event) {
+      event.preventDefault()
       dispatch({
         type: actionTypes.SingleSelect.TriggerButtonKeyDownArrowDown,
         props,
       })
     },
-    ArrowUp() {
+    ArrowUp(event) {
+      event.preventDefault()
       dispatch({
         type: actionTypes.SingleSelect.TriggerButtonKeyDownArrowUp,
         props,
@@ -489,6 +491,7 @@ function useDownshiftSelection(userProps = {}) {
     onKeyDown,
   } = {}) => ({
     ref: triggerButtonRef,
+    id: triggerButtonId,
     'aria-haspopup': 'listbox',
     'aria-expanded': isOpen,
     'aria-labelledby': `${labelId} ${triggerButtonId}`,
