@@ -1,6 +1,6 @@
 import ReactDOM from 'react-dom'
 import React from 'react'
-import useDownshiftSelection from './downshiftSelection'
+import useDownshiftSelection from './hooks/downshiftSelection'
 
 const options = [
   'Neptunium',

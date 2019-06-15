@@ -9,7 +9,8 @@ import {
   getNextWrappingIndex,
   callAllEventHandlers,
   getItemIndexByCharacterKey,
-} from './utils'
+  setAriaLiveMessage,
+} from '../utils'
 
 function downshiftSelectionReducer(state, action) {
   const {
@@ -131,9 +132,9 @@ function downshiftSelectionReducer(state, action) {
       return {
         ...state,
         isOpen: !state.isOpen,
-        highlightedIndex: state.selectedItem
+        highlightedIndex: (state.selectedItem && !state.isOpen)
           ? props.items.indexOf(state.selectedItem)
-          : 0,
+          : -1,
       }
     case actionTypes.SingleSelect.FunctionOpenMenu:
       return {
@@ -175,17 +176,44 @@ function getState(state, props) {
   }, {})
 }
 
+function getA11yStatusMessage({
+  isOpen,
+  selectedItem,
+  items,
+  itemToString,
+}) {
+  if (selectedItem) {
+    return `${itemToString(selectedItem)} has been selected.`
+  }
+  if (!items) {
+    return ''
+  }
+  const resultCount = items.length
+  if (isOpen) {
+    if (resultCount === 0) {
+      return 'No results are available'
+    }
+    return `${resultCount} result${resultCount === 1
+      ? ' is'
+      : 's are'}
+       available, use up and down arrow keys to navigate. Press Enter key to select.`
+  }
+  return ''
+}
+
 let keyClear = null
 
-function useDownshiftSelection(userProps) {
+function useDownshiftSelection(userProps = {}) {
   // Props defaults and destructuring.
   const props = {
     itemToString: item => (item ? String(item) : ''),
     stateReducer: (s, a) => a.changes,
+    getA11yStatusMessage,
     ...userProps,
   }
   const {
     items,
+    itemToString,
     // highlightedIndex
     highlightedIndex: highlightedIndexFromProps,
     initialHighlightedIndex,
@@ -242,6 +270,22 @@ function useDownshiftSelection(userProps) {
   const isInitialMount = useRef(true)
 
   // Effects.
+  useEffect(() => {
+    setAriaLiveMessage(
+      getA11yStatusMessage({
+        isOpen,
+        items,
+      }),
+    )
+  }, [isOpen])
+  useEffect(() => {
+    setAriaLiveMessage(
+      getA11yStatusMessage({
+        selectedItem,
+        itemToString,
+      }),
+    )
+  }, [selectedItem])
   useEffect(() => {
     if (keyClear) {
       clearTimeout(keyClear)

@@ -1,5 +1,7 @@
 import * as _ from 'lodash'
 
+import setAriaLiveMessage from './ariaLiveMessage'
+
 const actionTypes = {
   SingleSelect: {
     MenuKeyDownArrowDown: 'MenuKeyDownArrowDown',
@@ -108,4 +110,5 @@ export {
   callAllEventHandlers,
   getNextWrappingIndex,
   getItemIndexByCharacterKey,
+  setAriaLiveMessage,
 }
