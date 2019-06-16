@@ -130,6 +130,50 @@ describe('downshiftSelection', () => {
       expect(menu.getAttribute('aria-activedescendant')).toBe(defaultIds.item(options.length - 1))
     })
 
+    test('opens the closed menu with selected option highlighted on click', () => {
+      const selectedIndex = 3
+      const wrapper = setup({ initialSelectedItem: options[selectedIndex] })
+      const triggerButton = wrapper.getByTestId('trigger-button')
+
+      fireEvent.click(triggerButton)
+      const menu = wrapper.getByTestId('menu')
+      expect(menu.getAttribute('aria-activedescendant')).toBe(defaultIds.item(selectedIndex))
+    })
+
+    test('opens the closed menu with selected option + 1 highlighted on arrow down', () => {
+      const selectedIndex = 3
+      const wrapper = setup({ initialSelectedItem: options[selectedIndex] })
+      const triggerButton = wrapper.getByTestId('trigger-button')
+
+      fireEvent.keyDown(triggerButton, { keyCode: keyboardKey.ArrowDown })
+      const menu = wrapper.getByTestId('menu')
+      expect(menu.getAttribute('aria-activedescendant')).toBe(defaultIds.item(selectedIndex + 1))
+    })
+
+    test('opens the closed menu with selected option - 1 highlighted on arrow up', () => {
+      const selectedIndex = 3
+      const wrapper = setup({ initialSelectedItem: options[selectedIndex] })
+      const triggerButton = wrapper.getByTestId('trigger-button')
+
+      fireEvent.keyDown(triggerButton, { keyCode: keyboardKey.ArrowUp })
+      const menu = wrapper.getByTestId('menu')
+      expect(menu.getAttribute('aria-activedescendant')).toBe(defaultIds.item(selectedIndex - 1))
+    })
+
+    test('opens the closed menu at initialHighlightedIndex on first click only', () => {
+      const initialHighlightedIndex = 3
+      const wrapper = setup({ initialHighlightedIndex })
+      const triggerButton = wrapper.getByTestId('trigger-button')
+
+      fireEvent.click(triggerButton)
+      const menu = wrapper.getByTestId('menu')
+      expect(menu.getAttribute('aria-activedescendant')).toBe(defaultIds.item(initialHighlightedIndex))
+
+      fireEvent.click(triggerButton)
+      fireEvent.click(triggerButton)
+      expect(menu.getAttribute('aria-activedescendant')).toBeUndefined()
+    })
+
     test('prevents event default on arrow up', () => {
       const wrapper = setup()
       const preventDefault = jest.fn()
