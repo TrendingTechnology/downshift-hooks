@@ -36,7 +36,7 @@ The `useDownshiftSelection` hook provides functionality and accessibility to Sel
             <ul {...getMenuProps()} style={menuStyles}>
               {isOpen && options.map((option, index) => (
                 <li
-                  style={highlightedIndex === index ? { backgroundColor: 'blue' } : {}}
+                  style={highlightedIndex === index ? { backgroundColor: '#bde4ff' } : {}}
                   key={`${option}${index}`}
                   {...getItemProps({ item: option, index })}
                 >
