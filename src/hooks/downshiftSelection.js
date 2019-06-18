@@ -309,7 +309,7 @@ function useDownshiftSelection(userProps = {}) {
     }
   }, [isOpen])
   useEffect(() => {
-    if (highlightedIndex < 0) {
+    if (highlightedIndex < 0 || isInitialMount) {
       return
     }
     scrollIntoView(itemRefs.current[highlightedIndex], {
