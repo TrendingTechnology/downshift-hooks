@@ -1,4 +1,8 @@
-export default function getA11yStatusMessage({
+import {
+  getNextWrappingIndex,
+} from '../../utils'
+
+function getA11yStatusMessage({
   isOpen,
   selectedItem,
   items,
@@ -21,4 +25,31 @@ export default function getA11yStatusMessage({
        available, use up and down arrow keys to navigate. Press Enter key to select.`
   }
   return ''
+}
+
+const getHighlightedIndexOnOpen = (props, state, offset) => {
+  const { items, initialHighlightedIndex, defaultHighlightedIndex } = props
+  const { selectedItem, highlightedIndex } = state
+
+  if (initialHighlightedIndex && highlightedIndex > -1) {
+    return initialHighlightedIndex
+  }
+  if (defaultHighlightedIndex) {
+    return defaultHighlightedIndex
+  }
+  if (selectedItem) {
+    if (offset === 0) {
+      return items.indexOf(selectedItem)
+    }
+    return getNextWrappingIndex(offset, items.indexOf(selectedItem), items.length, false)
+  }
+  if (offset === 0) {
+    return -1
+  }
+  return offset < 0 ? items.length - 1 : 0
+}
+
+export {
+  getHighlightedIndexOnOpen,
+  getA11yStatusMessage,
 }

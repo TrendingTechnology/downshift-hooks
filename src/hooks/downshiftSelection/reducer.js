@@ -3,6 +3,9 @@ import {
   getNextWrappingIndex,
   getItemIndexByCharacterKey,
 } from '../../utils'
+import {
+  getHighlightedIndexOnOpen,
+} from './utils'
 
 export default function downshiftSelectionReducer(state, action) {
   const {
@@ -93,40 +96,25 @@ export default function downshiftSelectionReducer(state, action) {
         }),
       }
     }
-    case actionTypes.SingleSelect.TriggerButtonKeyDownArrowDown:
+    case actionTypes.SingleSelect.TriggerButtonKeyDownArrowDown: {
       return {
         ...state,
         isOpen: true,
-        highlightedIndex: state.selectedItem
-          ? getNextWrappingIndex(
-            1,
-            props.items.indexOf(state.selectedItem),
-            props.items.length,
-            false,
-          )
-          : 0,
+        highlightedIndex: getHighlightedIndexOnOpen(props, state, 1),
       }
+    }
     case actionTypes.SingleSelect.TriggerButtonKeyDownArrowUp:
       return {
         ...state,
         isOpen: true,
-        highlightedIndex: state.selectedItem
-          ? getNextWrappingIndex(
-            -1,
-            props.items.indexOf(state.selectedItem),
-            props.items.length,
-            false,
-          )
-          : props.items.length - 1,
+        highlightedIndex: getHighlightedIndexOnOpen(props, state, -1),
       }
     case actionTypes.SingleSelect.TriggerButtonClick:
     case actionTypes.SingleSelect.FunctionToggleMenu:
       return {
         ...state,
         isOpen: !state.isOpen,
-        highlightedIndex: (state.selectedItem && !state.isOpen)
-          ? props.items.indexOf(state.selectedItem)
-          : -1,
+        highlightedIndex: !state.isOpen ? getHighlightedIndexOnOpen(props, state, 0) : -1,
       }
     case actionTypes.SingleSelect.FunctionOpenMenu:
       return {

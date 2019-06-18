@@ -11,7 +11,7 @@ import {
   getState,
 } from '../../utils'
 import downshiftSelectionReducer from './reducer'
-import getA11yStatusMessage from './utils'
+import { getA11yStatusMessage } from './utils'
 
 let keyClear = null
 
@@ -82,6 +82,7 @@ function useDownshiftSelection(userProps = {}) {
   const isInitialMount = useRef(true)
 
   // Effects.
+  // Status message on open.
   useEffect(() => {
     setAriaLiveMessage(
       getA11yStatusMessage({
@@ -90,6 +91,7 @@ function useDownshiftSelection(userProps = {}) {
       }),
     )
   }, [isOpen])
+  // Status message on selection.
   useEffect(() => {
     setAriaLiveMessage(
       getA11yStatusMessage({
@@ -98,6 +100,7 @@ function useDownshiftSelection(userProps = {}) {
       }),
     )
   }, [selectedItem])
+  // Concatenates keysSoFar and schedules the cleanup.
   useEffect(() => {
     if (keyClear) {
       clearTimeout(keyClear)
@@ -109,6 +112,7 @@ function useDownshiftSelection(userProps = {}) {
       })
     }, 500)
   }, [keysSoFar])
+  // Focuses list on open but not on first mount.
   useEffect(() => {
     if (isInitialMount.current) {
       isInitialMount.current = false
@@ -120,8 +124,9 @@ function useDownshiftSelection(userProps = {}) {
       triggerButtonRef.current.focus()
     }
   }, [isOpen])
+  // Scrolls highlighted index into view.
   useEffect(() => {
-    if (highlightedIndex < 0 || isInitialMount) {
+    if (highlightedIndex < 0 || !isOpen) {
       return
     }
     scrollIntoView(itemRefs.current[highlightedIndex], {
