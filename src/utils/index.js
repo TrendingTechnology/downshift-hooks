@@ -103,6 +103,16 @@ function getItemIndexByCharacterKey(
   return newHighlightedIndex
 }
 
+function getState(state, props) {
+  return Object.keys(state).reduce((prevState, key) => {
+    // eslint-disable-next-line no-param-reassign
+    prevState[key] = props[key] !== undefined
+      ? props[key]
+      : state[key]
+    return prevState
+  }, {})
+}
+
 export {
   actionTypes,
   id,
@@ -111,4 +121,5 @@ export {
   getNextWrappingIndex,
   getItemIndexByCharacterKey,
   setAriaLiveMessage,
+  getState,
 }
