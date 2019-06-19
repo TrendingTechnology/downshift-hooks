@@ -2,6 +2,28 @@ import {
   getNextWrappingIndex,
 } from '../../utils'
 
+const actionTypes = {
+  MenuKeyDownArrowDown: 'MenuKeyDownArrowDown',
+  MenuKeyDownArrowUp: 'MenuKeyDownArrowUp',
+  MenuKeyDownEscape: 'MenuKeyDownEscape',
+  MenuKeyDownHome: 'MenuKeyDownHome',
+  MenuKeyDownEnd: 'MenuKeyDownEnd',
+  MenuKeyDownEnter: 'MenuKeyDownEnter',
+  MenuKeyDownCharacter: 'MenuKeyDownCharacter',
+  MenuBlur: 'MenuBlur',
+  ItemHover: 'ItemHover',
+  ItemClick: 'ItemClick',
+  TriggerButtonKeyDownArrowDown: 'TriggerButtonKeyDownArrowDown',
+  TriggerButtonKeyDownArrowUp: 'TriggerButtonKeyDownArrowUp',
+  TriggerButtonClick: 'TriggerButtonClick',
+  FunctionToggleMenu: 'FunctionToggleMenu',
+  FunctionOpenMenu: 'FunctionOpenMenu',
+  FunctionCloseMenu: 'FunctionCloseMenu',
+  FunctionSetHighlightedIndex: 'FunctionSetHighlightedIndex',
+  FunctionSetSelectedItem: 'FunctionSetSelectedItem',
+  FunctionClearKeysSoFar: ' FunctionClearKeysSoFar',
+}
+
 function getA11yStatusMessage({
   isOpen,
   selectedItem,
@@ -52,4 +74,5 @@ const getHighlightedIndexOnOpen = (props, state, offset) => {
 export {
   getHighlightedIndexOnOpen,
   getA11yStatusMessage,
+  actionTypes,
 }

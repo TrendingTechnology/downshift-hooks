@@ -4,14 +4,16 @@ import * as keyboardKey from 'keyboard-key'
 import * as _ from 'lodash'
 
 import {
-  actionTypes,
   defaultIds,
   callAllEventHandlers,
   setAriaLiveMessage,
   getState,
 } from '../../utils'
 import downshiftSelectionReducer from './reducer'
-import { getA11yStatusMessage } from './utils'
+import {
+  getA11yStatusMessage,
+  actionTypes,
+} from './utils'
 
 let keyClear = null
 
@@ -108,7 +110,7 @@ function useDownshiftSelection(userProps = {}) {
     }
     keyClear = setTimeout(() => {
       dispatch({
-        type: actionTypes.SingleSelect.FunctionClearKeysSoFar,
+        type: actionTypes.FunctionClearKeysSoFar,
       })
     }, 500)
   }, [keysSoFar])
@@ -141,7 +143,7 @@ function useDownshiftSelection(userProps = {}) {
     ArrowDown(event) {
       event.preventDefault()
       dispatch({
-        type: actionTypes.SingleSelect.MenuKeyDownArrowDown,
+        type: actionTypes.MenuKeyDownArrowDown,
         props,
         shiftKey: event.shiftKey,
       })
@@ -149,39 +151,39 @@ function useDownshiftSelection(userProps = {}) {
     ArrowUp(event) {
       event.preventDefault()
       dispatch({
-        type: actionTypes.SingleSelect.MenuKeyDownArrowUp,
+        type: actionTypes.MenuKeyDownArrowUp,
         props,
         shiftKey: event.shiftKey,
       })
     },
     Home() {
       dispatch({
-        type: actionTypes.SingleSelect.MenuKeyDownHome,
+        type: actionTypes.MenuKeyDownHome,
         props,
       })
     },
     End() {
       dispatch({
-        type: actionTypes.SingleSelect.MenuKeyDownEnd,
+        type: actionTypes.MenuKeyDownEnd,
         props,
       })
     },
     Escape() {
       dispatch({
-        type: actionTypes.SingleSelect.MenuKeyDownEscape,
+        type: actionTypes.MenuKeyDownEscape,
         props,
       })
     },
     Enter() {
       dispatch({
-        type: actionTypes.SingleSelect.MenuKeyDownEnter,
+        type: actionTypes.MenuKeyDownEnter,
         props,
       })
     },
     Tab(event) {
       if (event.shiftKey) {
         dispatch({
-          type: actionTypes.SingleSelect.MenuBlur,
+          type: actionTypes.MenuBlur,
           props,
         })
       }
@@ -191,14 +193,14 @@ function useDownshiftSelection(userProps = {}) {
     ArrowDown(event) {
       event.preventDefault()
       dispatch({
-        type: actionTypes.SingleSelect.TriggerButtonKeyDownArrowDown,
+        type: actionTypes.TriggerButtonKeyDownArrowDown,
         props,
       })
     },
     ArrowUp(event) {
       event.preventDefault()
       dispatch({
-        type: actionTypes.SingleSelect.TriggerButtonKeyDownArrowUp,
+        type: actionTypes.TriggerButtonKeyDownArrowUp,
         props,
       })
     },
@@ -211,7 +213,7 @@ function useDownshiftSelection(userProps = {}) {
       menuKeyDownHandlers[key].call(this, event)
     } else if (/^\S{1}$/.test(key)) {
       dispatch({
-        type: actionTypes.SingleSelect.MenuKeyDownCharacter,
+        type: actionTypes.MenuKeyDownCharacter,
         key,
         props,
       })
@@ -221,14 +223,14 @@ function useDownshiftSelection(userProps = {}) {
     // Shift Tab and Click are two blur cases that are handled separately.
     if (event.relatedTarget !== triggerButtonRef.current) {
       dispatch({
-        type: actionTypes.SingleSelect.MenuBlur,
+        type: actionTypes.MenuBlur,
         props,
       })
     }
   }
   const triggerButtonHandleClick = () => {
     dispatch({
-      type: actionTypes.SingleSelect.TriggerButtonClick,
+      type: actionTypes.TriggerButtonClick,
       props,
     })
   }
@@ -240,14 +242,14 @@ function useDownshiftSelection(userProps = {}) {
   }
   const itemHandleMouseOver = (index) => {
     dispatch({
-      type: actionTypes.SingleSelect.ItemHover,
+      type: actionTypes.ItemHover,
       props,
       index,
     })
   }
   const itemHandleClick = (index) => {
     dispatch({
-      type: actionTypes.SingleSelect.ItemClick,
+      type: actionTypes.ItemClick,
       props,
       index,
     })
@@ -256,28 +258,28 @@ function useDownshiftSelection(userProps = {}) {
   // returns
   const toggleMenu = () => {
     dispatch({
-      type: actionTypes.SingleSelect.FunctionToggleMenu,
+      type: actionTypes.FunctionToggleMenu,
     })
   }
   const closeMenu = () => {
     dispatch({
-      type: actionTypes.SingleSelect.FunctionCloseMenu,
+      type: actionTypes.FunctionCloseMenu,
     })
   }
   const openMenu = () => {
     dispatch({
-      type: actionTypes.SingleSelect.FunctionOpenMenu,
+      type: actionTypes.FunctionOpenMenu,
     })
   }
   const setHighlightedIndex = (newHighlightedIndex) => {
     dispatch({
-      type: actionTypes.SingleSelect.FunctionSetHighlightedIndex,
+      type: actionTypes.FunctionSetHighlightedIndex,
       highlightedIndex: newHighlightedIndex,
     })
   }
   const setSelectedItem = (newSelectedItem) => {
     dispatch({
-      type: actionTypes.SingleSelect.FUnctionSetSelectedItem,
+      type: actionTypes.FUnctionSetSelectedItem,
       selectedItem: newSelectedItem,
     })
   }

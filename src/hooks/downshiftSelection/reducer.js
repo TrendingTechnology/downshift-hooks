@@ -1,9 +1,9 @@
 import {
-  actionTypes,
   getNextWrappingIndex,
   getItemIndexByCharacterKey,
 } from '../../utils'
 import {
+  actionTypes,
   getHighlightedIndexOnOpen,
 } from './utils'
 
@@ -15,19 +15,19 @@ export default function downshiftSelectionReducer(state, action) {
   } = action
 
   switch (type) {
-    case actionTypes.SingleSelect.ItemHover:
+    case actionTypes.ItemHover:
       return {
         ...state,
         highlightedIndex: action.index,
       }
-    case actionTypes.SingleSelect.ItemClick:
+    case actionTypes.ItemClick:
       return {
         ...state,
         isOpen: false,
         highlightedIndex: -1,
         selectedItem: props.items[action.index],
       }
-    case actionTypes.SingleSelect.MenuBlur:
+    case actionTypes.MenuBlur:
       return {
         ...state,
         isOpen: false,
@@ -36,7 +36,7 @@ export default function downshiftSelectionReducer(state, action) {
           selectedItem: props.items[state.highlightedIndex],
         }),
       }
-    case actionTypes.SingleSelect.MenuKeyDownArrowDown:
+    case actionTypes.MenuKeyDownArrowDown:
       return {
         ...state,
         highlightedIndex: getNextWrappingIndex(
@@ -46,7 +46,7 @@ export default function downshiftSelectionReducer(state, action) {
           props.circularNavigation,
         ),
       }
-    case actionTypes.SingleSelect.MenuKeyDownArrowUp:
+    case actionTypes.MenuKeyDownArrowUp:
       return {
         ...state,
         highlightedIndex: getNextWrappingIndex(
@@ -56,30 +56,30 @@ export default function downshiftSelectionReducer(state, action) {
           props.circularNavigation,
         ),
       }
-    case actionTypes.SingleSelect.MenuKeyDownHome:
+    case actionTypes.MenuKeyDownHome:
       return {
         ...state,
         highlightedIndex: 0,
       }
-    case actionTypes.SingleSelect.MenuKeyDownEnd:
+    case actionTypes.MenuKeyDownEnd:
       return {
         ...state,
         highlightedIndex: props.items.length - 1,
       }
-    case actionTypes.SingleSelect.MenuKeyDownEscape:
+    case actionTypes.MenuKeyDownEscape:
       return {
         ...state,
         isOpen: false,
         highlightedIndex: -1,
       }
-    case actionTypes.SingleSelect.MenuKeyDownEnter:
+    case actionTypes.MenuKeyDownEnter:
       return {
         ...state,
         isOpen: false,
         highlightedIndex: -1,
         selectedItem: props.items[state.highlightedIndex],
       }
-    case actionTypes.SingleSelect.MenuKeyDownCharacter: {
+    case actionTypes.MenuKeyDownCharacter: {
       const lowercasedKey = action.key
       const keysSoFar = `${state.keysSoFar}${lowercasedKey}`
       const highlightedIndex = getItemIndexByCharacterKey(
@@ -96,47 +96,47 @@ export default function downshiftSelectionReducer(state, action) {
         }),
       }
     }
-    case actionTypes.SingleSelect.TriggerButtonKeyDownArrowDown: {
+    case actionTypes.TriggerButtonKeyDownArrowDown: {
       return {
         ...state,
         isOpen: true,
         highlightedIndex: getHighlightedIndexOnOpen(props, state, 1),
       }
     }
-    case actionTypes.SingleSelect.TriggerButtonKeyDownArrowUp:
+    case actionTypes.TriggerButtonKeyDownArrowUp:
       return {
         ...state,
         isOpen: true,
         highlightedIndex: getHighlightedIndexOnOpen(props, state, -1),
       }
-    case actionTypes.SingleSelect.TriggerButtonClick:
-    case actionTypes.SingleSelect.FunctionToggleMenu:
+    case actionTypes.TriggerButtonClick:
+    case actionTypes.FunctionToggleMenu:
       return {
         ...state,
         isOpen: !state.isOpen,
         highlightedIndex: !state.isOpen ? getHighlightedIndexOnOpen(props, state, 0) : -1,
       }
-    case actionTypes.SingleSelect.FunctionOpenMenu:
+    case actionTypes.FunctionOpenMenu:
       return {
         ...state,
         isOpen: true,
       }
-    case actionTypes.SingleSelect.FunctionCloseMenu:
+    case actionTypes.FunctionCloseMenu:
       return {
         ...state,
         isOpen: false,
       }
-    case actionTypes.SingleSelect.FunctionSetHighlightedIndex:
+    case actionTypes.FunctionSetHighlightedIndex:
       return {
         ...state,
         highlightedIndex: action.highlightedIndex,
       }
-    case actionTypes.SingleSelect.FunctionSetSelectedItem:
+    case actionTypes.FunctionSetSelectedItem:
       return {
         ...state,
         selectedItem: action.selectedItem,
       }
-    case actionTypes.SingleSelect.FunctionClearKeysSoFar:
+    case actionTypes.FunctionClearKeysSoFar:
       return {
         ...state,
         keysSoFar: '',

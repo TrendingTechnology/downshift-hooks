@@ -2,30 +2,6 @@ import * as _ from 'lodash'
 
 import setAriaLiveMessage from './ariaLiveMessage'
 
-const actionTypes = {
-  SingleSelect: {
-    MenuKeyDownArrowDown: 'MenuKeyDownArrowDown',
-    MenuKeyDownArrowUp: 'MenuKeyDownArrowUp',
-    MenuKeyDownEscape: 'MenuKeyDownEscape',
-    MenuKeyDownHome: 'MenuKeyDownHome',
-    MenuKeyDownEnd: 'MenuKeyDownEnd',
-    MenuKeyDownEnter: 'MenuKeyDownEnter',
-    MenuKeyDownCharacter: 'MenuKeyDownCharacter',
-    MenuBlur: 'MenuBlur',
-    ItemHover: 'ItemHover',
-    ItemClick: 'ItemClick',
-    TriggerButtonKeyDownArrowDown: 'TriggerButtonKeyDownArrowDown',
-    TriggerButtonKeyDownArrowUp: 'TriggerButtonKeyDownArrowUp',
-    TriggerButtonClick: 'TriggerButtonClick',
-    FunctionToggleMenu: 'FunctionToggleMenu',
-    FunctionOpenMenu: 'FunctionOpenMenu',
-    FunctionCloseMenu: 'FunctionCloseMenu',
-    FunctionSetHighlightedIndex: 'FunctionSetHighlightedIndex',
-    FunctionSetSelectedItem: 'FunctionSetSelectedItem',
-    FunctionClearKeysSoFar: ' FunctionClearKeysSoFar',
-  },
-}
-
 const id = 'downshift'
 
 const defaultIds = {
@@ -114,8 +90,6 @@ function getState(state, props) {
 }
 
 export {
-  actionTypes,
-  id,
   defaultIds,
   callAllEventHandlers,
   getNextWrappingIndex,
