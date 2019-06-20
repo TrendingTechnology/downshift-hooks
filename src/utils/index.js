@@ -35,9 +35,6 @@ function callAllEventHandlers(...fns) {
 
 function getNextWrappingIndex(moveAmount, baseIndex, itemsLength, circular) {
   if (baseIndex === -1) {
-    if (!circular) {
-      return 0
-    }
     return moveAmount > 0 ? 0 : itemsLength - 1
   }
   const nextIndex = baseIndex + moveAmount
