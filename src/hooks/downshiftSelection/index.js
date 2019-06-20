@@ -47,6 +47,11 @@ function useDownshiftSelection(userProps = {}) {
     triggerButtonId: triggerButtonIdFromProps,
     // reducer
     stateReducer,
+    // onChange props
+    // onSelectedItemChange,
+    // onOpenChange,
+    // onHighlightedIndexChange,
+    // onStateChange,
   } = props
 
   // Initial state.
@@ -279,7 +284,7 @@ function useDownshiftSelection(userProps = {}) {
   }
   const setSelectedItem = (newSelectedItem) => {
     dispatch({
-      type: actionTypes.FUnctionSetSelectedItem,
+      type: actionTypes.FunctionSetSelectedItem,
       selectedItem: newSelectedItem,
     })
   }

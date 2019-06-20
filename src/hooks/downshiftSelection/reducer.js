@@ -13,32 +13,32 @@ export default function downshiftSelectionReducer(state, action) {
     props,
     shiftKey,
   } = action
+  let changes
 
   switch (type) {
     case actionTypes.ItemHover:
-      return {
-        ...state,
+      changes = {
         highlightedIndex: action.index,
       }
+      break
     case actionTypes.ItemClick:
-      return {
-        ...state,
+      changes = {
         isOpen: false,
         highlightedIndex: -1,
         selectedItem: props.items[action.index],
       }
+      break
     case actionTypes.MenuBlur:
-      return {
-        ...state,
+      changes = {
         isOpen: false,
         highlightedIndex: -1,
         ...(state.highlightedIndex >= 0 && {
           selectedItem: props.items[state.highlightedIndex],
         }),
       }
+      break
     case actionTypes.MenuKeyDownArrowDown:
-      return {
-        ...state,
+      changes = {
         highlightedIndex: getNextWrappingIndex(
           shiftKey ? 5 : 1,
           state.highlightedIndex,
@@ -46,9 +46,9 @@ export default function downshiftSelectionReducer(state, action) {
           props.circularNavigation,
         ),
       }
+      break
     case actionTypes.MenuKeyDownArrowUp:
-      return {
-        ...state,
+      changes = {
         highlightedIndex: getNextWrappingIndex(
           shiftKey ? -5 : -1,
           state.highlightedIndex,
@@ -56,29 +56,30 @@ export default function downshiftSelectionReducer(state, action) {
           props.circularNavigation,
         ),
       }
+      break
     case actionTypes.MenuKeyDownHome:
-      return {
-        ...state,
+      changes = {
         highlightedIndex: 0,
       }
+      break
     case actionTypes.MenuKeyDownEnd:
-      return {
-        ...state,
+      changes = {
         highlightedIndex: props.items.length - 1,
       }
+      break
     case actionTypes.MenuKeyDownEscape:
-      return {
-        ...state,
+      changes = {
         isOpen: false,
         highlightedIndex: -1,
       }
+      break
     case actionTypes.MenuKeyDownEnter:
-      return {
-        ...state,
+      changes = {
         isOpen: false,
         highlightedIndex: -1,
         selectedItem: props.items[state.highlightedIndex],
       }
+      break
     case actionTypes.MenuKeyDownCharacter: {
       const lowercasedKey = action.key
       const keysSoFar = `${state.keysSoFar}${lowercasedKey}`
@@ -88,60 +89,78 @@ export default function downshiftSelectionReducer(state, action) {
         props.items,
         props.itemToString,
       )
-      return {
-        ...state,
+      changes = {
         keysSoFar,
         ...(highlightedIndex >= 0 && {
           highlightedIndex,
         }),
       }
     }
+      break
     case actionTypes.TriggerButtonKeyDownArrowDown: {
-      return {
-        ...state,
+      changes = {
         isOpen: true,
         highlightedIndex: getHighlightedIndexOnOpen(props, state, 1),
       }
     }
+      break
     case actionTypes.TriggerButtonKeyDownArrowUp:
-      return {
-        ...state,
+      changes = {
         isOpen: true,
         highlightedIndex: getHighlightedIndexOnOpen(props, state, -1),
       }
+      break
     case actionTypes.TriggerButtonClick:
     case actionTypes.FunctionToggleMenu:
-      return {
-        ...state,
+      changes = {
         isOpen: !state.isOpen,
         highlightedIndex: !state.isOpen ? getHighlightedIndexOnOpen(props, state, 0) : -1,
       }
+      break
     case actionTypes.FunctionOpenMenu:
-      return {
-        ...state,
+      changes = {
         isOpen: true,
       }
+      break
     case actionTypes.FunctionCloseMenu:
-      return {
-        ...state,
+      changes = {
         isOpen: false,
       }
+      break
     case actionTypes.FunctionSetHighlightedIndex:
-      return {
-        ...state,
+      changes = {
         highlightedIndex: action.highlightedIndex,
       }
+      break
     case actionTypes.FunctionSetSelectedItem:
-      return {
-        ...state,
+      changes = {
         selectedItem: action.selectedItem,
       }
+      break
     case actionTypes.FunctionClearKeysSoFar:
-      return {
-        ...state,
+      changes = {
         keysSoFar: '',
       }
+      break
     default:
       throw new Error();
+  }
+
+  if (props.onOpenChange && changes.isOpen) {
+    props.onOpenChange(changes)
+  }
+  if (props.onHighlightedIndexChange && changes.highlightedIndex) {
+    props.onHighlightedIndexChange(changes)
+  }
+  if (props.onSelectedItemChange && changes.selectedItem) {
+    props.onSelectedItemChange(changes)
+  }
+  if (props.onStateChange && changes) {
+    props.onStateChange(changes)
+  }
+
+  return {
+    ...state,
+    ...changes,
   }
 }
