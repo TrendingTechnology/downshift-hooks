@@ -116,10 +116,12 @@ function useDownshiftSelection(userProps = {}) {
     keyClear = setTimeout(() => {
       dispatch({
         type: actionTypes.FunctionClearKeysSoFar,
+        props,
       })
     }, 500)
   }, [keysSoFar])
-  // Focuses list on open but not on first mount.
+  // Focuses menu on open but not on first mount.
+  // Focuses triggerButton on close.
   useEffect(() => {
     if (isInitialMount.current) {
       isInitialMount.current = false

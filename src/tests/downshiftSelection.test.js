@@ -136,6 +136,47 @@ describe('downshiftSelection', () => {
 
         expect(menu.childNodes.length).toBe(0)
       })
+
+      test('enter it closes the menu and selects highlightedItem', () => {
+        const initialHighlightedIndex = 2
+        const onSelectedItemChange = jest.fn()
+        const wrapper = setup({
+          initialIsOpen: true,
+          initialHighlightedIndex,
+          onSelectedItemChange,
+        })
+        const menu = wrapper.getByTestId(dataTestIds.menu)
+
+        fireEvent.keyDown(menu, { keyCode: keyboardKey.Enter })
+        expect(menu.childNodes.length).toBe(0)
+        expect(onSelectedItemChange).toHaveBeenCalledWith(
+          expect.objectContaining({
+            selectedItem: options[initialHighlightedIndex],
+          })
+        )
+      })
+
+      test('shift+tab it closes the menu and selects highlightedItem', () => {
+        const initialHighlightedIndex = 2
+        const onSelectedItemChange = jest.fn()
+        const wrapper = setup({
+          initialIsOpen: true,
+          initialHighlightedIndex,
+          onSelectedItemChange,
+        })
+        const menu = wrapper.getByTestId(dataTestIds.menu)
+
+        fireEvent.keyDown(menu, { keyCode: keyboardKey.Tab, shiftKey: true })
+        expect(menu.childNodes.length).toBe(0)
+        expect(onSelectedItemChange).toHaveBeenCalledWith(
+          expect.objectContaining({
+            selectedItem: options[initialHighlightedIndex],
+          })
+        )
+      })
+    })
+
+    describe('on blur', () => {
     })
   })
 
