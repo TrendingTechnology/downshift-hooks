@@ -226,8 +226,12 @@ function useDownshiftSelection(userProps = {}) {
       })
     }
   }
+  /**
+   * Focus going back to the triggerButton is something we control (Escape, Enter, Click).
+   * We are triggering special actions for these cases in reducer, not MenuBlur.
+   * Since Shift-Tab also lands focus on triggerButton, we will handle it as exception and call MenuBlur.
+   */
   const menuHandleBlur = (event) => {
-    // Shift Tab and Click are two blur cases that are handled separately.
     if (event.relatedTarget !== triggerButtonRef.current) {
       dispatch({
         type: actionTypes.MenuBlur,

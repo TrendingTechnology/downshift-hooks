@@ -156,6 +156,7 @@ describe('downshiftSelection', () => {
         )
       })
 
+      // Special case test.
       test('shift+tab it closes the menu and selects highlightedItem', () => {
         const initialHighlightedIndex = 2
         const onSelectedItemChange = jest.fn()
@@ -177,6 +178,24 @@ describe('downshiftSelection', () => {
     })
 
     describe('on blur', () => {
+      test('the open menu will be closed and highlighted item will be selected', () => {
+        const initialHighlightedIndex = 2
+        const onSelectedItemChange = jest.fn()
+        const wrapper = setup({
+          initialIsOpen: true,
+          initialHighlightedIndex,
+          onSelectedItemChange,
+        })
+        const menu = wrapper.getByTestId(dataTestIds.menu)
+  
+        fireEvent.blur(menu)
+        expect(menu.childNodes.length).toBe(0)
+        expect(onSelectedItemChange).toHaveBeenCalledWith(
+          expect.objectContaining({
+            selectedItem: options[initialHighlightedIndex],
+          })
+        )
+      })
     })
   })
 
