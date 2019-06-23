@@ -110,6 +110,68 @@ describe('downshiftSelection', () => {
         expect(menu.getAttribute('aria-activedescendant')).toBe(defaultIds.item(options.length - 1))
       })
 
+      test(`arrow down it highlights the next item`, () => {
+        const initialHighlightedIndex = 2
+        const wrapper = setup({ isOpen: true, initialHighlightedIndex })
+        const menu = wrapper.getByTestId(dataTestIds.menu)
+
+        fireEvent.keyDown(menu, { keyCode: keyboardKey.ArrowDown })
+
+        expect(menu.getAttribute('aria-activedescendant')).toBe(defaultIds.item(initialHighlightedIndex + 1))
+      })
+
+      test(`arrow up it highlights the previous item`, () => {
+        const initialHighlightedIndex = 2
+        const wrapper = setup({ isOpen: true, initialHighlightedIndex })
+        const menu = wrapper.getByTestId(dataTestIds.menu)
+
+        fireEvent.keyDown(menu, { keyCode: keyboardKey.ArrowUp })
+
+        expect(menu.getAttribute('aria-activedescendant')).toBe(defaultIds.item(initialHighlightedIndex - 1))
+      })
+
+      test(`arrow down with shift it highlights the item 5 positions down`, () => {
+        const initialHighlightedIndex = 2
+        const wrapper = setup({ isOpen: true, initialHighlightedIndex })
+        const menu = wrapper.getByTestId(dataTestIds.menu)
+
+        fireEvent.keyDown(menu, { keyCode: keyboardKey.ArrowDown, shiftKey: true })
+
+        expect(menu.getAttribute('aria-activedescendant')).toBe(defaultIds.item(initialHighlightedIndex + 5))
+      })
+
+      test(`arrow up with shift it highlights the item 5 positions up`, () => {
+        const initialHighlightedIndex = 6
+        const wrapper = setup({ isOpen: true, initialHighlightedIndex })
+        const menu = wrapper.getByTestId(dataTestIds.menu)
+
+        fireEvent.keyDown(menu, { keyCode: keyboardKey.ArrowUp, shiftKey: true })
+
+        expect(menu.getAttribute('aria-activedescendant')).toBe(defaultIds.item(initialHighlightedIndex - 5))
+      })
+
+      test(`arrow down with shift it highlights last item if not enough items down`, () => {
+        const initialHighlightedIndex = options.length - 2
+        const wrapper = setup({ isOpen: true, initialHighlightedIndex })
+        const menu = wrapper.getByTestId(dataTestIds.menu)
+
+        fireEvent.keyDown(menu, { keyCode: keyboardKey.ArrowDown, shiftKey: true })
+
+        expect(menu.getAttribute('aria-activedescendant')).toBe(defaultIds.item(options.length -1))
+      })
+
+      test(`arrow up with shift it highlights the first item if not enough items up`, () => {
+        const initialHighlightedIndex = 1
+        const wrapper = setup({ isOpen: true, initialHighlightedIndex })
+        const menu = wrapper.getByTestId(dataTestIds.menu)
+
+        fireEvent.keyDown(menu, { keyCode: keyboardKey.ArrowUp, shiftKey: true })
+
+        expect(menu.getAttribute('aria-activedescendant')).toBe(defaultIds.item(0))
+      })
+
+      // circular navig.
+
       test(`end it highlights the last option number`, () => {
         const wrapper = setup({ isOpen: true, initialHighlightedIndex: 2 })
         const menu = wrapper.getByTestId(dataTestIds.menu)
@@ -137,7 +199,7 @@ describe('downshiftSelection', () => {
         expect(menu.childNodes.length).toBe(0)
       })
 
-      test('enter it closes the menu and selects highlightedItem', () => {
+      test('enter it closes the menu and selects highlighted item', () => {
         const initialHighlightedIndex = 2
         const onSelectedItemChange = jest.fn()
         const wrapper = setup({
@@ -157,7 +219,7 @@ describe('downshiftSelection', () => {
       })
 
       // Special case test.
-      test('shift+tab it closes the menu and selects highlightedItem', () => {
+      test('shift+tab it closes the menu and selects highlighted item', () => {
         const initialHighlightedIndex = 2
         const onSelectedItemChange = jest.fn()
         const wrapper = setup({
@@ -187,7 +249,7 @@ describe('downshiftSelection', () => {
           onSelectedItemChange,
         })
         const menu = wrapper.getByTestId(dataTestIds.menu)
-  
+
         fireEvent.blur(menu)
         expect(menu.childNodes.length).toBe(0)
         expect(onSelectedItemChange).toHaveBeenCalledWith(
