@@ -92,85 +92,130 @@ describe('downshiftSelection', () => {
 
   describe('menu', () => {
     describe('on key down', () => {
-      test(`arrow down it highlights option number '0' if none is highlighted`, () => {
-        const wrapper = setup({ isOpen: true })
-        const menu = wrapper.getByTestId(dataTestIds.menu)
+      describe('arrow up', () => {
+        test(`it highlights the last option number if none is highlighted`, () => {
+          const wrapper = setup({ isOpen: true })
+          const menu = wrapper.getByTestId(dataTestIds.menu)
 
-        fireEvent.keyDown(menu, { keyCode: keyboardKey.ArrowDown })
+          fireEvent.keyDown(menu, { keyCode: keyboardKey.ArrowUp })
 
-        expect(menu.getAttribute('aria-activedescendant')).toBe(defaultIds.item(0))
+          expect(menu.getAttribute('aria-activedescendant')).toBe(defaultIds.item(options.length - 1))
+        })
+
+        test(`it highlights the previous item`, () => {
+          const initialHighlightedIndex = 2
+          const wrapper = setup({ isOpen: true, initialHighlightedIndex })
+          const menu = wrapper.getByTestId(dataTestIds.menu)
+
+          fireEvent.keyDown(menu, { keyCode: keyboardKey.ArrowUp })
+
+          expect(menu.getAttribute('aria-activedescendant')).toBe(defaultIds.item(initialHighlightedIndex - 1))
+        })
+
+        test(`with shift it highlights the 5th previous item`, () => {
+          const initialHighlightedIndex = 6
+          const wrapper = setup({ isOpen: true, initialHighlightedIndex })
+          const menu = wrapper.getByTestId(dataTestIds.menu)
+
+          fireEvent.keyDown(menu, { keyCode: keyboardKey.ArrowUp, shiftKey: true })
+
+          expect(menu.getAttribute('aria-activedescendant')).toBe(defaultIds.item(initialHighlightedIndex - 5))
+        })
+
+        test(`with shift it highlights the first item if not enough items remaining`, () => {
+          const initialHighlightedIndex = 1
+          const wrapper = setup({ isOpen: true, initialHighlightedIndex })
+          const menu = wrapper.getByTestId(dataTestIds.menu)
+
+          fireEvent.keyDown(menu, { keyCode: keyboardKey.ArrowUp, shiftKey: true })
+
+          expect(menu.getAttribute('aria-activedescendant')).toBe(defaultIds.item(0))
+        })
+
+        test('will stop at 0 if circularNavigatios is falsy', () => {
+          const wrapper = setup({ isOpen: true, initialHighlightedIndex: 0 })
+          const menu = wrapper.getByTestId(dataTestIds.menu)
+
+          fireEvent.keyDown(menu, { keyCode: keyboardKey.ArrowUp })
+
+          expect(menu.getAttribute('aria-activedescendant')).toBe(defaultIds.item(0))
+        })
+
+        test('will continue from 0 to last item if circularNavigatios is truthy', () => {
+          const wrapper = setup({
+            isOpen: true,
+            initialHighlightedIndex: 0,
+            circularNavigation: true
+          })
+          const menu = wrapper.getByTestId(dataTestIds.menu)
+
+          fireEvent.keyDown(menu, { keyCode: keyboardKey.ArrowUp })
+
+          expect(menu.getAttribute('aria-activedescendant')).toBe(defaultIds.item(options.length - 1))
+        })
       })
 
-      test(`arrow up it highlights the last option number if none is highlighted`, () => {
-        const wrapper = setup({ isOpen: true })
-        const menu = wrapper.getByTestId(dataTestIds.menu)
+      describe('arrow down', () => {
+        test(`it highlights option number '0' if none is highlighted`, () => {
+          const wrapper = setup({ isOpen: true })
+          const menu = wrapper.getByTestId(dataTestIds.menu)
 
-        fireEvent.keyDown(menu, { keyCode: keyboardKey.ArrowUp })
+          fireEvent.keyDown(menu, { keyCode: keyboardKey.ArrowDown })
 
-        expect(menu.getAttribute('aria-activedescendant')).toBe(defaultIds.item(options.length - 1))
+          expect(menu.getAttribute('aria-activedescendant')).toBe(defaultIds.item(0))
+        })
+        test(`it highlights the next item`, () => {
+          const initialHighlightedIndex = 2
+          const wrapper = setup({ isOpen: true, initialHighlightedIndex })
+          const menu = wrapper.getByTestId(dataTestIds.menu)
+
+          fireEvent.keyDown(menu, { keyCode: keyboardKey.ArrowDown })
+
+          expect(menu.getAttribute('aria-activedescendant')).toBe(defaultIds.item(initialHighlightedIndex + 1))
+        })
+
+        test(`with shift it highlights the next 5th item`, () => {
+          const initialHighlightedIndex = 2
+          const wrapper = setup({ isOpen: true, initialHighlightedIndex })
+          const menu = wrapper.getByTestId(dataTestIds.menu)
+
+          fireEvent.keyDown(menu, { keyCode: keyboardKey.ArrowDown, shiftKey: true })
+
+          expect(menu.getAttribute('aria-activedescendant')).toBe(defaultIds.item(initialHighlightedIndex + 5))
+        })
+
+        test(`with shift it highlights last item if not enough next items remaining`, () => {
+          const initialHighlightedIndex = options.length - 2
+          const wrapper = setup({ isOpen: true, initialHighlightedIndex })
+          const menu = wrapper.getByTestId(dataTestIds.menu)
+
+          fireEvent.keyDown(menu, { keyCode: keyboardKey.ArrowDown, shiftKey: true })
+
+          expect(menu.getAttribute('aria-activedescendant')).toBe(defaultIds.item(options.length - 1))
+        })
+
+        test('will stop at last item if circularNavigatios is falsy', () => {
+          const wrapper = setup({ isOpen: true, initialHighlightedIndex: options.length - 1 })
+          const menu = wrapper.getByTestId(dataTestIds.menu)
+
+          fireEvent.keyDown(menu, { keyCode: keyboardKey.ArrowDown })
+
+          expect(menu.getAttribute('aria-activedescendant')).toBe(defaultIds.item(options.length - 1))
+        })
+
+        test('will continue from last item to 0 if circularNavigatios is truthy', () => {
+          const wrapper = setup({
+            isOpen: true,
+            initialHighlightedIndex: options.length - 1,
+            circularNavigation: true
+          })
+          const menu = wrapper.getByTestId(dataTestIds.menu)
+
+          fireEvent.keyDown(menu, { keyCode: keyboardKey.ArrowDown })
+
+          expect(menu.getAttribute('aria-activedescendant')).toBe(defaultIds.item(0))
+        })
       })
-
-      test(`arrow down it highlights the next item`, () => {
-        const initialHighlightedIndex = 2
-        const wrapper = setup({ isOpen: true, initialHighlightedIndex })
-        const menu = wrapper.getByTestId(dataTestIds.menu)
-
-        fireEvent.keyDown(menu, { keyCode: keyboardKey.ArrowDown })
-
-        expect(menu.getAttribute('aria-activedescendant')).toBe(defaultIds.item(initialHighlightedIndex + 1))
-      })
-
-      test(`arrow up it highlights the previous item`, () => {
-        const initialHighlightedIndex = 2
-        const wrapper = setup({ isOpen: true, initialHighlightedIndex })
-        const menu = wrapper.getByTestId(dataTestIds.menu)
-
-        fireEvent.keyDown(menu, { keyCode: keyboardKey.ArrowUp })
-
-        expect(menu.getAttribute('aria-activedescendant')).toBe(defaultIds.item(initialHighlightedIndex - 1))
-      })
-
-      test(`arrow down with shift it highlights the item 5 positions down`, () => {
-        const initialHighlightedIndex = 2
-        const wrapper = setup({ isOpen: true, initialHighlightedIndex })
-        const menu = wrapper.getByTestId(dataTestIds.menu)
-
-        fireEvent.keyDown(menu, { keyCode: keyboardKey.ArrowDown, shiftKey: true })
-
-        expect(menu.getAttribute('aria-activedescendant')).toBe(defaultIds.item(initialHighlightedIndex + 5))
-      })
-
-      test(`arrow up with shift it highlights the item 5 positions up`, () => {
-        const initialHighlightedIndex = 6
-        const wrapper = setup({ isOpen: true, initialHighlightedIndex })
-        const menu = wrapper.getByTestId(dataTestIds.menu)
-
-        fireEvent.keyDown(menu, { keyCode: keyboardKey.ArrowUp, shiftKey: true })
-
-        expect(menu.getAttribute('aria-activedescendant')).toBe(defaultIds.item(initialHighlightedIndex - 5))
-      })
-
-      test(`arrow down with shift it highlights last item if not enough items down`, () => {
-        const initialHighlightedIndex = options.length - 2
-        const wrapper = setup({ isOpen: true, initialHighlightedIndex })
-        const menu = wrapper.getByTestId(dataTestIds.menu)
-
-        fireEvent.keyDown(menu, { keyCode: keyboardKey.ArrowDown, shiftKey: true })
-
-        expect(menu.getAttribute('aria-activedescendant')).toBe(defaultIds.item(options.length -1))
-      })
-
-      test(`arrow up with shift it highlights the first item if not enough items up`, () => {
-        const initialHighlightedIndex = 1
-        const wrapper = setup({ isOpen: true, initialHighlightedIndex })
-        const menu = wrapper.getByTestId(dataTestIds.menu)
-
-        fireEvent.keyDown(menu, { keyCode: keyboardKey.ArrowUp, shiftKey: true })
-
-        expect(menu.getAttribute('aria-activedescendant')).toBe(defaultIds.item(0))
-      })
-
-      // circular navig.
 
       test(`end it highlights the last option number`, () => {
         const wrapper = setup({ isOpen: true, initialHighlightedIndex: 2 })
