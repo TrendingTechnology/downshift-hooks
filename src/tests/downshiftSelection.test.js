@@ -62,7 +62,6 @@ const DropdownSelection = (props) => {
           {...getTriggerButtonProps()}
         >
           {selectedItem || 'Elements'}
-
         </button>
         <ul
           data-testid={dataTestIds.menu}
@@ -255,6 +254,7 @@ describe('downshiftSelection', () => {
         const menu = wrapper.getByTestId(dataTestIds.menu)
 
         fireEvent.keyDown(menu, { keyCode: keyboardKey.Enter })
+
         expect(menu.childNodes.length).toBe(0)
         expect(onSelectedItemChange).toHaveBeenCalledWith(
           expect.objectContaining({
@@ -275,6 +275,7 @@ describe('downshiftSelection', () => {
         const menu = wrapper.getByTestId(dataTestIds.menu)
 
         fireEvent.keyDown(menu, { keyCode: keyboardKey.Tab, shiftKey: true })
+
         expect(menu.childNodes.length).toBe(0)
         expect(onSelectedItemChange).toHaveBeenCalledWith(
           expect.objectContaining({
@@ -296,6 +297,7 @@ describe('downshiftSelection', () => {
         const menu = wrapper.getByTestId(dataTestIds.menu)
 
         fireEvent.blur(menu)
+
         expect(menu.childNodes.length).toBe(0)
         expect(onSelectedItemChange).toHaveBeenCalledWith(
           expect.objectContaining({
@@ -311,27 +313,30 @@ describe('downshiftSelection', () => {
       test('opens the closed menu', () => {
         const wrapper = setup()
         const triggerButton = wrapper.getByTestId(dataTestIds.triggerButton)
+        const menu = wrapper.getByTestId(dataTestIds.menu)
 
         fireEvent.click(triggerButton)
-        const menu = wrapper.getByTestId(dataTestIds.menu)
+
         expect(menu.childNodes.length).toBe(options.length)
       })
 
       test('closes the open menu', () => {
         const wrapper = setup({ initialIsOpen: true })
         const triggerButton = wrapper.getByTestId(dataTestIds.triggerButton)
+        const menu = wrapper.getByTestId(dataTestIds.menu)
 
         fireEvent.click(triggerButton)
-        const menu = wrapper.getByTestId(dataTestIds.menu)
+
         expect(menu.childNodes.length).toBe(0)
       })
 
       test('opens the closed menu without any option highlighted', () => {
         const wrapper = setup()
         const triggerButton = wrapper.getByTestId(dataTestIds.triggerButton)
+        const menu = wrapper.getByTestId(dataTestIds.menu)
 
         fireEvent.click(triggerButton)
-        const menu = wrapper.getByTestId(dataTestIds.menu)
+
         expect(menu.getAttribute('aria-activedescendant')).toBeNull()
       })
 
@@ -339,9 +344,10 @@ describe('downshiftSelection', () => {
         const selectedIndex = 3
         const wrapper = setup({ initialSelectedItem: options[selectedIndex] })
         const triggerButton = wrapper.getByTestId(dataTestIds.triggerButton)
+        const menu = wrapper.getByTestId(dataTestIds.menu)
 
         fireEvent.click(triggerButton)
-        const menu = wrapper.getByTestId(dataTestIds.menu)
+
         expect(menu.getAttribute('aria-activedescendant')).toBe(defaultIds.item(selectedIndex))
       })
 
@@ -349,13 +355,15 @@ describe('downshiftSelection', () => {
         const initialHighlightedIndex = 3
         const wrapper = setup({ initialHighlightedIndex })
         const triggerButton = wrapper.getByTestId(dataTestIds.triggerButton)
+        const menu = wrapper.getByTestId(dataTestIds.menu)
 
         fireEvent.click(triggerButton)
-        const menu = wrapper.getByTestId(dataTestIds.menu)
+
         expect(menu.getAttribute('aria-activedescendant')).toBe(defaultIds.item(initialHighlightedIndex))
 
         fireEvent.click(triggerButton)
         fireEvent.click(triggerButton)
+
         expect(menu.getAttribute('aria-activedescendant')).toBeNull()
       })
 
@@ -363,13 +371,15 @@ describe('downshiftSelection', () => {
         const defaultHighlightedIndex = 3
         const wrapper = setup({ defaultHighlightedIndex })
         const triggerButton = wrapper.getByTestId(dataTestIds.triggerButton)
+        const menu = wrapper.getByTestId(dataTestIds.menu)
 
         fireEvent.click(triggerButton)
-        const menu = wrapper.getByTestId(dataTestIds.menu)
+
         expect(menu.getAttribute('aria-activedescendant')).toBe(defaultIds.item(defaultHighlightedIndex))
 
         fireEvent.click(triggerButton)
         fireEvent.click(triggerButton)
+
         expect(menu.getAttribute('aria-activedescendant')).toBe(defaultIds.item(defaultHighlightedIndex))
       })
 
@@ -377,142 +387,170 @@ describe('downshiftSelection', () => {
         const highlightedIndex = 3
         const wrapper = setup({ highlightedIndex })
         const triggerButton = wrapper.getByTestId(dataTestIds.triggerButton)
-
-        fireEvent.click(triggerButton)
         const menu = wrapper.getByTestId(dataTestIds.menu)
+
+        fireEvent.click(triggerButton)
+
         expect(menu.getAttribute('aria-activedescendant')).toBe(defaultIds.item(highlightedIndex))
 
         fireEvent.click(triggerButton)
         fireEvent.click(triggerButton)
+
         expect(menu.getAttribute('aria-activedescendant')).toBe(defaultIds.item(highlightedIndex))
+      })
+
+      test('opens the closed menu and sets focus on the menu', () => {
+        const wrapper = setup()
+        const triggerButton = wrapper.getByTestId(dataTestIds.triggerButton)
+        const menu = wrapper.getByTestId(dataTestIds.menu)
+
+        fireEvent.click(triggerButton)
+
+        expect(document.activeElement).toBe(menu)
+      })
+
+      test('closes the open menu and sets focus on the trigger button', () => {
+        const wrapper = setup({ initialIsOpen: true })
+        const triggerButton = wrapper.getByTestId(dataTestIds.triggerButton)
+        const menu = wrapper.getByTestId(dataTestIds.menu)
+
+        menu.focus()
+        fireEvent.click(triggerButton)
+
+        expect(document.activeElement).toBe(triggerButton)
       })
     })
 
     describe('on keydown', () => {
-      test('arrow down opens the closed menu with first option highlighted', () => {
-        const wrapper = setup()
-        const triggerButton = wrapper.getByTestId(dataTestIds.triggerButton)
+      describe('arrow up', () => {
+        test('opens the closed menu with last option highlighted', () => {
+          const wrapper = setup()
+          const triggerButton = wrapper.getByTestId(dataTestIds.triggerButton)
+          const menu = wrapper.getByTestId(dataTestIds.menu)
 
-        fireEvent.keyDown(triggerButton, { keyCode: keyboardKey.ArrowDown })
-        const menu = wrapper.getByTestId(dataTestIds.menu)
-        expect(menu.getAttribute('aria-activedescendant')).toBe(defaultIds.item(0))
+          fireEvent.keyDown(triggerButton, { keyCode: keyboardKey.ArrowUp })
+
+          expect(menu.getAttribute('aria-activedescendant')).toBe(defaultIds.item(options.length - 1))
+        })
+
+        test('opens the closed menu with selected option - 1 highlighted', () => {
+          const selectedIndex = 3
+          const wrapper = setup({ initialSelectedItem: options[selectedIndex] })
+          const triggerButton = wrapper.getByTestId(dataTestIds.triggerButton)
+          const menu = wrapper.getByTestId(dataTestIds.menu)
+
+          fireEvent.keyDown(triggerButton, { keyCode: keyboardKey.ArrowUp })
+
+          expect(menu.getAttribute('aria-activedescendant')).toBe(defaultIds.item(selectedIndex - 1))
+        })
+
+        test('opens the closed menu at initialHighlightedIndex, but on first arrow up only', () => {
+          const initialHighlightedIndex = 3
+          const wrapper = setup({ initialHighlightedIndex })
+          const triggerButton = wrapper.getByTestId(dataTestIds.triggerButton)
+          const menu = wrapper.getByTestId(dataTestIds.menu)
+
+          fireEvent.keyDown(triggerButton, { keyCode: keyboardKey.ArrowUp })
+
+          expect(menu.getAttribute('aria-activedescendant')).toBe(defaultIds.item(initialHighlightedIndex))
+
+          fireEvent.keyDown(menu, { keyCode: keyboardKey.Escape })
+          fireEvent.keyDown(triggerButton, { keyCode: keyboardKey.ArrowUp })
+
+          expect(menu.getAttribute('aria-activedescendant')).toBe(defaultIds.item(options.length - 1))
+        })
+
+        test('arrow up opens the closed menu at defaultHighlightedIndex, on every arrow up', () => {
+          const defaultHighlightedIndex = 3
+          const wrapper = setup({ defaultHighlightedIndex })
+          const triggerButton = wrapper.getByTestId(dataTestIds.triggerButton)
+          const menu = wrapper.getByTestId(dataTestIds.menu)
+
+          fireEvent.keyDown(triggerButton, { keyCode: keyboardKey.ArrowUp })
+
+          expect(menu.getAttribute('aria-activedescendant')).toBe(defaultIds.item(defaultHighlightedIndex))
+
+          fireEvent.keyDown(menu, { keyCode: keyboardKey.Escape })
+          fireEvent.keyDown(triggerButton, { keyCode: keyboardKey.ArrowUp })
+
+          expect(menu.getAttribute('aria-activedescendant')).toBe(defaultIds.item(defaultHighlightedIndex))
+        })
+
+        test.skip('prevents event default', () => {
+          const wrapper = setup()
+          const preventDefault = jest.fn()
+          const triggerButton = wrapper.getByTestId(dataTestIds.triggerButton)
+
+          fireEvent.keyDown(triggerButton, { keyCode: keyboardKey.ArrowUp, preventDefault })
+
+          expect(preventDefault).toHaveBeenCalledTimes(1)
+        })
       })
 
-      test('arrow up opens the closed menu with last option highlighted', () => {
-        const wrapper = setup()
-        const triggerButton = wrapper.getByTestId(dataTestIds.triggerButton)
+      describe('arrow down', () => {
+        test('opens the closed menu with first option highlighted', () => {
+          const wrapper = setup()
+          const triggerButton = wrapper.getByTestId(dataTestIds.triggerButton)
+          const menu = wrapper.getByTestId(dataTestIds.menu)
 
-        fireEvent.keyDown(triggerButton, { keyCode: keyboardKey.ArrowUp })
-        const menu = wrapper.getByTestId(dataTestIds.menu)
-        expect(menu.getAttribute('aria-activedescendant')).toBe(defaultIds.item(options.length - 1))
-      })
+          fireEvent.keyDown(triggerButton, { keyCode: keyboardKey.ArrowDown })
 
-      test('arrow down opens the closed menu with selected option + 1 highlighted', () => {
-        const selectedIndex = 3
-        const wrapper = setup({ initialSelectedItem: options[selectedIndex] })
-        const triggerButton = wrapper.getByTestId(dataTestIds.triggerButton)
+          expect(menu.getAttribute('aria-activedescendant')).toBe(defaultIds.item(0))
+        })
 
-        fireEvent.keyDown(triggerButton, { keyCode: keyboardKey.ArrowDown })
-        const menu = wrapper.getByTestId(dataTestIds.menu)
-        expect(menu.getAttribute('aria-activedescendant')).toBe(defaultIds.item(selectedIndex + 1))
-      })
+        test('opens the closed menu with selected option + 1 highlighted', () => {
+          const selectedIndex = 3
+          const wrapper = setup({ initialSelectedItem: options[selectedIndex] })
+          const triggerButton = wrapper.getByTestId(dataTestIds.triggerButton)
+          const menu = wrapper.getByTestId(dataTestIds.menu)
 
-      test('arrow up opens the closed menu with selected option - 1 highlighted', () => {
-        const selectedIndex = 3
-        const wrapper = setup({ initialSelectedItem: options[selectedIndex] })
-        const triggerButton = wrapper.getByTestId(dataTestIds.triggerButton)
+          fireEvent.keyDown(triggerButton, { keyCode: keyboardKey.ArrowDown })
 
-        fireEvent.keyDown(triggerButton, { keyCode: keyboardKey.ArrowUp })
-        const menu = wrapper.getByTestId(dataTestIds.menu)
-        expect(menu.getAttribute('aria-activedescendant')).toBe(defaultIds.item(selectedIndex - 1))
-      })
+          expect(menu.getAttribute('aria-activedescendant')).toBe(defaultIds.item(selectedIndex + 1))
+        })
 
-      test('arrow down opens the closed menu at initialHighlightedIndex, but on first arrow down only', () => {
-        const initialHighlightedIndex = 3
-        const wrapper = setup({ initialHighlightedIndex })
-        const triggerButton = wrapper.getByTestId(dataTestIds.triggerButton)
+        test('opens the closed menu at initialHighlightedIndex, but on first arrow down only', () => {
+          const initialHighlightedIndex = 3
+          const wrapper = setup({ initialHighlightedIndex })
+          const triggerButton = wrapper.getByTestId(dataTestIds.triggerButton)
+          const menu = wrapper.getByTestId(dataTestIds.menu)
 
-        fireEvent.keyDown(triggerButton, { keyCode: keyboardKey.ArrowDown })
-        const menu = wrapper.getByTestId(dataTestIds.menu)
-        expect(menu.getAttribute('aria-activedescendant')).toBe(defaultIds.item(initialHighlightedIndex))
+          fireEvent.keyDown(triggerButton, { keyCode: keyboardKey.ArrowDown })
 
-        fireEvent.keyDown(menu, { keyCode: keyboardKey.Escape })
-        fireEvent.keyDown(triggerButton, { keyCode: keyboardKey.ArrowDown })
-        expect(menu.getAttribute('aria-activedescendant')).toBe(defaultIds.item(0))
-      })
+          expect(menu.getAttribute('aria-activedescendant')).toBe(defaultIds.item(initialHighlightedIndex))
 
-      test('arrow up opens the closed menu at initialHighlightedIndex, but on first arrow up only', () => {
-        const initialHighlightedIndex = 3
-        const wrapper = setup({ initialHighlightedIndex })
-        const triggerButton = wrapper.getByTestId(dataTestIds.triggerButton)
+          fireEvent.keyDown(menu, { keyCode: keyboardKey.Escape })
+          fireEvent.keyDown(triggerButton, { keyCode: keyboardKey.ArrowDown })
 
-        fireEvent.keyDown(triggerButton, { keyCode: keyboardKey.ArrowUp })
-        const menu = wrapper.getByTestId(dataTestIds.menu)
-        expect(menu.getAttribute('aria-activedescendant')).toBe(defaultIds.item(initialHighlightedIndex))
+          expect(menu.getAttribute('aria-activedescendant')).toBe(defaultIds.item(0))
+        })
 
-        fireEvent.keyDown(menu, { keyCode: keyboardKey.Escape })
-        fireEvent.keyDown(triggerButton, { keyCode: keyboardKey.ArrowUp })
-        expect(menu.getAttribute('aria-activedescendant')).toBe(defaultIds.item(options.length - 1))
-      })
+        test('opens the closed menu at defaultHighlightedIndex, on every arrow down', () => {
+          const defaultHighlightedIndex = 3
+          const wrapper = setup({ defaultHighlightedIndex })
+          const triggerButton = wrapper.getByTestId(dataTestIds.triggerButton)
+          const menu = wrapper.getByTestId(dataTestIds.menu)
 
-      test('arrow down opens the closed menu at defaultHighlightedIndex, on every arrow down', () => {
-        const defaultHighlightedIndex = 3
-        const wrapper = setup({ defaultHighlightedIndex })
-        const triggerButton = wrapper.getByTestId(dataTestIds.triggerButton)
+          fireEvent.keyDown(triggerButton, { keyCode: keyboardKey.ArrowDown })
 
-        fireEvent.keyDown(triggerButton, { keyCode: keyboardKey.ArrowDown })
-        const menu = wrapper.getByTestId(dataTestIds.menu)
-        expect(menu.getAttribute('aria-activedescendant')).toBe(defaultIds.item(defaultHighlightedIndex))
+          expect(menu.getAttribute('aria-activedescendant')).toBe(defaultIds.item(defaultHighlightedIndex))
 
-        fireEvent.keyDown(menu, { keyCode: keyboardKey.Escape })
-        fireEvent.keyDown(triggerButton, { keyCode: keyboardKey.ArrowDown })
-        expect(menu.getAttribute('aria-activedescendant')).toBe(defaultIds.item(defaultHighlightedIndex))
-      })
+          fireEvent.keyDown(menu, { keyCode: keyboardKey.Escape })
+          fireEvent.keyDown(triggerButton, { keyCode: keyboardKey.ArrowDown })
 
-      test('arrow up opens the closed menu at defaultHighlightedIndex, on every arrow up', () => {
-        const defaultHighlightedIndex = 3
-        const wrapper = setup({ defaultHighlightedIndex })
-        const triggerButton = wrapper.getByTestId(dataTestIds.triggerButton)
+          expect(menu.getAttribute('aria-activedescendant')).toBe(defaultIds.item(defaultHighlightedIndex))
+        })
 
-        fireEvent.keyDown(triggerButton, { keyCode: keyboardKey.ArrowUp })
-        const menu = wrapper.getByTestId(dataTestIds.menu)
-        expect(menu.getAttribute('aria-activedescendant')).toBe(defaultIds.item(defaultHighlightedIndex))
+        // also add for menu when this test works.
+        test.skip('arrow down prevents event default', () => {
+          const wrapper = setup()
+          const preventDefault = jest.fn()
+          const triggerButton = wrapper.getByTestId(dataTestIds.triggerButton)
 
-        fireEvent.keyDown(menu, { keyCode: keyboardKey.Escape })
-        fireEvent.keyDown(triggerButton, { keyCode: keyboardKey.ArrowUp })
-        expect(menu.getAttribute('aria-activedescendant')).toBe(defaultIds.item(defaultHighlightedIndex))
-      })
+          fireEvent.keyDown(triggerButton, { keyCode: keyboardKey.ArrowDown, preventDefault })
 
-      test('opens the closed menu at highlightedIndex from props, on every click', () => {
-        const highlightedIndex = 3
-        const wrapper = setup({ highlightedIndex })
-        const triggerButton = wrapper.getByTestId(dataTestIds.triggerButton)
-
-        fireEvent.click(triggerButton)
-        const menu = wrapper.getByTestId(dataTestIds.menu)
-        expect(menu.getAttribute('aria-activedescendant')).toBe(defaultIds.item(highlightedIndex))
-
-        fireEvent.click(triggerButton)
-        fireEvent.click(triggerButton)
-        expect(menu.getAttribute('aria-activedescendant')).toBe(defaultIds.item(highlightedIndex))
-      })
-
-      test.skip('arrow up prevents event default', () => {
-        const wrapper = setup()
-        const preventDefault = jest.fn()
-        const triggerButton = wrapper.getByTestId(dataTestIds.triggerButton)
-
-        fireEvent.keyDown(triggerButton, { keyCode: keyboardKey.ArrowUp, preventDefault })
-        expect(preventDefault).toHaveBeenCalledTimes(1)
-      })
-
-      test.skip('arrow down prevents event default', () => {
-        const wrapper = setup()
-        const preventDefault = jest.fn()
-        const triggerButton = wrapper.getByTestId(dataTestIds.triggerButton)
-
-        fireEvent.keyDown(triggerButton, { keyCode: keyboardKey.ArrowDown, preventDefault })
-        expect(preventDefault).toHaveBeenCalledTimes(1)
+          expect(preventDefault).toHaveBeenCalledTimes(1)
+        })
       })
     })
   })
