@@ -24,6 +24,12 @@ const actionTypes = {
   FunctionClearKeysSoFar: ' FunctionClearKeysSoFar',
 }
 
+const defaultStateValues = {
+  highlightedIndex: -1,
+  isOpen: false,
+  selectedItem: null,
+}
+
 function getA11yStatusMessage({
   isOpen,
   selectedItem,
@@ -71,8 +77,32 @@ const getHighlightedIndexOnOpen = (props, state, offset) => {
   return offset < 0 ? items.length - 1 : 0
 }
 
+const getInitialValue = (props, propKey) => {
+  if (props[propKey] !== undefined) {
+    return props[propKey]
+  }
+  const initialPropKey = `initial${propKey.slice(0, 1).toUpperCase()}${propKey.slice(1)}`
+  if (props[initialPropKey] !== undefined) {
+    return props[initialPropKey]
+  }
+  const defaultPropKey = `default${propKey.slice(0, 1).toUpperCase()}${propKey.slice(1)}`
+  if (props[defaultPropKey] !== undefined) {
+    return props[defaultPropKey]
+  }
+  return defaultStateValues[propKey]
+}
+
+const getInitialState = (props) => {
+  return {
+    highlightedIndex: getInitialValue(props, 'highlightedIndex'),
+    isOpen: getInitialValue(props, 'isOpen'),
+    selectedItem: getInitialValue(props, 'selectedItem'),
+  }
+}
+
 export {
   getHighlightedIndexOnOpen,
   getA11yStatusMessage,
+  getInitialState,
   actionTypes,
 }

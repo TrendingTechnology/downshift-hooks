@@ -13,6 +13,7 @@ import downshiftSelectionReducer from './reducer'
 import {
   getA11yStatusMessage,
   actionTypes,
+  getInitialState,
 } from './utils'
 
 let keyClear = null
@@ -29,17 +30,8 @@ function useDownshiftSelection(userProps = {}) {
     items,
     itemToString,
     // highlightedIndex
-    highlightedIndex: highlightedIndexFromProps,
-    initialHighlightedIndex,
-    defaultHighlightedIndex,
     // isOpen
-    isOpen: isOpenFromProps,
-    initialIsOpen,
-    defaultIsOpen,
     // selectedItem
-    selectedItem: selectedItemFromProps,
-    initialSelectedItem,
-    defaultSelectedItem,
     // ids
     labelId: labelIdFromProps,
     menuId: menuIdFromProps,
@@ -54,12 +46,8 @@ function useDownshiftSelection(userProps = {}) {
     // onStateChange,
   } = props
 
-  // Initial state.
-  const initialState = {
-    highlightedIndex: highlightedIndexFromProps || initialHighlightedIndex || defaultHighlightedIndex || -1,
-    isOpen: isOpenFromProps || initialIsOpen || defaultIsOpen || false,
-    selectedItem: selectedItemFromProps || initialSelectedItem || defaultSelectedItem || null,
-  }
+  // Initial state depending on controlled props.
+  const initialState = getInitialState(props)
 
   // Reducer init.
   const [{
