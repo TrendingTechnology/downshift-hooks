@@ -485,6 +485,16 @@ describe('downshiftSelection', () => {
 
           expect(preventDefault).toHaveBeenCalledTimes(1)
         })
+
+        test('opens the closed menu and focuses the list', () => {
+          const wrapper = setup()
+          const triggerButton = wrapper.getByTestId(dataTestIds.triggerButton)
+          const menu = wrapper.getByTestId(dataTestIds.menu)
+
+          fireEvent.keyDown(triggerButton, { keyCode: keyboardKey.ArrowUp })
+
+          expect(document.activeElement).toBe(menu)
+        })
       })
 
       describe('arrow down', () => {
@@ -550,6 +560,16 @@ describe('downshiftSelection', () => {
           fireEvent.keyDown(triggerButton, { keyCode: keyboardKey.ArrowDown, preventDefault })
 
           expect(preventDefault).toHaveBeenCalledTimes(1)
+        })
+
+        test('opens the closed menu and focuses the list', () => {
+          const wrapper = setup()
+          const triggerButton = wrapper.getByTestId(dataTestIds.triggerButton)
+          const menu = wrapper.getByTestId(dataTestIds.menu)
+
+          fireEvent.keyDown(triggerButton, { keyCode: keyboardKey.ArrowDown })
+
+          expect(document.activeElement).toBe(menu)
         })
       })
     })
