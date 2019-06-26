@@ -243,6 +243,17 @@ describe('downshiftSelection', () => {
         expect(menu.childNodes.length).toBe(0)
       })
 
+      test('escape it has the focus moved to triggerButton', () => {
+        const wrapper = setup({ initialIsOpen: true, })
+        const menu = wrapper.getByTestId(dataTestIds.menu)
+        const triggerButton = wrapper.getByTestId(dataTestIds.triggerButton)
+
+        menu.focus()
+        fireEvent.keyDown(menu, { keyCode: keyboardKey.Escape })
+
+        expect(document.activeElement).toBe(triggerButton)
+      })
+
       test('enter it closes the menu and selects highlighted item', () => {
         const initialHighlightedIndex = 2
         const onSelectedItemChange = jest.fn()
@@ -261,6 +272,17 @@ describe('downshiftSelection', () => {
             selectedItem: options[initialHighlightedIndex],
           })
         )
+      })
+
+      test('enter it has the focus moved to triggerButton', () => {
+        const wrapper = setup({ initialIsOpen: true, })
+        const menu = wrapper.getByTestId(dataTestIds.menu)
+        const triggerButton = wrapper.getByTestId(dataTestIds.triggerButton)
+
+        menu.focus()
+        fireEvent.keyDown(menu, { keyCode: keyboardKey.Enter })
+
+        expect(document.activeElement).toBe(triggerButton)
       })
 
       // Special case test.
@@ -282,6 +304,17 @@ describe('downshiftSelection', () => {
             selectedItem: options[initialHighlightedIndex],
           })
         )
+      })
+
+      test('shift+tab it has the focus moved to triggerButton', () => {
+        const wrapper = setup({ initialIsOpen: true, })
+        const menu = wrapper.getByTestId(dataTestIds.menu)
+        const triggerButton = wrapper.getByTestId(dataTestIds.triggerButton)
+
+        menu.focus()
+        fireEvent.keyDown(menu, { keyCode: keyboardKey.Tab, shiftKey: true })
+
+        expect(document.activeElement).toBe(triggerButton)
       })
     })
 
