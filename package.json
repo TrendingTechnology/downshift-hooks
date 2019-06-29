@@ -4,13 +4,11 @@
   "description": "Will use this to scaffold future React apps.",
   "main": "index.js",
   "scripts": {
-    "build": "webpack --mode production",
-    "dev": "webpack --mode development",
-    "start": "webpack-dev-server --config ./webpack.config.js --mode development",
     "docz:dev": "docz dev",
     "docz:build": "docz build",
     "test": "jest",
-    "test:watch": "jest --watch"
+    "test:watch": "jest --watch",
+    "build": "kcd-scripts build --bundle"
   },
   "repository": {
     "type": "git",
@@ -40,9 +38,11 @@
     "eslint-plugin-jsx-a11y": "6.2.1",
     "eslint-plugin-react": "7.12.4",
     "jest": "^24.8.0",
+    "kcd-scripts": "^1.4.0",
     "react-hooks-testing-library": "^0.5.1",
     "react-hot-loader": "^4.8.4",
     "react-test-renderer": "^16.8.6",
+    "rollup-plugin-commonjs": "^10.0.1",
     "webpack": "^4.33.0",
     "webpack-cli": "^3.3.3",
     "webpack-dev-server": "^3.7.1"
