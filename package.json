@@ -1,8 +1,9 @@
 {
   "name": "downshift-hooks",
-  "version": "1.0.0",
-  "description": "Will use this to scaffold future React apps.",
-  "main": "index.js",
+  "version": "0.1.0",
+  "description": "A set of hooks to build simple, flexible, WAI-ARIA compliant React dropdown components.",
+  "main": "dist/downshift-hooks.cjs.js",
+  "module": "dist/downshift-hooks.esm.js",
   "scripts": {
     "build": "kcd-scripts build --bundle",
     "docs:dev": "docz dev",
@@ -13,15 +14,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/silviuavram/react-scaffold-app.git"
+    "url": "https://github.com/silviuavram/downshift-hooks.git"
   },
   "keywords": [],
   "author": "Silviu Avram <silviu.avram91@gmail.com>",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/silviuavram/react-scaffold-app/issues"
+    "url": "https://github.com/silviuavram/downshift-hooks/issues"
   },
-  "homepage": "https://github.com/silviuavram/react-scaffold-app#readme",
+  "homepage": "https://github.com/silviuavram/downshift-hooks#readme",
   "devDependencies": {
     "@babel/core": "^7.4.3",
     "@babel/preset-env": "^7.4.3",
