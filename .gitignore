@@ -65,3 +65,6 @@ dist
 
 #docz
 .docz
+
+#package-lock.json
+package-lock.json
