@@ -1,15 +1,10 @@
 {
-  "parser": "babel-eslint",
-  "extends": [
-    "airbnb-base"
-  ],
+  "extends": "./node_modules/kcd-scripts/eslint.js",
   "rules": {
-    "semi": 0,
-    "no-unused-vars": 0,
-    "max-len": ["error", 120]
-  },
-  "env": {
-    "browser": true,
-    "jest": true
+    "react/prop-types": "off",
+    "import/no-unassigned-import": "off",
+    "import/named": "off",
+    "max-lines-per-function": "off",
+    "jsx-a11y/label-has-for": "off"
   }
 }

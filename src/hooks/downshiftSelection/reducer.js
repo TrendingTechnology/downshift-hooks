@@ -7,6 +7,7 @@ import {
   getHighlightedIndexOnOpen,
 } from './utils'
 
+// eslint-disable-next-line complexity
 export default function downshiftSelectionReducer(state, action) {
   const {
     type,
@@ -114,7 +115,7 @@ export default function downshiftSelectionReducer(state, action) {
     case actionTypes.FunctionToggleMenu:
       changes = {
         isOpen: !state.isOpen,
-        highlightedIndex: !state.isOpen ? getHighlightedIndexOnOpen(props, state, 0) : -1,
+        highlightedIndex: state.isOpen ? -1 : getHighlightedIndexOnOpen(props, state, 0),
       }
       break
     case actionTypes.FunctionOpenMenu:

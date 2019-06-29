@@ -1,7 +1,6 @@
 import { useReducer, useRef, useEffect } from 'react'
 import scrollIntoView from 'scroll-into-view-if-needed'
 import * as keyboardKey from 'keyboard-key'
-import * as _ from 'lodash'
 
 import {
   defaultIds,
@@ -85,6 +84,7 @@ function useDownshiftSelection(userProps = {}) {
         items,
       }),
     )
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen])
   // Status message on selection.
   useEffect(() => {
@@ -94,6 +94,7 @@ function useDownshiftSelection(userProps = {}) {
         itemToString,
       }),
     )
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedItem])
   // Concatenates keysSoFar and schedules the cleanup.
   useEffect(() => {
@@ -107,6 +108,7 @@ function useDownshiftSelection(userProps = {}) {
         props,
       })
     }, 500)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [keysSoFar])
   // Focuses menu on open but not on first mount.
   // Focuses triggerButton on close.
@@ -131,6 +133,7 @@ function useDownshiftSelection(userProps = {}) {
       block: 'nearest',
       inline: 'nearest',
     })
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [highlightedIndex])
 
   // Event handler functions
@@ -205,7 +208,7 @@ function useDownshiftSelection(userProps = {}) {
   const menuHandleKeyDown = (event) => {
     const key = keyboardKey.getKey(event)
     if (key && menuKeyDownHandlers[key]) {
-      menuKeyDownHandlers[key].call(this, event)
+      menuKeyDownHandlers[key](event)
     } else if (/^\S{1}$/.test(key)) {
       dispatch({
         type: actionTypes.MenuKeyDownCharacter,
@@ -214,11 +217,9 @@ function useDownshiftSelection(userProps = {}) {
       })
     }
   }
-  /**
-   * Focus going back to the triggerButton is something we control (Escape, Enter, Click).
-   * We are triggering special actions for these cases in reducer, not MenuBlur.
-   * Since Shift-Tab also lands focus on triggerButton, we will handle it as exception and call MenuBlur.
-   */
+  // Focus going back to the triggerButton is something we control (Escape, Enter, Click).
+  // We are triggering special actions for these cases in reducer, not MenuBlur.
+  // Since Shift-Tab also lands focus on triggerButton, we will handle it as exception and call MenuBlur.
   const menuHandleBlur = (event) => {
     if (event.relatedTarget !== triggerButtonRef.current) {
       dispatch({
@@ -236,7 +237,7 @@ function useDownshiftSelection(userProps = {}) {
   const triggerButtonHandleKeyDown = (event) => {
     const key = keyboardKey.getKey(event)
     if (key && triggerButtonKeyDownHandlers[key]) {
-      triggerButtonKeyDownHandlers[key].call(this, event)
+      triggerButtonKeyDownHandlers[key](event)
     }
   }
   const itemHandleMouseOver = (index) => {

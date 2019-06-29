@@ -1,3 +1,4 @@
+/* eslint-disable jest/no-disabled-tests */
 import React from 'react'
 import * as keyboardKey from 'keyboard-key'
 import { render, fireEvent, cleanup } from '@testing-library/react'
@@ -240,7 +241,7 @@ describe('downshiftSelection', () => {
 
         fireEvent.keyDown(menu, { keyCode: keyboardKey.Escape })
 
-        expect(menu.childNodes.length).toBe(0)
+        expect(menu.childNodes).toHaveLength(0)
       })
 
       test('escape it has the focus moved to triggerButton', () => {
@@ -266,7 +267,7 @@ describe('downshiftSelection', () => {
 
         fireEvent.keyDown(menu, { keyCode: keyboardKey.Enter })
 
-        expect(menu.childNodes.length).toBe(0)
+        expect(menu.childNodes).toHaveLength(0)
         expect(onSelectedItemChange).toHaveBeenCalledWith(
           expect.objectContaining({
             selectedItem: options[initialHighlightedIndex],
@@ -298,7 +299,7 @@ describe('downshiftSelection', () => {
 
         fireEvent.keyDown(menu, { keyCode: keyboardKey.Tab, shiftKey: true })
 
-        expect(menu.childNodes.length).toBe(0)
+        expect(menu.childNodes).toHaveLength(0)
         expect(onSelectedItemChange).toHaveBeenCalledWith(
           expect.objectContaining({
             selectedItem: options[initialHighlightedIndex],
@@ -331,7 +332,7 @@ describe('downshiftSelection', () => {
 
         fireEvent.blur(menu)
 
-        expect(menu.childNodes.length).toBe(0)
+        expect(menu.childNodes).toHaveLength(0)
         expect(onSelectedItemChange).toHaveBeenCalledWith(
           expect.objectContaining({
             selectedItem: options[initialHighlightedIndex],
@@ -350,7 +351,7 @@ describe('downshiftSelection', () => {
 
         fireEvent.click(triggerButton)
 
-        expect(menu.childNodes.length).toBe(options.length)
+        expect(menu.childNodes).toHaveLength(options.length)
       })
 
       test('closes the open menu', () => {
@@ -360,7 +361,7 @@ describe('downshiftSelection', () => {
 
         fireEvent.click(triggerButton)
 
-        expect(menu.childNodes.length).toBe(0)
+        expect(menu.childNodes).toHaveLength(0)
       })
 
       test('opens the closed menu without any option highlighted', () => {
