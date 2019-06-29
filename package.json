@@ -5,8 +5,7 @@
   "main": "dist/downshift-hooks.cjs.js",
   "module": "dist/downshift-hooks.esm.js",
   "scripts": {
-    "build": "kcd-scripts build",
-    "build:bundle": "kcd-scripts build --bundle",
+    "build": "kcd-scripts build --bundle",
     "docs:dev": "docz dev",
     "docs:build": "docz build",
     "lint": "kcd-scripts lint --config .eslintrc --ignore-path .eslintignore",
