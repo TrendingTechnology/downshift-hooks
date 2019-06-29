@@ -92,7 +92,7 @@ describe('downshiftSelection', () => {
   describe('menu', () => {
     describe('on key down', () => {
       describe('arrow up', () => {
-        test(`it highlights the last option number if none is highlighted`, () => {
+        test('it highlights the last option number if none is highlighted', () => {
           const wrapper = setup({ isOpen: true })
           const menu = wrapper.getByTestId(dataTestIds.menu)
 
@@ -101,7 +101,7 @@ describe('downshiftSelection', () => {
           expect(menu.getAttribute('aria-activedescendant')).toBe(defaultIds.item(options.length - 1))
         })
 
-        test(`it highlights the previous item`, () => {
+        test('it highlights the previous item', () => {
           const initialHighlightedIndex = 2
           const wrapper = setup({ isOpen: true, initialHighlightedIndex })
           const menu = wrapper.getByTestId(dataTestIds.menu)
@@ -111,7 +111,7 @@ describe('downshiftSelection', () => {
           expect(menu.getAttribute('aria-activedescendant')).toBe(defaultIds.item(initialHighlightedIndex - 1))
         })
 
-        test(`with shift it highlights the 5th previous item`, () => {
+        test('with shift it highlights the 5th previous item', () => {
           const initialHighlightedIndex = 6
           const wrapper = setup({ isOpen: true, initialHighlightedIndex })
           const menu = wrapper.getByTestId(dataTestIds.menu)
@@ -121,7 +121,7 @@ describe('downshiftSelection', () => {
           expect(menu.getAttribute('aria-activedescendant')).toBe(defaultIds.item(initialHighlightedIndex - 5))
         })
 
-        test(`with shift it highlights the first item if not enough items remaining`, () => {
+        test('with shift it highlights the first item if not enough items remaining', () => {
           const initialHighlightedIndex = 1
           const wrapper = setup({ isOpen: true, initialHighlightedIndex })
           const menu = wrapper.getByTestId(dataTestIds.menu)
@@ -144,7 +144,7 @@ describe('downshiftSelection', () => {
           const wrapper = setup({
             isOpen: true,
             initialHighlightedIndex: 0,
-            circularNavigation: true
+            circularNavigation: true,
           })
           const menu = wrapper.getByTestId(dataTestIds.menu)
 
@@ -155,7 +155,7 @@ describe('downshiftSelection', () => {
       })
 
       describe('arrow down', () => {
-        test(`it highlights option number '0' if none is highlighted`, () => {
+        test("it highlights option number '0' if none is highlighted", () => {
           const wrapper = setup({ isOpen: true })
           const menu = wrapper.getByTestId(dataTestIds.menu)
 
@@ -163,7 +163,7 @@ describe('downshiftSelection', () => {
 
           expect(menu.getAttribute('aria-activedescendant')).toBe(defaultIds.item(0))
         })
-        test(`it highlights the next item`, () => {
+        test('it highlights the next item', () => {
           const initialHighlightedIndex = 2
           const wrapper = setup({ isOpen: true, initialHighlightedIndex })
           const menu = wrapper.getByTestId(dataTestIds.menu)
@@ -173,7 +173,7 @@ describe('downshiftSelection', () => {
           expect(menu.getAttribute('aria-activedescendant')).toBe(defaultIds.item(initialHighlightedIndex + 1))
         })
 
-        test(`with shift it highlights the next 5th item`, () => {
+        test('with shift it highlights the next 5th item', () => {
           const initialHighlightedIndex = 2
           const wrapper = setup({ isOpen: true, initialHighlightedIndex })
           const menu = wrapper.getByTestId(dataTestIds.menu)
@@ -183,7 +183,7 @@ describe('downshiftSelection', () => {
           expect(menu.getAttribute('aria-activedescendant')).toBe(defaultIds.item(initialHighlightedIndex + 5))
         })
 
-        test(`with shift it highlights last item if not enough next items remaining`, () => {
+        test('with shift it highlights last item if not enough next items remaining', () => {
           const initialHighlightedIndex = options.length - 2
           const wrapper = setup({ isOpen: true, initialHighlightedIndex })
           const menu = wrapper.getByTestId(dataTestIds.menu)
@@ -206,7 +206,7 @@ describe('downshiftSelection', () => {
           const wrapper = setup({
             isOpen: true,
             initialHighlightedIndex: options.length - 1,
-            circularNavigation: true
+            circularNavigation: true,
           })
           const menu = wrapper.getByTestId(dataTestIds.menu)
 
@@ -216,7 +216,7 @@ describe('downshiftSelection', () => {
         })
       })
 
-      test(`end it highlights the last option number`, () => {
+      test('end it highlights the last option number', () => {
         const wrapper = setup({ isOpen: true, initialHighlightedIndex: 2 })
         const menu = wrapper.getByTestId(dataTestIds.menu)
 
@@ -225,7 +225,7 @@ describe('downshiftSelection', () => {
         expect(menu.getAttribute('aria-activedescendant')).toBe(defaultIds.item(options.length - 1))
       })
 
-      test(`home it highlights the first option number`, () => {
+      test('home it highlights the first option number', () => {
         const wrapper = setup({ isOpen: true, initialHighlightedIndex: 2 })
         const menu = wrapper.getByTestId(dataTestIds.menu)
 
@@ -244,7 +244,7 @@ describe('downshiftSelection', () => {
       })
 
       test('escape it has the focus moved to triggerButton', () => {
-        const wrapper = setup({ initialIsOpen: true, })
+        const wrapper = setup({ initialIsOpen: true })
         const menu = wrapper.getByTestId(dataTestIds.menu)
         const triggerButton = wrapper.getByTestId(dataTestIds.triggerButton)
 
@@ -270,12 +270,12 @@ describe('downshiftSelection', () => {
         expect(onSelectedItemChange).toHaveBeenCalledWith(
           expect.objectContaining({
             selectedItem: options[initialHighlightedIndex],
-          })
+          }),
         )
       })
 
       test('enter it has the focus moved to triggerButton', () => {
-        const wrapper = setup({ initialIsOpen: true, })
+        const wrapper = setup({ initialIsOpen: true })
         const menu = wrapper.getByTestId(dataTestIds.menu)
         const triggerButton = wrapper.getByTestId(dataTestIds.triggerButton)
 
@@ -302,12 +302,12 @@ describe('downshiftSelection', () => {
         expect(onSelectedItemChange).toHaveBeenCalledWith(
           expect.objectContaining({
             selectedItem: options[initialHighlightedIndex],
-          })
+          }),
         )
       })
 
       test('shift+tab it has the focus moved to triggerButton', () => {
-        const wrapper = setup({ initialIsOpen: true, })
+        const wrapper = setup({ initialIsOpen: true })
         const menu = wrapper.getByTestId(dataTestIds.menu)
         const triggerButton = wrapper.getByTestId(dataTestIds.triggerButton)
 
@@ -335,7 +335,7 @@ describe('downshiftSelection', () => {
         expect(onSelectedItemChange).toHaveBeenCalledWith(
           expect.objectContaining({
             selectedItem: options[initialHighlightedIndex],
-          })
+          }),
         )
       })
     })

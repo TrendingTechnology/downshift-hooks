@@ -102,8 +102,8 @@ export default function downshiftSelectionReducer(state, action) {
         isOpen: true,
         highlightedIndex: getHighlightedIndexOnOpen(props, state, 1),
       }
-    }
       break
+    }
     case actionTypes.TriggerButtonKeyDownArrowUp:
       changes = {
         isOpen: true,
