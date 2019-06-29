@@ -13,9 +13,6 @@ config.plugins[cjsPluginIndex] = commonjs({
       'useEffect',
       'useRef',
     ],
-    'node_modules/lodash/lodash.js': [
-      'findIndex',
-    ],
     'node_modules/keyboard-key/src/keyboardKey.js': [
       'getKey',
     ],

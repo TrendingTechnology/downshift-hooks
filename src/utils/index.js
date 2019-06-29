@@ -1,5 +1,3 @@
-import * as _ from 'lodash'
-
 import setAriaLiveMessage from './ariaLiveMessage'
 
 const id = 'downshift'
@@ -59,18 +57,19 @@ function getItemIndexByCharacterKey(
   const itemStrings = items.map(item => itemToString(item).toLowerCase())
 
   if (highlightedIndex > -1) {
-    newHighlightedIndex = _.findIndex(
-      itemStrings,
-      itemString => itemString.startsWith(keysSoFar),
-      highlightedIndex + (keysSoFar > 1 ? 0 : 1),
-    )
+    const startPosition = highlightedIndex + (keysSoFar > 1 ? 0 : 1)
+    newHighlightedIndex = itemStrings
+      .slice(startPosition)
+      .findIndex(itemString => itemString.startsWith(keysSoFar))
+    
+    if (newHighlightedIndex > -1) {
+      return newHighlightedIndex + startPosition
+    }
   }
 
   if (newHighlightedIndex === -1) {
-    newHighlightedIndex = _.findIndex(
-      itemStrings,
-      itemString => itemString.startsWith(keysSoFar),
-    )
+    newHighlightedIndex = itemStrings
+      .findIndex(itemString => itemString.startsWith(keysSoFar))
   }
 
   return newHighlightedIndex
