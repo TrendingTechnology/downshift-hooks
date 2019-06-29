@@ -10,7 +10,6 @@
     "docs:dev": "docz dev",
     "docs:build": "docz build",
     "lint": "kcd-scripts lint --config .eslintrc --ignore-path .eslintignore",
-    "precommit": "kcd-scripts precommit",
     "setup": "npm install && npm run validate -s",
     "test": "kcd-scripts test",
     "test:cover": "kcd-scripts test --coverage",
