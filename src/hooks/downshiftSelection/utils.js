@@ -92,13 +92,11 @@ const getInitialValue = (props, propKey) => {
   return defaultStateValues[propKey]
 }
 
-const getInitialState = (props) => {
-  return {
-    highlightedIndex: getInitialValue(props, 'highlightedIndex'),
-    isOpen: getInitialValue(props, 'isOpen'),
-    selectedItem: getInitialValue(props, 'selectedItem'),
-  }
-}
+const getInitialState = props => ({
+  highlightedIndex: getInitialValue(props, 'highlightedIndex'),
+  isOpen: getInitialValue(props, 'isOpen'),
+  selectedItem: getInitialValue(props, 'selectedItem'),
+})
 
 export {
   getHighlightedIndexOnOpen,
