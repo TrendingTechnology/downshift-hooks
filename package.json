@@ -5,12 +5,16 @@
   "main": "dist/downshift-hooks.cjs.js",
   "module": "dist/downshift-hooks.esm.js",
   "scripts": {
-    "build": "kcd-scripts build --bundle",
+    "build": "kcd-scripts build",
+    "build:bundle": "kcd-scripts build --bundle",
     "docs:dev": "docz dev",
     "docs:build": "docz build",
-    "lint": "kcd-scripts lint",
+    "lint": "kcd-scripts lint --config .eslintrc --ignore-path .eslintignore",
+    "precommit": "kcd-scripts precommit",
+    "setup": "npm install && npm run validate -s",
     "test": "kcd-scripts test",
-    "test:cover": "kcd-scripts test --coverage"
+    "test:cover": "kcd-scripts test --coverage",
+    "validate": "kcd-scripts validate build,lint,test:cover"
   },
   "repository": {
     "type": "git",
@@ -27,6 +31,7 @@
     "@testing-library/react": "^8.0.1",
     "docz": "^1.2.0",
     "docz-theme-default": "^1.2.0",
+    "eslint-plugin-react": "7.12.4",
     "kcd-scripts": "^1.4.0",
     "rollup-plugin-commonjs": "^10.0.1"
   },
