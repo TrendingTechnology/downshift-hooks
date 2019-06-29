@@ -1,6 +1,8 @@
 # downshift-hooks
 A set of hooks to build simple, flexible, WAI-ARIA compliant React dropdown components.
 
+[![Build Status](https://travis-ci.org/silviuavram/downshift-hooks.svg?branch=master)](https://travis-ci.org/silviuavram/downshift-hooks)
+
 ## The problem
 You need an autocomplete/dropdown/select experience in your application and you
 want it to be accessible. You also want it to be simple and flexible to account
@@ -25,7 +27,7 @@ This module is distributed via [npm][npm] which is bundled with [node][node] and
 should be installed as one of your project's `dependencies`:
 
 ```
-npm install --save downshift
+npm install --save downshift-hooks
 ```
 
 ## Usage
