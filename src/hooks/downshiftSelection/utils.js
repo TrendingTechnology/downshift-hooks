@@ -59,6 +59,7 @@ const getHighlightedIndexOnOpen = (props, state, offset) => {
   const { items, initialHighlightedIndex, defaultHighlightedIndex } = props
   const { selectedItem, highlightedIndex } = state
 
+  // initialHighlightedIndex will give value to highlightedIndex on initial state only.
   if (initialHighlightedIndex && highlightedIndex > -1) {
     return initialHighlightedIndex
   }
