@@ -91,6 +91,36 @@ describe('downshiftSelection', () => {
   afterEach(cleanup)
 
   describe('menu', () => {
+    describe('initialFocus', () => {
+      test('is grabbed when isOpen is passed as true', () => {
+        const wrapper = setup({ isOpen: true })
+        const menu = wrapper.getByTestId(dataTestIds.menu)
+
+        expect(document.activeElement).toBe(menu)
+      })
+
+      test('is grabbed when initialIsOpen is passed as true', () => {
+        const wrapper = setup({ initialIsOpen: true })
+        const menu = wrapper.getByTestId(dataTestIds.menu)
+
+        expect(document.activeElement).toBe(menu)
+      })
+
+      test('is grabbed when defaultIsOpen is passed as true', () => {
+        const wrapper = setup({ defaultIsOpen: true })
+        const menu = wrapper.getByTestId(dataTestIds.menu)
+
+        expect(document.activeElement).toBe(menu)
+      })
+
+      test('is not grabbed when initial open is set to default (false)', () => {
+        const wrapper = setup({})
+        const menu = wrapper.getByTestId(dataTestIds.menu)
+
+        expect(document.activeElement).not.toBe(menu)
+      })
+    })
+
     describe('on key down', () => {
       describe('arrow up', () => {
         test('it highlights the last option number if none is highlighted', () => {
@@ -446,9 +476,7 @@ describe('downshiftSelection', () => {
       test('closes the open menu and sets focus on the trigger button', () => {
         const wrapper = setup({ initialIsOpen: true })
         const triggerButton = wrapper.getByTestId(dataTestIds.triggerButton)
-        const menu = wrapper.getByTestId(dataTestIds.menu)
 
-        menu.focus()
         fireEvent.click(triggerButton)
 
         expect(document.activeElement).toBe(triggerButton)

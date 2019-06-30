@@ -30,6 +30,8 @@ function useDownshiftSelection(userProps = {}) {
     itemToString,
     // highlightedIndex
     // isOpen
+    initialIsOpen,
+    defaultIsOpen,
     // selectedItem
     // ids
     labelId: labelIdFromProps,
@@ -84,7 +86,7 @@ function useDownshiftSelection(userProps = {}) {
         items,
       }),
     )
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen])
   // Status message on selection.
   useEffect(() => {
@@ -94,7 +96,7 @@ function useDownshiftSelection(userProps = {}) {
         itemToString,
       }),
     )
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedItem])
   // Concatenates keysSoFar and schedules the cleanup.
   useEffect(() => {
@@ -108,20 +110,26 @@ function useDownshiftSelection(userProps = {}) {
         props,
       })
     }, 500)
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [keysSoFar])
-  // Focuses menu on open but not on first mount.
-  // Focuses triggerButton on close.
   useEffect(() => {
+    // Don't focus menu on first render, most probably is closed.
     if (isInitialMount.current) {
       isInitialMount.current = false
+      // But it was initialised as open, then focus.
+      if (initialIsOpen || defaultIsOpen || isOpen) {
+        menuRef.current.focus()
+      }
       return
     }
+    // Focuses menu on open.
     if (isOpen) {
       menuRef.current.focus()
+      // Focuses triggerButton on close.
     } else if (document.activeElement === menuRef.current) {
       triggerButtonRef.current.focus()
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen])
   // Scrolls highlighted index into view.
   useEffect(() => {
@@ -133,7 +141,7 @@ function useDownshiftSelection(userProps = {}) {
       block: 'nearest',
       inline: 'nearest',
     })
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [highlightedIndex])
 
   // Event handler functions
