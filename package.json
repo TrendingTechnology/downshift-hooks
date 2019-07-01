@@ -20,7 +20,7 @@
   },
   "keywords": [],
   "author": "Silviu Avram <silviu.avram91@gmail.com>",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/silviuavram/downshift-hooks/issues"
   },
