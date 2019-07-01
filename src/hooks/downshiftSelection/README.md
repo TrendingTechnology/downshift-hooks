@@ -15,9 +15,41 @@ These functions are destructured as a set of ARIA attributes and event listeners
 > [Try it out in the browser](https://codesandbox.io/s/downshift-hooks-example-ew0em)
 
 ```jsx
-import React from "react";
-import { render } from "react-dom";
-import { useDownshiftSelection } from "downshift-hooks";
+import React from "react"
+import { render } from "react-dom"
+import { useDownshiftSelection } from "downshift-hooks"
+
+function DropdownSelection() {
+  const {
+    isOpen,
+    selectedItem,
+    getTriggerButtonProps,
+    getLabelProps,
+    getMenuProps,
+    highlightedIndex,
+    getItemProps
+  } = useDownshiftSelection({ items: options })
+  return (
+    <div>
+      <label {...getLabelProps()}>Choose an element:</label>
+      <button {...getTriggerButtonProps()}>{selectedItem || "Elements"}</button>
+      <ul {...getMenuProps()} style={menuStyles}>
+        {isOpen &&
+          options.map((option, index) => (
+            <li
+              style={
+                highlightedIndex === index ? { backgroundColor: "#bde4ff" } : {}
+              }
+              key={`${option}${index}`}
+              {...getItemProps({ item: option, index })}
+            >
+              {option}
+            </li>
+          ))}
+      </ul>
+    </div>
+  )
+}
 
 const options = [
   "Neptunium",
@@ -46,7 +78,7 @@ const options = [
   "Livermorium",
   "Tennessine",
   "Oganesson"
-];
+]
 const menuStyles = {
   maxHeight: "200px",
   overflowY: "auto",
@@ -55,41 +87,9 @@ const menuStyles = {
   margin: 0,
   borderTop: 0,
   background: "white"
-};
-
-function DropdownSelection() {
-  const {
-    isOpen,
-    selectedItem,
-    getTriggerButtonProps,
-    getLabelProps,
-    getMenuProps,
-    highlightedIndex,
-    getItemProps
-  } = useDownshiftSelection({ items: options });
-  return (
-    <div>
-      <label {...getLabelProps()}>Choose an element:</label>
-      <button {...getTriggerButtonProps()}>{selectedItem || "Elements"}</button>
-      <ul {...getMenuProps()} style={menuStyles}>
-        {isOpen &&
-          options.map((option, index) => (
-            <li
-              style={
-                highlightedIndex === index ? { backgroundColor: "#bde4ff" } : {}
-              }
-              key={`${option}${index}`}
-              {...getItemProps({ item: option, index })}
-            >
-              {option}
-            </li>
-          ))}
-      </ul>
-    </div>
-  );
 }
 
-render(<DropdownSelection />, document.getElementById("root"));
+render(<DropdownSelection />, document.getElementById("root"))
 ```
 
 [selection]: https://www.w3.org/TR/wai-aria-practices/examples/listbox/listbox-collapsible.html
