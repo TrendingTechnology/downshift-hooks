@@ -97,6 +97,7 @@ const getInitialState = props => ({
   highlightedIndex: getInitialValue(props, 'highlightedIndex'),
   isOpen: getInitialValue(props, 'isOpen'),
   selectedItem: getInitialValue(props, 'selectedItem'),
+  keysSoFar: '',
 })
 
 export {

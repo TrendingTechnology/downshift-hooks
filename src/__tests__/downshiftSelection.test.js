@@ -91,7 +91,7 @@ describe('downshiftSelection', () => {
   afterEach(cleanup)
 
   describe('menu', () => {
-    describe('initialFocus', () => {
+    describe('initial focus', () => {
       test('is grabbed when isOpen is passed as true', () => {
         const wrapper = setup({ isOpen: true })
         const menu = wrapper.getByTestId(dataTestIds.menu)
@@ -122,6 +122,88 @@ describe('downshiftSelection', () => {
     })
 
     describe('on key down', () => {
+      describe('character key', () => {
+        jest.useFakeTimers()
+
+        afterEach(() => {
+          jest.runAllTimers()
+        })
+
+        const startsWithCharacter = (option, character) => {
+          return option.toLowerCase().startsWith(character.toLowerCase())
+        }
+
+        test('should highlight the first item that starts with that key', () => {
+          const wrapper = setup({ isOpen: true })
+          const menu = wrapper.getByTestId(dataTestIds.menu)
+
+          fireEvent.keyDown(menu, { key: 'c' })
+
+          expect(menu.getAttribute('aria-activedescendant')).toBe(
+            defaultIds.item(options.findIndex(option => startsWithCharacter(option, 'c'))))
+        })
+
+        test('should highlight the second item that starts with that key after typing it twice', () => {
+          const wrapper = setup({ isOpen: true })
+          const menu = wrapper.getByTestId(dataTestIds.menu)
+          const firstIndex = options.findIndex(option => startsWithCharacter(option, 'c'))
+
+          fireEvent.keyDown(menu, { key: 'c' })
+          jest.runAllTimers()
+          fireEvent.keyDown(menu, { key: 'c' })
+
+          expect(menu.getAttribute('aria-activedescendant')).toBe(
+            defaultIds.item(firstIndex + 1 + options.slice(firstIndex + 1).findIndex(option => startsWithCharacter(option, 'c'))))
+        })
+
+        test('should highlight the first item again if the options are depleated', () => {
+          const wrapper = setup({ isOpen: true })
+          const menu = wrapper.getByTestId(dataTestIds.menu)
+
+          fireEvent.keyDown(menu, { key: 'b' })
+          jest.runAllTimers()
+          fireEvent.keyDown(menu, { key: 'b' })
+          jest.runAllTimers()
+          fireEvent.keyDown(menu, { key: 'b' })
+
+          expect(menu.getAttribute('aria-activedescendant')).toBe(
+            defaultIds.item(options.findIndex(option => startsWithCharacter(option, 'b'))))
+        })
+
+        test('should not highlight anything if no item starts with that key', () => {
+          const wrapper = setup({ isOpen: true })
+          const menu = wrapper.getByTestId(dataTestIds.menu)
+
+          fireEvent.keyDown(menu, { key: 'x' })
+
+          expect(menu.getAttribute('aria-activedescendant')).toBeNull()
+        })
+
+        test('should highlight the first item that starts with the keys typed in rapid succession', () => {
+          const wrapper = setup({ isOpen: true })
+          const menu = wrapper.getByTestId(dataTestIds.menu)
+
+          fireEvent.keyDown(menu, { key: 'c' })
+          fireEvent.keyDown(menu, { key: 'a' })
+
+          expect(menu.getAttribute('aria-activedescendant')).toBe(
+            defaultIds.item(options.findIndex(option => startsWithCharacter(option, 'ca'))))
+        })
+
+        test('should become first character after timeout passes', () => {
+          const wrapper = setup({ isOpen: true })
+          const menu = wrapper.getByTestId(dataTestIds.menu)
+
+          fireEvent.keyDown(menu, { key: 'c' })
+          fireEvent.keyDown(menu, { key: 'a' })
+          jest.runAllTimers()
+          fireEvent.keyDown(menu, { key: 'l' })
+
+          expect(menu.getAttribute('aria-activedescendant')).toBe(
+            defaultIds.item(options.findIndex(option => startsWithCharacter(option, 'l'))))
+        })
+      })
+
       describe('arrow up', () => {
         test('it highlights the last option number if none is highlighted', () => {
           const wrapper = setup({ isOpen: true })
