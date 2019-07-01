@@ -37,6 +37,15 @@ npm install --save downshift-hooks
 
 For collapsible dropdown with a single selection, [click here][selection-readme].
 
+## Roadmap and contributions
+
+Next steps:
+- complete testing for the Selection hook.
+- create Search hook (the old Downshift default component) for the combobox design pattern.
+- create Multiple versions for Selection and Search.
+
+Share your opinion about having separate hooks for each component case. Help me out with ideas, feature prioritisation, code quality, documentation and anything else by creating Issues in this repositiory. Much appreciated!
+
 ## Documentation
 
 TODO
