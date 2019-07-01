@@ -1,7 +1,7 @@
 import {
   getNextWrappingIndex,
   getItemIndexByCharacterKey,
-} from '../../utils'
+} from '../utils'
 import {
   actionTypes,
   getHighlightedIndexOnOpen,

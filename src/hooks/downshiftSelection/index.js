@@ -7,7 +7,7 @@ import {
   callAllEventHandlers,
   setAriaLiveMessage,
   getState,
-} from '../../utils'
+} from '../utils'
 import downshiftSelectionReducer from './reducer'
 import {
   getA11yStatusMessage,

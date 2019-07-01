@@ -1,6 +1,6 @@
 import {
   getNextWrappingIndex,
-} from '../../utils'
+} from '../utils'
 
 const actionTypes = {
   MenuKeyDownArrowDown: 'MenuKeyDownArrowDown',

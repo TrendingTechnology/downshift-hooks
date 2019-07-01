@@ -1,7 +1,7 @@
 /* eslint-disable jest/no-disabled-tests */
 import * as keyboardKey from 'keyboard-key'
 import { fireEvent, cleanup } from '@testing-library/react'
-import { defaultIds } from '../../../utils'
+import { defaultIds } from '../../utils'
 import { setup, dataTestIds, options } from '../testUtils'
 
 describe('menu', () => {
