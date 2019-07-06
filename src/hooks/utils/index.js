@@ -31,6 +31,23 @@ function callAllEventHandlers(...fns) {
   })
 }
 
+/**
+ * This return a function that will call all the given functions with
+ * the arguments with which it's called. It does a null-check before
+ * attempting to call the functions and can take any number of functions.
+ * @param {...Function} fns the functions to call
+ * @return {Function} the function that calls all the functions
+ */
+function callAll(...fns) {
+  return (...args) => {
+    fns.forEach(fn => {
+      if (fn) {
+        fn(...args)
+      }
+    })
+  }
+}
+
 function getNextWrappingIndex(moveAmount, baseIndex, itemsLength, circular) {
   if (baseIndex === -1) {
     return moveAmount > 0 ? 0 : itemsLength - 1
@@ -85,11 +102,16 @@ function getState(state, props) {
   }, {})
 }
 
+
+function noop() {}
+
 export {
   defaultIds,
   callAllEventHandlers,
+  callAll,
   getNextWrappingIndex,
   getItemIndexByCharacterKey,
   setAriaLiveMessage,
   getState,
+  noop,
 }

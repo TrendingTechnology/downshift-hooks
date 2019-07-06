@@ -5,6 +5,7 @@ import * as keyboardKey from 'keyboard-key'
 import {
   defaultIds,
   callAllEventHandlers,
+  callAll,
   setAriaLiveMessage,
   getState,
 } from '../utils'
@@ -297,7 +298,10 @@ function useDownshiftSelection(userProps = {}) {
   const getMenuProps = ({
     onKeyDown,
     onBlur,
+    refKey = 'ref',
+    ref,
   } = {}) => ({
+    [refKey]: callAll(ref, menuNode => { menuRef.current = menuNode }),
     id: menuId,
     role: 'listbox',
     'aria-labelledby': labelId,
@@ -316,8 +320,11 @@ function useDownshiftSelection(userProps = {}) {
   const getTriggerButtonProps = ({
     onClick,
     onKeyDown,
+    refKey = 'ref',
+    ref,
+    ...rest
   } = {}) => ({
-    ref: triggerButtonRef,
+    [refKey]: callAll(ref, triggerButtonNode => { triggerButtonRef.current = triggerButtonNode }),
     id: triggerButtonId,
     'aria-haspopup': 'listbox',
     'aria-expanded': isOpen,
@@ -330,6 +337,7 @@ function useDownshiftSelection(userProps = {}) {
       onKeyDown,
       triggerButtonHandleKeyDown,
     ),
+    ...rest
   })
   const getItemProps = ({
     item,

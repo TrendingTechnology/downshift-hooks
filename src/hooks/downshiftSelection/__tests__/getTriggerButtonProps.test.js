@@ -1,11 +1,69 @@
 /* eslint-disable jest/no-disabled-tests */
 import * as keyboardKey from 'keyboard-key'
 import { fireEvent, cleanup } from '@testing-library/react'
-import { defaultIds } from '../../utils'
-import { setup, dataTestIds, options } from '../testUtils'
+import { act } from '@testing-library/react-hooks'
+import { defaultIds, noop } from '../../utils'
+import { setup, dataTestIds, options, setupHook } from '../testUtils'
 
 describe('getTriggerButtonProps', () => {
 	afterEach(cleanup)
+
+	test('passes down props received', () => {
+		const { result } = setupHook()
+
+		expect(result.current.getTriggerButtonProps({ 'foo': 'bar' }))
+			.toHaveProperty('foo', 'bar')
+	})
+
+	test('calls user and downshift event handlers', () => {
+		const userOnClick = jest.fn()
+		const { result } = setupHook()
+
+		act(() => {
+			const { ref } = result.current.getMenuProps()
+			ref.current = {
+				focus: noop,
+			}
+		})
+
+		act(() => {
+			const { onClick, ref } = result.current.getTriggerButtonProps({
+				onClick: userOnClick,
+			})
+			ref.current = {
+				focus: noop,
+			}
+			onClick({})
+		})
+
+		expect(userOnClick).toHaveBeenCalledTimes(1)
+		expect(result.current.isOpen).toBe(true)
+	})
+
+	test("does not call downshift event handler if user passes 'preventDownshiftDefault'", () => {
+		const userOnClick = jest.fn()
+		const { result } = setupHook()
+
+		act(() => {
+			const { ref } = result.current.getMenuProps()
+			ref.current = {
+				focus: noop,
+			}
+		})
+
+		act(() => {
+			const { onClick, ref } = result.current.getTriggerButtonProps({
+				onClick: userOnClick,
+			})
+			ref.current = {
+				focus: noop,
+			}
+			onClick({ preventDownshiftDefault: true })
+		})
+
+		expect(userOnClick).toHaveBeenCalledTimes(1)
+		expect(result.current.isOpen).toBe(false)
+	})
 
 	describe('event handlers', () => {
 		describe('on click', () => {

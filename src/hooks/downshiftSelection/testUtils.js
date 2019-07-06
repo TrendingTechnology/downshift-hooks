@@ -1,5 +1,6 @@
 import React from 'react'
 import { render } from '@testing-library/react'
+import { renderHook } from '@testing-library/react-hooks'
 import useDownshiftSelection from '.'
 
 const options = [
@@ -35,6 +36,10 @@ const dataTestIds = {
 	triggerButton: 'trigger-button-id',
 	menu: 'menu-id',
 	item: index => `item-id-${index}`,
+}
+
+const setupHook = (props) => {
+  return renderHook(() => useDownshiftSelection({ items: options, ...props }))
 }
 
 const DropdownSelection = (props) => {
@@ -83,4 +88,5 @@ export {
   dataTestIds,
   setup,
   options,
+  setupHook,
 }
