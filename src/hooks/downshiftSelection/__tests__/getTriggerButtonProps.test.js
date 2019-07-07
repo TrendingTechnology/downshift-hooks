@@ -15,24 +15,32 @@ describe('getTriggerButtonProps', () => {
 			.toHaveProperty('foo', 'bar')
 	})
 
+	test('uses custom ref passed by the user', () => {
+		const { result } = setupHook()
+		const focus = jest.fn()
+
+		act(() => {
+			const { ref: menuRef } = result.current.getMenuProps()
+			const { ref: triggerButtonRef, onClick } = result.current.getTriggerButtonProps()
+
+			menuRef({ focus })
+			triggerButtonRef({})
+			onClick({})
+		})
+
+		expect(focus).toHaveBeenCalledTimes(1)
+	})
+
 	test('calls user and downshift event handlers', () => {
 		const userOnClick = jest.fn()
 		const { result } = setupHook()
 
 		act(() => {
-			const { ref } = result.current.getMenuProps()
-			ref.current = {
-				focus: noop,
-			}
-		})
+			const { ref: menuRef } = result.current.getMenuProps()
+			const { ref: triggerButtonRef, onClick } = result.current.getTriggerButtonProps({ onClick: userOnClick })
 
-		act(() => {
-			const { onClick, ref } = result.current.getTriggerButtonProps({
-				onClick: userOnClick,
-			})
-			ref.current = {
-				focus: noop,
-			}
+			menuRef({ focus: noop })
+			triggerButtonRef({})
 			onClick({})
 		})
 

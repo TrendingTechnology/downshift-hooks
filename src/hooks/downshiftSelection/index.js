@@ -307,7 +307,6 @@ function useDownshiftSelection(userProps = {}) {
     'aria-labelledby': labelId,
     tabIndex: -1,
     ...(highlightedIndex > -1 && { 'aria-activedescendant': itemId(highlightedIndex) }),
-    ref: menuRef,
     onKeyDown: callAllEventHandlers(
       onKeyDown,
       menuHandleKeyDown,
