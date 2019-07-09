@@ -1,10 +1,12 @@
 /* eslint-disable jest/no-disabled-tests */
 import * as keyboardKey from 'keyboard-key'
 import { fireEvent, cleanup } from '@testing-library/react'
-import { defaultIds } from '../../utils'
+import { getDefaultIds } from '../../utils'
 import { setup, dataTestIds, options } from '../testUtils'
 
 describe('getMenuProps', () => {
+	const defaultIds = getDefaultIds(false)
+
 	afterEach(cleanup)
 
 	describe('initial focus', () => {

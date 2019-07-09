@@ -2,75 +2,148 @@
 import * as keyboardKey from 'keyboard-key'
 import { fireEvent, cleanup } from '@testing-library/react'
 import { act } from '@testing-library/react-hooks'
-import { defaultIds, noop } from '../../utils'
+import { getDefaultIds, noop } from '../../utils'
 import { setup, dataTestIds, options, setupHook } from '../testUtils'
 
 describe('getTriggerButtonProps', () => {
+	let defaultIds
+
+	beforeEach(() => {
+		defaultIds = getDefaultIds(false)
+	})
+
 	afterEach(cleanup)
 
-	test('passes down props received', () => {
-		const { result } = setupHook()
+	describe('hook props', () => {
+		test('assign default value to aria-labelledby', () => {
+			const { result } = setupHook()
+			const triggerButtonProps = result.current.getTriggerButtonProps()
 
-		expect(result.current.getTriggerButtonProps({ 'foo': 'bar' }))
-			.toHaveProperty('foo', 'bar')
-	})
-
-	test('uses custom ref passed by the user', () => {
-		const { result } = setupHook()
-		const focus = jest.fn()
-
-		act(() => {
-			const { ref: menuRef } = result.current.getMenuProps()
-			const { ref: triggerButtonRef, onClick } = result.current.getTriggerButtonProps()
-
-			menuRef({ focus })
-			triggerButtonRef({})
-			onClick({})
+			expect(triggerButtonProps['aria-labelledby'])
+				.toEqual(`${defaultIds.label} ${defaultIds.triggerButton}`)
 		})
 
-		expect(focus).toHaveBeenCalledTimes(1)
-	})
-
-	test('calls user and downshift event handlers', () => {
-		const userOnClick = jest.fn()
-		const { result } = setupHook()
-
-		act(() => {
-			const { ref: menuRef } = result.current.getMenuProps()
-			const { ref: triggerButtonRef, onClick } = result.current.getTriggerButtonProps({ onClick: userOnClick })
-
-			menuRef({ focus: noop })
-			triggerButtonRef({})
-			onClick({})
-		})
-
-		expect(userOnClick).toHaveBeenCalledTimes(1)
-		expect(result.current.isOpen).toBe(true)
-	})
-
-	test("does not call downshift event handler if user passes 'preventDownshiftDefault'", () => {
-		const userOnClick = jest.fn()
-		const { result } = setupHook()
-
-		act(() => {
-			const { ref } = result.current.getMenuProps()
-			ref.current = {
-				focus: noop,
+		test('assign custom value passed by user to aria-labelledby', () => {
+			const props = {
+				labelId: 'my-custom-label-id',
+				triggerButtonId: 'my-custom-trigger-button-id'
 			}
+			const { result } = setupHook(props)
+			const triggerButtonProps = result.current.getTriggerButtonProps()
+
+			expect(triggerButtonProps['aria-labelledby'])
+				.toEqual(`${props.labelId} ${props.triggerButtonId}`)
 		})
 
-		act(() => {
-			const { onClick, ref } = result.current.getTriggerButtonProps({
-				onClick: userOnClick,
+		test('assign default value to id', () => {
+			const { result } = setupHook()
+			const triggerButtonProps = result.current.getTriggerButtonProps()
+
+			expect(triggerButtonProps.id)
+				.toEqual(defaultIds.triggerButton)
+		})
+
+		test('assign custom value passed by user to id', () => {
+			const props = {
+				triggerButtonId: 'my-custom-trigger-button-id'
+			}
+			const { result } = setupHook(props)
+			const triggerButtonProps = result.current.getTriggerButtonProps()
+
+			expect(triggerButtonProps.id)
+				.toEqual(props.triggerButtonId)
+		})
+
+		test("assign 'listbbox' to aria-haspopup", () => {
+			const { result } = setupHook()
+			const triggerButtonProps = result.current.getTriggerButtonProps()
+
+			expect(triggerButtonProps['aria-haspopup'])
+				.toEqual('listbox')
+		})
+
+		test("assign 'false' value to aria-expanded when menu is closed", () => {
+			const { result } = setupHook({ isOpen: false })
+			const triggerButtonProps = result.current.getTriggerButtonProps()
+
+			expect(triggerButtonProps['aria-expanded'])
+				.toEqual(false)
+		})
+
+		test("assign 'true' value to aria-expanded when menu is open", () => {
+			const { result } = setupHook()
+
+			act(() => {
+				const { ref: menuRef } = result.current.getMenuProps()
+
+				menuRef({ focus: noop })
+				result.current.toggleMenu()
 			})
-			ref.current = {
-				focus: noop,
-			}
-			onClick({ preventDownshiftDefault: true })
+
+			const triggerButtonProps = result.current.getTriggerButtonProps()
+
+			expect(triggerButtonProps['aria-expanded'])
+				.toEqual(true)
+		})
+	})
+
+	describe('user props', () => {
+		test('are passed down', () => {
+			const { result } = setupHook()
+
+			expect(result.current.getTriggerButtonProps({ 'foo': 'bar' }))
+				.toHaveProperty('foo', 'bar')
 		})
 
-		expect(userOnClick).toHaveBeenCalledTimes(1)
-		expect(result.current.isOpen).toBe(false)
+		test('custom ref passed by the user is used', () => {
+			const { result } = setupHook()
+			const focus = jest.fn()
+
+			act(() => {
+				const { ref: menuRef } = result.current.getMenuProps()
+				const { ref: triggerButtonRef, onClick } = result.current.getTriggerButtonProps()
+
+				menuRef({ focus })
+				triggerButtonRef({})
+				onClick({})
+			})
+
+			expect(focus).toHaveBeenCalledTimes(1)
+		})
+
+		test('event handlers are called before downshift handlers', () => {
+			const userOnClick = jest.fn()
+			const { result } = setupHook()
+
+			act(() => {
+				const { ref: menuRef } = result.current.getMenuProps()
+				const { ref: triggerButtonRef, onClick } = result.current.getTriggerButtonProps({ onClick: userOnClick })
+
+				menuRef({ focus: noop })
+				triggerButtonRef({})
+				onClick({})
+			})
+
+			expect(userOnClick).toHaveBeenCalledTimes(1)
+			expect(result.current.isOpen).toBe(true)
+		})
+
+		test("event handlers are called without downshift handlers if 'preventDownshiftDefault' is passed in user event", () => {
+			const userOnClick = jest.fn()
+			const { result } = setupHook()
+
+			act(() => {
+				const { ref: menuRef } = result.current.getMenuProps()
+				const { ref: triggerButtonRef, onClick } = result.current.getTriggerButtonProps({ onClick: userOnClick })
+
+				triggerButtonRef({ focus: noop })
+				menuRef({ focus: noop })
+				onClick({ preventDownshiftDefault: true })
+			})
+
+			expect(userOnClick).toHaveBeenCalledTimes(1)
+			expect(result.current.isOpen).toBe(false)
+		})
 	})
 
 	describe('event handlers', () => {

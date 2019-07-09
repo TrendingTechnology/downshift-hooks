@@ -3,7 +3,7 @@ import scrollIntoView from 'scroll-into-view-if-needed'
 import * as keyboardKey from 'keyboard-key'
 
 import {
-  defaultIds,
+  getDefaultIds,
   callAllEventHandlers,
   callAll,
   setAriaLiveMessage,
@@ -66,6 +66,7 @@ function useDownshiftSelection(userProps = {}) {
   }, initialState)
 
   // IDs generation.
+  const defaultIds = getDefaultIds()
   const labelId = labelIdFromProps || defaultIds.label
   const itemId = itemIdFromProps || defaultIds.item
   const menuId = menuIdFromProps || defaultIds.menu
@@ -268,6 +269,7 @@ function useDownshiftSelection(userProps = {}) {
   const toggleMenu = () => {
     dispatch({
       type: actionTypes.FunctionToggleMenu,
+      props,
     })
   }
   const closeMenu = () => {
@@ -278,6 +280,7 @@ function useDownshiftSelection(userProps = {}) {
   const openMenu = () => {
     dispatch({
       type: actionTypes.FunctionOpenMenu,
+      props,
     })
   }
   const setHighlightedIndex = (newHighlightedIndex) => {

@@ -1,12 +1,19 @@
 import setAriaLiveMessage from './ariaLiveMessage'
 
 const id = 'downshift'
+let lastCall = 0
 
-const defaultIds = {
-  label: `${id}-label`,
-  menu: `${id}-menu`,
-  item: index => `${id}-item-${index}`,
-  triggerButton: `${id}-triggerButton`,
+function getDefaultIds(increment = true) {
+  const result = {
+    label: `${id}-label-${lastCall}`,
+    menu: `${id}-menu-${lastCall}`,
+    item: index => `${id}-item-${lastCall}-${index}`,
+    triggerButton: `${id}-triggerButton-${lastCall}`,
+  }
+  if (increment) {
+    lastCall++
+  }
+  return result
 }
 
 /**
@@ -78,7 +85,7 @@ function getItemIndexByCharacterKey(
     newHighlightedIndex = itemStrings
       .slice(startPosition)
       .findIndex(itemString => itemString.startsWith(keysSoFar))
-    
+
     if (newHighlightedIndex > -1) {
       return newHighlightedIndex + startPosition
     }
@@ -103,10 +110,10 @@ function getState(state, props) {
 }
 
 
-function noop() {}
+function noop() { }
 
 export {
-  defaultIds,
+  getDefaultIds,
   callAllEventHandlers,
   callAll,
   getNextWrappingIndex,

@@ -121,6 +121,7 @@ export default function downshiftSelectionReducer(state, action) {
     case actionTypes.FunctionOpenMenu:
       changes = {
         isOpen: true,
+        highlightedIndex: getHighlightedIndexOnOpen(props, state, 0),
       }
       break
     case actionTypes.FunctionCloseMenu:
