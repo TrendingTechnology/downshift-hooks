@@ -95,23 +95,7 @@ describe('getTriggerButtonProps', () => {
 				.toHaveProperty('foo', 'bar')
 		})
 
-		test('custom ref passed by the user is used', () => {
-			const { result } = setupHook()
-			const focus = jest.fn()
-
-			act(() => {
-				const { ref: menuRef } = result.current.getMenuProps()
-				const { ref: triggerButtonRef, onClick } = result.current.getTriggerButtonProps()
-
-				menuRef({ focus })
-				triggerButtonRef({})
-				onClick({})
-			})
-
-			expect(focus).toHaveBeenCalledTimes(1)
-		})
-
-		test('event handlers are called before downshift handlers', () => {
+		test('event handler onClick is called along with downshift handler', () => {
 			const userOnClick = jest.fn()
 			const { result } = setupHook()
 
@@ -128,8 +112,27 @@ describe('getTriggerButtonProps', () => {
 			expect(result.current.isOpen).toBe(true)
 		})
 
-		test("event handlers are called without downshift handlers if 'preventDownshiftDefault' is passed in user event", () => {
-			const userOnClick = jest.fn()
+		test('event handler onKeyDown is called along with downshift handler', () => {
+			const userOnKeyDown = jest.fn()
+			const { result } = setupHook()
+
+			act(() => {
+				const { ref: menuRef } = result.current.getMenuProps()
+				const { ref: triggerButtonRef, onKeyDown } = result.current.getTriggerButtonProps({ onKeyDown: userOnKeyDown })
+
+				menuRef({ focus: noop })
+				triggerButtonRef({})
+				onKeyDown({ keyCode: keyboardKey.ArrowDown, preventDefault: noop })
+			})
+
+			expect(userOnKeyDown).toHaveBeenCalledTimes(1)
+			expect(result.current.isOpen).toBe(true)
+		})
+
+		test("event handler onClick is called without downshift handler if 'preventDownshiftDefault' is passed in user event", () => {
+			const userOnClick = jest.fn(event => {
+				event.preventDownshiftDefault = true
+			})
 			const { result } = setupHook()
 
 			act(() => {
@@ -138,10 +141,32 @@ describe('getTriggerButtonProps', () => {
 
 				triggerButtonRef({ focus: noop })
 				menuRef({ focus: noop })
-				onClick({ preventDownshiftDefault: true })
+				onClick({})
 			})
 
 			expect(userOnClick).toHaveBeenCalledTimes(1)
+			expect(result.current.isOpen).toBe(false)
+		})
+
+		test("event handler onKeyDown is called without downshift handler if 'preventDownshiftDefault' is passed in user event", () => {
+			const userOnKeyDown = jest.fn(event => {
+				event.preventDownshiftDefault = true
+			})
+			const { result } = setupHook()
+
+			act(() => {
+				const { ref: menuRef } = result.current.getMenuProps()
+				const { ref: triggerButtonRef, onKeyDown } = result.current.getTriggerButtonProps({ onKeyDown: userOnKeyDown })
+
+				triggerButtonRef({ focus: noop })
+				menuRef({ focus: noop })
+				onKeyDown({
+					keyCode: keyboardKey.ArrowDown,
+					preventDefault: noop
+				})
+			})
+
+			expect(userOnKeyDown).toHaveBeenCalledTimes(1)
 			expect(result.current.isOpen).toBe(false)
 		})
 	})

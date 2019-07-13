@@ -135,7 +135,7 @@ function useDownshiftSelection(userProps = {}) {
   }, [isOpen])
   // Scrolls highlighted index into view.
   useEffect(() => {
-    if (highlightedIndex < 0 || !isOpen) {
+    if (highlightedIndex < 0 || !isOpen || !itemRefs.current.length) {
       return
     }
     scrollIntoView(itemRefs.current[highlightedIndex], {
@@ -189,6 +189,7 @@ function useDownshiftSelection(userProps = {}) {
       })
     },
     Tab(event) {
+      // The exception that calls MenuBlur.
       if (event.shiftKey) {
         dispatch({
           type: actionTypes.MenuBlur,
