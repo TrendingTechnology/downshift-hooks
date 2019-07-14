@@ -109,6 +109,15 @@ function getState(state, props) {
   }, {})
 }
 
+function getItemIndex(index, item, items) {
+  if (index !== undefined) {
+    return index
+  }
+  if (items.length === 0) {
+    return -1
+  }
+  return items.indexOf(item)
+}
 
 function noop() { }
 
@@ -121,4 +130,5 @@ export {
   setAriaLiveMessage,
   getState,
   noop,
+  getItemIndex,
 }

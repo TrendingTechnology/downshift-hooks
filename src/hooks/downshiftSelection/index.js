@@ -8,6 +8,7 @@ import {
   callAll,
   setAriaLiveMessage,
   getState,
+  getItemIndex,
 } from '../utils'
 import downshiftSelectionReducer from './reducer'
 import {
@@ -345,21 +346,24 @@ function useDownshiftSelection(userProps = {}) {
   const getItemProps = ({
     item,
     index,
+    refKey = 'ref',
+    ref,
     onMouseOver,
     onClick,
+    ...rest
   } = {}) => {
-    const itemIndex = index || items.indexOf(item)
+    const itemIndex = getItemIndex(index, item, items)
     if (itemIndex < 0) {
       throw new Error('Pass either item or item index in getItemProps!')
     }
     return {
-      ref: (itemElement) => {
-        if (itemElement) {
-          itemRefs.current.push(itemElement)
+      [refKey]: callAll(ref, (itemNode) => {
+        if (itemNode) {
+          itemRefs.current.push(itemNode)
         }
-      },
+      }),
       role: 'option',
-      'aria-selected': index === highlightedIndex,
+      ...(itemIndex === highlightedIndex && { 'aria-selected': true }),
       id: itemId(itemIndex),
       onMouseOver: callAllEventHandlers(
         onMouseOver,
@@ -369,6 +373,7 @@ function useDownshiftSelection(userProps = {}) {
         onClick,
         () => itemHandleClick(itemIndex),
       ),
+      ...rest,
     }
   }
 
