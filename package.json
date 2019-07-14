@@ -1,6 +1,6 @@
 {
   "name": "downshift-hooks",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "A set of hooks to build simple, flexible, WAI-ARIA compliant React dropdown components.",
   "main": "dist/downshift-hooks.cjs.js",
   "module": "dist/downshift-hooks.esm.js",
@@ -13,6 +13,11 @@
     "test": "kcd-scripts test",
     "test:cover": "kcd-scripts test --coverage",
     "validate": "kcd-scripts validate build,lint,test:cover"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "kcd-scripts pre-commit"
+    }
   },
   "repository": {
     "type": "git",
