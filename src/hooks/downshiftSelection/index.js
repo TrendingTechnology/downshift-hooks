@@ -1,4 +1,4 @@
-import { useReducer, useRef, useEffect } from 'react'
+import {useReducer, useRef, useEffect} from 'react'
 import scrollIntoView from 'scroll-into-view-if-needed'
 import * as keyboardKey from 'keyboard-key'
 
@@ -11,11 +11,7 @@ import {
   getItemIndex,
 } from '../utils'
 import downshiftSelectionReducer from './reducer'
-import {
-  getA11yStatusMessage,
-  actionTypes,
-  getInitialState,
-} from './utils'
+import {getA11yStatusMessage, actionTypes, getInitialState} from './utils'
 
 let keyClear = null
 
@@ -44,26 +40,25 @@ function useDownshiftSelection(userProps = {}) {
     stateReducer,
     // onChange props
     // onSelectedItemChange,
-    // onOpenChange,
+    // onIsOpenChange,
     // onHighlightedIndexChange,
     // onStateChange,
   } = props
+
+  if (items === undefined) {
+    throw new Error('Pass dropdown items as hook parameter!')
+  }
 
   // Initial state depending on controlled props.
   const initialState = getInitialState(props)
 
   // Reducer init.
-  const [{
-    isOpen,
-    highlightedIndex,
-    selectedItem,
-    keysSoFar,
-  }, dispatch] = useReducer((state, action) => {
+  const [
+    {isOpen, highlightedIndex, selectedItem, keysSoFar},
+    dispatch,
+  ] = useReducer((state, action) => {
     const changes = downshiftSelectionReducer(state, action)
-    return getState(
-      stateReducer(state, { ...action, changes }),
-      props,
-    )
+    return getState(stateReducer(state, {...action, changes}), props)
   }, initialState)
 
   // IDs generation.
@@ -83,6 +78,9 @@ function useDownshiftSelection(userProps = {}) {
   // Effects.
   // Status message on open.
   useEffect(() => {
+    if (!isOpen) {
+      return
+    }
     setAriaLiveMessage(
       getA11yStatusMessage({
         isOpen,
@@ -93,6 +91,9 @@ function useDownshiftSelection(userProps = {}) {
   }, [isOpen])
   // Status message on selection.
   useEffect(() => {
+    if (!selectedItem) {
+      return
+    }
     setAriaLiveMessage(
       getA11yStatusMessage({
         selectedItem,
@@ -103,6 +104,9 @@ function useDownshiftSelection(userProps = {}) {
   }, [selectedItem])
   // Concatenates keysSoFar and schedules the cleanup.
   useEffect(() => {
+    if (!keysSoFar) {
+      return
+    }
     if (keyClear) {
       clearTimeout(keyClear)
       keyClear = null
@@ -217,7 +221,7 @@ function useDownshiftSelection(userProps = {}) {
   }
 
   // Event handlers.
-  const menuHandleKeyDown = (event) => {
+  const menuHandleKeyDown = event => {
     const key = keyboardKey.getKey(event)
     if (key && menuKeyDownHandlers[key]) {
       menuKeyDownHandlers[key](event)
@@ -232,7 +236,7 @@ function useDownshiftSelection(userProps = {}) {
   // Focus going back to the triggerButton is something we control (Escape, Enter, Click).
   // We are triggering special actions for these cases in reducer, not MenuBlur.
   // Since Shift-Tab also lands focus on triggerButton, we will handle it as exception and call MenuBlur.
-  const menuHandleBlur = (event) => {
+  const menuHandleBlur = event => {
     if (event.relatedTarget !== triggerButtonRef.current) {
       dispatch({
         type: actionTypes.MenuBlur,
@@ -246,20 +250,20 @@ function useDownshiftSelection(userProps = {}) {
       props,
     })
   }
-  const triggerButtonHandleKeyDown = (event) => {
+  const triggerButtonHandleKeyDown = event => {
     const key = keyboardKey.getKey(event)
     if (key && triggerButtonKeyDownHandlers[key]) {
       triggerButtonKeyDownHandlers[key](event)
     }
   }
-  const itemHandleMouseOver = (index) => {
+  const itemHandleMouseOver = index => {
     dispatch({
       type: actionTypes.ItemHover,
       props,
       index,
     })
   }
-  const itemHandleClick = (index) => {
+  const itemHandleClick = index => {
     dispatch({
       type: actionTypes.ItemClick,
       props,
@@ -285,41 +289,40 @@ function useDownshiftSelection(userProps = {}) {
       props,
     })
   }
-  const setHighlightedIndex = (newHighlightedIndex) => {
+  const setHighlightedIndex = newHighlightedIndex => {
     dispatch({
       type: actionTypes.FunctionSetHighlightedIndex,
       highlightedIndex: newHighlightedIndex,
     })
   }
-  const setSelectedItem = (newSelectedItem) => {
+  const setSelectedItem = newSelectedItem => {
     dispatch({
       type: actionTypes.FunctionSetSelectedItem,
       selectedItem: newSelectedItem,
     })
   }
+  const reset = () => {
+    dispatch({
+      type: actionTypes.FunctionReset,
+      props,
+    })
+  }
   const getLabelProps = () => ({
     id: labelId,
   })
-  const getMenuProps = ({
-    onKeyDown,
-    onBlur,
-    refKey = 'ref',
-    ref,
-  } = {}) => ({
-    [refKey]: callAll(ref, menuNode => { menuRef.current = menuNode }),
+  const getMenuProps = ({onKeyDown, onBlur, refKey = 'ref', ref} = {}) => ({
+    [refKey]: callAll(ref, menuNode => {
+      menuRef.current = menuNode
+    }),
     id: menuId,
     role: 'listbox',
     'aria-labelledby': labelId,
     tabIndex: -1,
-    ...(highlightedIndex > -1 && { 'aria-activedescendant': itemId(highlightedIndex) }),
-    onKeyDown: callAllEventHandlers(
-      onKeyDown,
-      menuHandleKeyDown,
-    ),
-    onBlur: callAllEventHandlers(
-      onBlur,
-      menuHandleBlur,
-    ),
+    ...(highlightedIndex > -1 && {
+      'aria-activedescendant': itemId(highlightedIndex),
+    }),
+    onKeyDown: callAllEventHandlers(onKeyDown, menuHandleKeyDown),
+    onBlur: callAllEventHandlers(onBlur, menuHandleBlur),
   })
   const getTriggerButtonProps = ({
     onClick,
@@ -328,20 +331,16 @@ function useDownshiftSelection(userProps = {}) {
     ref,
     ...rest
   } = {}) => ({
-    [refKey]: callAll(ref, triggerButtonNode => { triggerButtonRef.current = triggerButtonNode }),
+    [refKey]: callAll(ref, triggerButtonNode => {
+      triggerButtonRef.current = triggerButtonNode
+    }),
     id: triggerButtonId,
     'aria-haspopup': 'listbox',
     'aria-expanded': isOpen,
     'aria-labelledby': `${labelId} ${triggerButtonId}`,
-    onClick: callAllEventHandlers(
-      onClick,
-      triggerButtonHandleClick,
-    ),
-    onKeyDown: callAllEventHandlers(
-      onKeyDown,
-      triggerButtonHandleKeyDown,
-    ),
-    ...rest
+    onClick: callAllEventHandlers(onClick, triggerButtonHandleClick),
+    onKeyDown: callAllEventHandlers(onKeyDown, triggerButtonHandleKeyDown),
+    ...rest,
   })
   const getItemProps = ({
     item,
@@ -357,22 +356,18 @@ function useDownshiftSelection(userProps = {}) {
       throw new Error('Pass either item or item index in getItemProps!')
     }
     return {
-      [refKey]: callAll(ref, (itemNode) => {
+      [refKey]: callAll(ref, itemNode => {
         if (itemNode) {
           itemRefs.current.push(itemNode)
         }
       }),
       role: 'option',
-      ...(itemIndex === highlightedIndex && { 'aria-selected': true }),
+      ...(itemIndex === highlightedIndex && {'aria-selected': true}),
       id: itemId(itemIndex),
-      onMouseOver: callAllEventHandlers(
-        onMouseOver,
-        () => itemHandleMouseOver(itemIndex),
+      onMouseOver: callAllEventHandlers(onMouseOver, () =>
+        itemHandleMouseOver(itemIndex),
       ),
-      onClick: callAllEventHandlers(
-        onClick,
-        () => itemHandleClick(itemIndex),
-      ),
+      onClick: callAllEventHandlers(onClick, () => itemHandleClick(itemIndex)),
       ...rest,
     }
   }
@@ -390,6 +385,8 @@ function useDownshiftSelection(userProps = {}) {
     highlightedIndex,
     isOpen,
     selectedItem,
+    items,
+    reset,
   }
 }
 

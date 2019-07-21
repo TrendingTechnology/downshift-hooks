@@ -1,19 +1,13 @@
-import {
-  getNextWrappingIndex,
-  getItemIndexByCharacterKey,
-} from '../utils'
+import {getNextWrappingIndex, getItemIndexByCharacterKey} from '../utils'
 import {
   actionTypes,
   getHighlightedIndexOnOpen,
+  defaultStateValues,
 } from './utils'
 
 // eslint-disable-next-line complexity
 export default function downshiftSelectionReducer(state, action) {
-  const {
-    type,
-    props,
-    shiftKey,
-  } = action
+  const {type, props, shiftKey} = action
   let changes
 
   switch (type) {
@@ -81,22 +75,23 @@ export default function downshiftSelectionReducer(state, action) {
         selectedItem: props.items[state.highlightedIndex],
       }
       break
-    case actionTypes.MenuKeyDownCharacter: {
-      const lowercasedKey = action.key
-      const keysSoFar = `${state.keysSoFar}${lowercasedKey}`
-      const highlightedIndex = getItemIndexByCharacterKey(
-        keysSoFar,
-        state.highlightedIndex,
-        props.items,
-        props.itemToString,
-      )
-      changes = {
-        keysSoFar,
-        ...(highlightedIndex >= 0 && {
-          highlightedIndex,
-        }),
+    case actionTypes.MenuKeyDownCharacter:
+      {
+        const lowercasedKey = action.key
+        const keysSoFar = `${state.keysSoFar}${lowercasedKey}`
+        const highlightedIndex = getItemIndexByCharacterKey(
+          keysSoFar,
+          state.highlightedIndex,
+          props.items,
+          props.itemToString,
+        )
+        changes = {
+          keysSoFar,
+          ...(highlightedIndex >= 0 && {
+            highlightedIndex,
+          }),
+        }
       }
-    }
       break
     case actionTypes.TriggerButtonKeyDownArrowDown: {
       changes = {
@@ -115,7 +110,9 @@ export default function downshiftSelectionReducer(state, action) {
     case actionTypes.FunctionToggleMenu:
       changes = {
         isOpen: !state.isOpen,
-        highlightedIndex: state.isOpen ? -1 : getHighlightedIndexOnOpen(props, state, 0),
+        highlightedIndex: state.isOpen
+          ? -1
+          : getHighlightedIndexOnOpen(props, state, 0),
       }
       break
     case actionTypes.FunctionOpenMenu:
@@ -144,20 +141,39 @@ export default function downshiftSelectionReducer(state, action) {
         keysSoFar: '',
       }
       break
+    case actionTypes.FunctionReset:
+      changes = {
+        highlightedIndex:
+          props.defaultHighlightedIndex === undefined
+            ? defaultStateValues.highlightedIndex
+            : props.defaultHighlightedIndex,
+        isOpen:
+          props.defaultIsOpen === undefined
+            ? defaultStateValues.isOpen
+            : props.defaultIsOpen,
+        selectedItem:
+          props.defaultSelectedItem === undefined
+            ? defaultStateValues.selectedItem
+            : props.defaultSelectedItem,
+      }
+      break
     default:
-      throw new Error();
+      throw new Error()
   }
 
-  if (props.onOpenChange && changes.isOpen) {
-    props.onOpenChange(changes)
+  if (props.onIsOpenChange && changes.isOpen !== undefined) {
+    props.onIsOpenChange(changes)
   }
-  if (props.onHighlightedIndexChange && changes.highlightedIndex) {
+  if (
+    props.onHighlightedIndexChange &&
+    changes.highlightedIndex !== undefined
+  ) {
     props.onHighlightedIndexChange(changes)
   }
-  if (props.onSelectedItemChange && changes.selectedItem) {
+  if (props.onSelectedItemChange && changes.selectedItem !== undefined) {
     props.onSelectedItemChange(changes)
   }
-  if (props.onStateChange && changes) {
+  if (props.onStateChange && changes !== undefined) {
     props.onStateChange(changes)
   }
 
