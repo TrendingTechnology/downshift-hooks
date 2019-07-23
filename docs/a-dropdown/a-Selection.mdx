@@ -6,10 +6,23 @@ route: /dropdown
 
 import {Playground} from 'docz'
 import {useDownshiftSelection} from '../../src'
-
-### Selection
+import {
+  Provider,
+  themes,
+  Button,
+  Text,
+  List,
+  Ref,
+  Image,
+} from '@stardust-ui/react'
 
 The `useDownshiftSelection` hook provides functionality and accessibility to Selection Dropdown, as described by the corresponding [ARIA docs](https://www.w3.org/TR/wai-aria-practices/examples/listbox/listbox-collapsible.html).
+
+## Plain HTML
+
+A dropdown created with HTML elements such as `<label>` for label, `<ul>` and `<li>` for the items list, and `<button>` for the trigger button.
+
+### Playground
 
 <Playground style={{height: '200px'}}>
   {() => {
@@ -89,7 +102,7 @@ The `useDownshiftSelection` hook provides functionality and accessibility to Sel
   }}
 </Playground>
 
-#### Usage
+### Usage
 
 ```
 import ReactDOM from 'react-dom'
@@ -108,27 +121,224 @@ const DropdownSelection = () => {
     getMenuProps,
     highlightedIndex,
     getItemProps,
-  } = useDownshiftSelection({ items: options })
+  } = useDownshiftSelection({items: options})
   return (
     <div>
-      <label {...getLabelProps()}>
-        Choose an element:
-      </label>
-      <button
-        {...getTriggerButtonProps()}>
+      <label {...getLabelProps()}>Choose an element:</label>
+      <button {...getTriggerButtonProps()}>
         {selectedItem || 'Elements'}
       </button>
       <ul {...getMenuProps()} style={menuStyles}>
-        {isOpen && options.map((option, index) => (
-          <li
-            style={highlightedIndex === index ? { backgroundColor: '#bde4ff' } : {}}
-            key={`${option}${index}`}
-            {...getItemProps({ item: option, index })}
-          >
-            {option}
-          </li>
-        ))}
+        {isOpen &&
+          options.map((option, index) => (
+            <li
+              style={
+                highlightedIndex === index
+                  ? {backgroundColor: '#bde4ff'}
+                  : {}
+              }
+              key={`${option}${index}`}
+              {...getItemProps({item: option, index})}
+            >
+              {option}
+            </li>
+          ))}
       </ul>
     </div>
   )
+}
+```
+
+## StardustUI
+
+A dropdown created with StardustUI components such as `<Label>` for label, `<List>` and `<ListItem>` for the items list, and `<Button>` for the trigger button.
+
+### Playground
+
+<Playground style={{height: '300px'}}>
+  {() => {
+    const DropdownSelectionStardustUI = () => {
+      const {
+        isOpen,
+        selectedItem,
+        getTriggerButtonProps,
+        getLabelProps,
+        getMenuProps,
+        highlightedIndex,
+        getItemProps,
+      } = useDownshiftSelection({items: options, itemToString: item => item.header})
+      const triggerButtonProps = getTriggerButtonProps({
+        refKey: 'triggerButtonRef',
+      })
+      const menuProps = getMenuProps({
+        refKey: 'menuRef',
+      })
+
+      return (
+        <Provider theme={themes.teams}>
+          <Text {...getLabelProps()} content={'Who do you want to be?'} />
+          <br />
+          <Ref innerRef={triggerButtonProps.triggerButtonRef}>
+            <Button
+              content={selectedItem && selectedItem.header || 'Choose your hero'}
+              icon="arrow right"
+              iconPosition="after"
+              {...triggerButtonProps}
+            />
+          </Ref>
+          <Ref innerRef={menuProps.menuRef}>
+            <List {...menuProps} style={menuStyles}>
+              {isOpen &&
+                options.map((option, index) => {
+                  const itemProps = getItemProps({item: option, index, refKey: 'itemRef'})
+                  return (
+                    <Ref innerRef={itemProps.itemRef}>
+                      <List.Item
+                        key={option.header}
+                        media={<Image src={option.image} avatar />}
+                        header={option.header}
+                        content={option.content}
+                        style={
+                          highlightedIndex === index
+                            ? {backgroundColor: '#bde4ff'}
+                            : {}
+                        }
+                        {...itemProps}
+                      />
+                    </Ref>
+                )
+                })}
+            </List>
+          </Ref>
+        </Provider>
+      )
+    }
+    const menuStyles = {
+      maxHeight: '250px',
+      overflowY: 'auto',
+      position: 'absolute',
+      margin: 0,
+      borderTop: 0,
+      background: 'white',
+    }
+    const options = [
+      {
+        header: 'Bruce Wayne',
+        image: 'public/images/avatar/small/matt.jpg',
+        content: 'Software Engineer',
+      },
+      {
+        header: 'Natasha Romanoff',
+        image: 'public/images/avatar/small/jenny.jpg',
+        content: 'UX Designer 2',
+      },
+      {
+        header: 'Steven Strange',
+        image: 'public/images/avatar/small/joe.jpg',
+        content: 'Principal Software Engineering Manager',
+      },
+      {
+        header: 'Alfred Pennyworth',
+        image: 'public/images/avatar/small/justen.jpg',
+        content: 'Technology Consultant',
+      },
+      {
+        header: `Scarlett O'Hara`,
+        image: 'public/images/avatar/small/laura.jpg',
+        content: 'Software Engineer 2',
+      },
+      {
+        header: 'Imperator Furiosa',
+        image: 'public/images/avatar/small/veronika.jpg',
+        content: 'Boss',
+      },
+      {
+        header: 'Bruce Banner',
+        image: 'public/images/avatar/small/chris.jpg',
+        content: 'Senior Computer Scientist',
+      },
+      {
+        header: 'Peter Parker',
+        image: 'public/images/avatar/small/daniel.jpg',
+        content: 'Partner Software Engineer',
+      },
+      {
+        header: 'Selina Kyle',
+        image: 'public/images/avatar/small/ade.jpg',
+        content: 'Graphic Designer',
+      },
+    ]
+    return <DropdownSelectionStardustUI />
+
+}}
+
+</Playground>
+
+### Usage
+
+```
+import ReactDOM from 'react-dom'
+import React from 'react'
+import useDownshiftSelection from 'downshift-hooks'
+import {Provider, themes, Button, Text, List, Ref, Image} from '@stardust-ui/react'
+
+const options = [{header, image, content}, ...] // your dropdown items here
+const menuStyles = {...} // your styles here
+
+const DropdownSelectionStardustUI = () => {
+  const {
+    isOpen,
+    selectedItem,
+    getTriggerButtonProps,
+    getLabelProps,
+    getMenuProps,
+    highlightedIndex,
+    getItemProps,
+  } = useDownshiftSelection({items: options, itemToString: item => item.header})
+  const triggerButtonProps = getTriggerButtonProps({
+    refKey: 'triggerButtonRef',
+  })
+  const menuProps = getMenuProps({
+    refKey: 'menuRef',
+  })
+
+  return (
+    <Provider theme={themes.teams}>
+      <Text {...getLabelProps()} content={'Who do you want to be?'} />
+      <br />
+      <Ref innerRef={triggerButtonProps.triggerButtonRef}>
+        <Button
+          content={selectedItem && selectedItem.header || 'Choose your hero'}
+          icon="arrow right"
+          iconPosition="after"
+          {...triggerButtonProps}
+        />
+      </Ref>
+      <Ref innerRef={menuProps.menuRef}>
+        <List {...menuProps} style={menuStyles}>
+          {isOpen &&
+            options.map((option, index) => {
+              const itemProps = getItemProps({item: option, index, refKey: 'itemRef'})
+              return (
+                <Ref innerRef={itemProps.itemRef}>
+                  <List.Item
+                    key={option.header}
+                    media={<Image src={option.image} avatar />}
+                    header={option.header}
+                    content={option.content}
+                    style={
+                      highlightedIndex === index
+                        ? {backgroundColor: '#bde4ff'}
+                        : {}
+                    }
+                    {...itemProps}
+                  />
+                </Ref>
+            )
+            })}
+        </List>
+      </Ref>
+    </Provider>
+  )
+}
 ```

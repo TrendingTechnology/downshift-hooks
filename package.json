@@ -31,6 +31,7 @@
   },
   "homepage": "https://github.com/silviuavram/downshift-hooks#readme",
   "devDependencies": {
+    "@stardust-ui/react": "^0.34.2",
     "@testing-library/react": "^8.0.1",
     "@testing-library/react-hooks": "^1.1.0",
     "docz": "^1.2.0",
