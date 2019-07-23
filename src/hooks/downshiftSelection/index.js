@@ -373,20 +373,24 @@ function useDownshiftSelection(userProps = {}) {
   }
 
   return {
+    // prop getters.
+    getTriggerButtonProps,
+    getLabelProps,
+    getMenuProps,
+    getItemProps,
+    // actions.
     toggleMenu,
     openMenu,
     closeMenu,
     setHighlightedIndex,
     setSelectedItem,
-    getTriggerButtonProps,
-    getLabelProps,
-    getMenuProps,
-    getItemProps,
+    reset,
+    // state.
     highlightedIndex,
     isOpen,
     selectedItem,
+    // props.
     items,
-    reset,
   }
 }
 

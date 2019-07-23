@@ -161,20 +161,22 @@ export default function downshiftSelectionReducer(state, action) {
       throw new Error()
   }
 
-  if (props.onIsOpenChange && changes.isOpen !== undefined) {
-    props.onIsOpenChange(changes)
-  }
-  if (
-    props.onHighlightedIndexChange &&
-    changes.highlightedIndex !== undefined
-  ) {
-    props.onHighlightedIndexChange(changes)
-  }
-  if (props.onSelectedItemChange && changes.selectedItem !== undefined) {
-    props.onSelectedItemChange(changes)
-  }
-  if (props.onStateChange && changes !== undefined) {
-    props.onStateChange(changes)
+  if (props) {
+    if (props.onIsOpenChange && changes.isOpen !== undefined) {
+      props.onIsOpenChange(changes)
+    }
+    if (
+      props.onHighlightedIndexChange &&
+      changes.highlightedIndex !== undefined
+    ) {
+      props.onHighlightedIndexChange(changes)
+    }
+    if (props.onSelectedItemChange && changes.selectedItem !== undefined) {
+      props.onSelectedItemChange(changes)
+    }
+    if (props.onStateChange && changes !== undefined) {
+      props.onStateChange(changes)
+    }
   }
 
   return {
