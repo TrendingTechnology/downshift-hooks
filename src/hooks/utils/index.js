@@ -1,18 +1,13 @@
 import setAriaLiveMessage from './ariaLiveMessage'
 
-const id = 'downshift'
-let lastCall = 0
-
-function getDefaultIds(increment = true) {
+function getDefaultIds(uniqueId) {
   const result = {
-    label: `${id}-label-${lastCall}`,
-    menu: `${id}-menu-${lastCall}`,
-    item: index => `${id}-item-${lastCall}-${index}`,
-    triggerButton: `${id}-triggerButton-${lastCall}`,
+    label: `downshift-label-${uniqueId}`,
+    menu: `downshift-menu-${uniqueId}`,
+    item: index => `downshift-item-${uniqueId}-${index}`,
+    triggerButton: `downshift-trigger-button-${uniqueId}`,
   }
-  if (increment) {
-    lastCall++
-  }
+
   return result
 }
 
@@ -24,18 +19,17 @@ function getDefaultIds(increment = true) {
  * @return {Function} the event handler to add to an element
  */
 function callAllEventHandlers(...fns) {
-  return (event, ...args) => fns.some((fn) => {
-    if (fn) {
-      fn(event, ...args)
-    }
-    return (
-      event.preventDownshiftDefault
-      || (
-        Object.prototype.hasOwnProperty.call(event, 'nativeEvent')
-        && event.nativeEvent.preventDownshiftDefault
+  return (event, ...args) =>
+    fns.some(fn => {
+      if (fn) {
+        fn(event, ...args)
+      }
+      return (
+        event.preventDownshiftDefault ||
+        (Object.prototype.hasOwnProperty.call(event, 'nativeEvent') &&
+          event.nativeEvent.preventDownshiftDefault)
       )
-    )
-  })
+    })
 }
 
 /**
@@ -92,8 +86,9 @@ function getItemIndexByCharacterKey(
   }
 
   if (newHighlightedIndex === -1) {
-    newHighlightedIndex = itemStrings
-      .findIndex(itemString => itemString.startsWith(keysSoFar))
+    newHighlightedIndex = itemStrings.findIndex(itemString =>
+      itemString.startsWith(keysSoFar),
+    )
   }
 
   return newHighlightedIndex
@@ -102,9 +97,7 @@ function getItemIndexByCharacterKey(
 function getState(state, props) {
   return Object.keys(state).reduce((prevState, key) => {
     // eslint-disable-next-line no-param-reassign
-    prevState[key] = props[key] === undefined
-      ? state[key]
-      : props[key]
+    prevState[key] = props[key] === undefined ? state[key] : props[key]
     return prevState
   }, {})
 }
@@ -119,7 +112,7 @@ function getItemIndex(index, item, items) {
   return items.indexOf(item)
 }
 
-function noop() { }
+function noop() {}
 
 export {
   getDefaultIds,

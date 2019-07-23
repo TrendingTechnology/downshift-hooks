@@ -1,6 +1,7 @@
 import {useReducer, useRef, useEffect} from 'react'
 import scrollIntoView from 'scroll-into-view-if-needed'
 import * as keyboardKey from 'keyboard-key'
+import {useId} from '@reach/auto-id'
 
 import {
   getDefaultIds,
@@ -44,6 +45,7 @@ function useDownshiftSelection(userProps = {}) {
     // onHighlightedIndexChange,
     // onStateChange,
   } = props
+  const defaultIds = getDefaultIds(useId())
 
   if (items === undefined) {
     throw new Error('Pass dropdown items as hook parameter!')
@@ -62,7 +64,6 @@ function useDownshiftSelection(userProps = {}) {
   }, initialState)
 
   // IDs generation.
-  const defaultIds = getDefaultIds()
   const labelId = labelIdFromProps || defaultIds.label
   const itemId = itemIdFromProps || defaultIds.item
   const menuId = menuIdFromProps || defaultIds.menu

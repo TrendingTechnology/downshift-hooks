@@ -32,6 +32,12 @@ const options = [
   'Oganesson',
 ]
 
+let downshiftTestId = 0
+
+const getId = () => {
+  return ++downshiftTestId
+}
+
 const dataTestIds = {
   triggerButton: 'trigger-button-id',
   menu: 'menu-id',
@@ -83,4 +89,4 @@ const DropdownSelection = props => {
 
 const setup = props => render(<DropdownSelection {...props} />)
 
-export {dataTestIds, setup, options, setupHook}
+export {dataTestIds, setup, options, setupHook, getId}

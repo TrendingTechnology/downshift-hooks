@@ -3,13 +3,13 @@ import * as keyboardKey from 'keyboard-key'
 import {act} from '@testing-library/react-hooks'
 import {fireEvent, cleanup} from '@testing-library/react'
 import {getDefaultIds, noop} from '../../utils'
-import {setup, dataTestIds, options, setupHook} from '../testUtils'
+import {setup, dataTestIds, options, setupHook, getId} from '../testUtils'
 
 describe('getMenuProps', () => {
   let defaultIds
 
   beforeEach(() => {
-    defaultIds = getDefaultIds(false)
+    defaultIds = getDefaultIds(getId())
   })
 
   afterEach(cleanup)
@@ -95,6 +95,19 @@ describe('getMenuProps', () => {
       act(() => {
         const {ref: menuRef} = result.current.getMenuProps()
         menuRef({focus})
+        result.current.toggleMenu()
+      })
+
+      expect(focus).toHaveBeenCalledTimes(1)
+    })
+
+    test('custom ref with custom name passed by the user is used', () => {
+      const {result} = setupHook()
+      const focus = jest.fn()
+
+      act(() => {
+        const {blablaRef} = result.current.getMenuProps({refKey: 'blablaRef'})
+        blablaRef({focus})
         result.current.toggleMenu()
       })
 

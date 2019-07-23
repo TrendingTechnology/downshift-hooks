@@ -1,13 +1,13 @@
 import {fireEvent, cleanup} from '@testing-library/react'
 import {act} from '@testing-library/react-hooks'
 import {getDefaultIds, noop} from '../../utils'
-import {setup, dataTestIds, options, setupHook} from '../testUtils'
+import {setup, dataTestIds, options, setupHook, getId} from '../testUtils'
 
 describe('getItemProps', () => {
   let defaultIds
 
   beforeEach(() => {
-    defaultIds = getDefaultIds(false)
+    defaultIds = getDefaultIds(getId())
   })
 
   afterEach(cleanup)
