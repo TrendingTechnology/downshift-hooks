@@ -61,6 +61,7 @@ const DropdownSelection = props => {
   } = useDownshiftSelection({items: options, ...props})
   return (
     <div>
+      {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
       <label {...getLabelProps()}>Choose an element:</label>
       <button
         data-testid={dataTestIds.triggerButton}
