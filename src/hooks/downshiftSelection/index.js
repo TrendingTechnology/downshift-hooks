@@ -89,6 +89,8 @@ function useDownshiftSelection(userProps = {}) {
     }
     setAriaLiveMessage(
       getA11yStatusMessage({
+        selectedItem,
+        itemToString,
         isOpen,
         items,
       }),
@@ -104,6 +106,8 @@ function useDownshiftSelection(userProps = {}) {
       getA11yStatusMessage({
         selectedItem,
         itemToString,
+        isOpen,
+        items,
       }),
     )
     // eslint-disable-next-line react-hooks/exhaustive-deps

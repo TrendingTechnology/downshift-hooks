@@ -131,6 +131,22 @@ describe('props', () => {
         document.getElementById('a11y-status-message').textContent,
       ).toEqual('custom message')
     })
+
+    test('is called with the correct props', () => {
+      const getA11yStatusMessage = jest.fn()
+      const wrapper = setup({getA11yStatusMessage})
+      const triggerButton = wrapper.getByTestId(dataTestIds.triggerButton)
+
+      fireEvent.click(triggerButton)
+      expect(getA11yStatusMessage).toHaveBeenCalledWith(
+        expect.objectContaining({
+          items: expect.any(Array),
+          itemToString: expect.any(Function),
+          isOpen: expect.any(Boolean),
+          selectedItem: expect.any(Object),
+        }),
+      )
+    })
   })
 
   describe('highlightedIndex', () => {
