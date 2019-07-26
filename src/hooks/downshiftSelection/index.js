@@ -175,13 +175,15 @@ function useDownshiftSelection(userProps = {}) {
         shiftKey: event.shiftKey,
       })
     },
-    Home() {
+    Home(event) {
+      event.preventDefault()
       dispatch({
         type: actionTypes.MenuKeyDownHome,
         props,
       })
     },
-    End() {
+    End(event) {
+      event.preventDefault()
       dispatch({
         type: actionTypes.MenuKeyDownEnd,
         props,
