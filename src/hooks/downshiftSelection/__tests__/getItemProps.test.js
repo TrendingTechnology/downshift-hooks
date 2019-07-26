@@ -1,7 +1,13 @@
+import * as keyboardKey from 'keyboard-key'
 import {fireEvent, cleanup} from '@testing-library/react'
+import scrollIntoView from 'scroll-into-view-if-needed'
 import {act} from '@testing-library/react-hooks'
 import {getDefaultIds, noop} from '../../utils'
 import {setup, dataTestIds, options, setupHook, getId} from '../testUtils'
+
+jest.mock('scroll-into-view-if-needed', () => {
+  return jest.fn()
+})
 
 describe('getItemProps', () => {
   let defaultIds
@@ -164,6 +170,7 @@ describe('getItemProps', () => {
       expect(result.current.highlightedIndex).toBe(-1)
     })
   })
+
   describe('event handlers', () => {
     describe('on mouse over', () => {
       test('it highlights the item', () => {
@@ -215,6 +222,18 @@ describe('getItemProps', () => {
         expect(menu.childNodes).toHaveLength(0)
         expect(triggerButton.textContent).toEqual(options[index])
       })
+    })
+  })
+
+  describe('scrolling', () => {
+    test('is performed by the menu to the item if highlighted and not 100% visible', () => {
+      scrollIntoView.mockClear()
+
+      const wrapper = setup({initialIsOpen: true})
+      const menu = wrapper.getByTestId(dataTestIds.menu)
+
+      fireEvent.keyDown(menu, {keyCode: keyboardKey.End})
+      expect(scrollIntoView).toHaveBeenCalledTimes(1)
     })
   })
 })
