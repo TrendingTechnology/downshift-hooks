@@ -12,7 +12,11 @@ import {
   getItemIndex,
 } from '../utils'
 import downshiftSelectionReducer from './reducer'
-import {getA11yStatusMessage, actionTypes, getInitialState} from './utils'
+import {
+  getA11yStatusMessage as defaultGetA11yStatusMessage,
+  actionTypes,
+  getInitialState,
+} from './utils'
 
 let keyClear = null
 
@@ -21,12 +25,13 @@ function useDownshiftSelection(userProps = {}) {
   const props = {
     itemToString: item => (item ? String(item) : ''),
     stateReducer: (s, a) => a.changes,
-    getA11yStatusMessage,
+    getA11yStatusMessage: defaultGetA11yStatusMessage,
     ...userProps,
   }
   const {
     items,
     itemToString,
+    getA11yStatusMessage,
     // highlightedIndex
     // isOpen
     initialIsOpen,

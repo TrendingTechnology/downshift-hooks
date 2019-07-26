@@ -41,8 +41,9 @@ function getA11yStatusMessage({isOpen, selectedItem, items, itemToString}) {
     if (resultCount === 0) {
       return 'No results are available'
     }
-    return `${resultCount} result${resultCount === 1 ? ' is' : 's are'}
-       available, use up and down arrow keys to navigate. Press Enter key to select.`
+    return `${resultCount} result${
+      resultCount === 1 ? ' is' : 's are'
+    } available, use up and down arrow keys to navigate. Press Enter key to select.`
   }
   return ''
 }

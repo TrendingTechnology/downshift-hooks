@@ -51,6 +51,88 @@ describe('props', () => {
     })
   })
 
+  describe('getA11yStatusMessage', () => {
+    jest.useFakeTimers()
+
+    afterEach(() => {
+      jest.runAllTimers()
+    })
+
+    test('reports that no results are available if items list is empty', () => {
+      const wrapper = setup({items: []})
+      const triggerButton = wrapper.getByTestId(dataTestIds.triggerButton)
+
+      fireEvent.click(triggerButton)
+      expect(document.getElementById('a11y-status-message').textContent).toBe(
+        'No results are available',
+      )
+    })
+
+    test('reports that one result is available if one item is shown', () => {
+      const wrapper = setup({items: ['bla']})
+      const triggerButton = wrapper.getByTestId(dataTestIds.triggerButton)
+
+      fireEvent.click(triggerButton)
+      expect(
+        document.getElementById('a11y-status-message').textContent,
+      ).toEqual(
+        '1 result is available, use up and down arrow keys to navigate. Press Enter key to select.',
+      )
+    })
+
+    test('reports the number of results available if more than one item are shown', () => {
+      const wrapper = setup({items: ['bla', 'blabla']})
+      const triggerButton = wrapper.getByTestId(dataTestIds.triggerButton)
+
+      fireEvent.click(triggerButton)
+      expect(
+        document.getElementById('a11y-status-message').textContent,
+      ).toEqual(
+        '2 results are available, use up and down arrow keys to navigate. Press Enter key to select.',
+      )
+    })
+
+    test('is empty on menu close', () => {
+      const wrapper = setup({items: ['bla', 'blabla'], initialIsOpen: true})
+      const triggerButton = wrapper.getByTestId(dataTestIds.triggerButton)
+      jest.runAllTimers()
+
+      fireEvent.click(triggerButton)
+      expect(
+        document.getElementById('a11y-status-message').textContent,
+      ).toEqual('')
+    })
+
+    test('is removed after 500ms as a cleanup', () => {
+      const wrapper = setup()
+      const triggerButton = wrapper.getByTestId(dataTestIds.triggerButton)
+
+      fireEvent.click(triggerButton)
+      jest.runAllTimers()
+
+      expect(
+        document.getElementById('a11y-status-message').textContent,
+      ).toEqual('')
+    })
+
+    test('is replaced with the user provided one', () => {
+      const wrapper = setup({getA11yStatusMessage: () => 'custom message'})
+      const triggerButton = wrapper.getByTestId(dataTestIds.triggerButton)
+
+      fireEvent.click(triggerButton)
+      expect(
+        document.getElementById('a11y-status-message').textContent,
+      ).toEqual('custom message')
+
+      const item = wrapper.getByTestId(dataTestIds.item(3))
+      jest.runAllTimers()
+      fireEvent.click(item)
+      expect(
+        document.getElementById('a11y-status-message').textContent,
+      ).toEqual('custom message')
+    })
+  })
+
   describe('highlightedIndex', () => {
     test('controls the state property if passed', () => {
       const highlightedIndex = 1
