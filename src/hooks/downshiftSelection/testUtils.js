@@ -1,6 +1,8 @@
 import React from 'react'
+import {useId} from '@reach/auto-id'
 import {render} from '@testing-library/react'
 import {renderHook} from '@testing-library/react-hooks'
+import {getDefaultIds} from '../utils'
 import useDownshiftSelection from '.'
 
 const options = [
@@ -32,11 +34,13 @@ const options = [
   'Oganesson',
 ]
 
-let downshiftTestId = 0
+jest.mock('@reach/auto-id', () => {
+  return {
+    useId: () => 'test-id',
+  }
+})
 
-const getId = () => {
-  return ++downshiftTestId
-}
+const defaultIds = getDefaultIds(useId())
 
 const dataTestIds = {
   triggerButton: 'trigger-button-id',
@@ -90,4 +94,4 @@ const DropdownSelection = props => {
 
 const setup = props => render(<DropdownSelection {...props} />)
 
-export {dataTestIds, setup, options, setupHook, getId}
+export {dataTestIds, setup, options, setupHook, defaultIds}

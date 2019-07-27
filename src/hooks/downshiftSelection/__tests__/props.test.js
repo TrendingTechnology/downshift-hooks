@@ -1,16 +1,9 @@
 import * as keyboardKey from 'keyboard-key'
 import {fireEvent, cleanup} from '@testing-library/react'
-import {setup, dataTestIds, options, getId} from '../testUtils'
-import {getDefaultIds} from '../../utils'
+import {setup, dataTestIds, options, defaultIds} from '../testUtils'
 import {actionTypes} from '../utils'
 
 describe('props', () => {
-  let defaultIds
-
-  beforeEach(() => {
-    defaultIds = getDefaultIds(getId())
-  })
-
   afterEach(cleanup)
 
   describe('items', () => {
@@ -223,16 +216,16 @@ describe('props', () => {
       expect(stateReducer).not.toHaveBeenCalled()
 
       fireEvent.click(triggerButton)
-      expect(stateReducer).toHaveBeenCalledTimes(1)
-
-      fireEvent.keyDown(menu, {key: 'c'})
       expect(stateReducer).toHaveBeenCalledTimes(2)
 
-      fireEvent.keyDown(menu, {keyCode: keyboardKey.ArrowUp})
+      fireEvent.keyDown(menu, {key: 'c'})
       expect(stateReducer).toHaveBeenCalledTimes(3)
 
-      fireEvent.click(triggerButton)
+      fireEvent.keyDown(menu, {keyCode: keyboardKey.ArrowUp})
       expect(stateReducer).toHaveBeenCalledTimes(4)
+
+      fireEvent.click(triggerButton)
+      expect(stateReducer).toHaveBeenCalledTimes(5)
     })
 
     test('replaces prop values with user defined', () => {

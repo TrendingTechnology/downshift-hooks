@@ -2,16 +2,16 @@
 import * as keyboardKey from 'keyboard-key'
 import {act} from '@testing-library/react-hooks'
 import {fireEvent, cleanup} from '@testing-library/react'
-import {getDefaultIds, noop} from '../../utils'
-import {setup, dataTestIds, options, setupHook, getId} from '../testUtils'
+import {noop} from '../../utils'
+import {setup, dataTestIds, options, setupHook, defaultIds} from '../testUtils'
+
+jest.mock('@reach/auto-id', () => {
+  return {
+    useId: () => 'test-id',
+  }
+})
 
 describe('getMenuProps', () => {
-  let defaultIds
-
-  beforeEach(() => {
-    defaultIds = getDefaultIds(getId())
-  })
-
   afterEach(cleanup)
 
   describe('hook props', () => {

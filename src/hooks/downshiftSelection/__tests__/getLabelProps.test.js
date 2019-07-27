@@ -1,14 +1,7 @@
 import {cleanup} from '@testing-library/react'
-import {setupHook, getId} from '../testUtils'
-import {getDefaultIds} from '../../utils'
+import {setupHook, defaultIds} from '../testUtils'
 
 describe('getLabelProps', () => {
-  let defaultIds
-
-  beforeEach(() => {
-    defaultIds = getDefaultIds(getId())
-  })
-
   afterEach(cleanup)
 
   test('should have a default id assigned', () => {

@@ -2,20 +2,14 @@ import * as keyboardKey from 'keyboard-key'
 import {fireEvent, cleanup} from '@testing-library/react'
 import scrollIntoView from 'scroll-into-view-if-needed'
 import {act} from '@testing-library/react-hooks'
-import {getDefaultIds, noop} from '../../utils'
-import {setup, dataTestIds, options, setupHook, getId} from '../testUtils'
+import {noop} from '../../utils'
+import {setup, dataTestIds, options, setupHook, defaultIds} from '../testUtils'
 
 jest.mock('scroll-into-view-if-needed', () => {
   return jest.fn()
 })
 
 describe('getItemProps', () => {
-  let defaultIds
-
-  beforeEach(() => {
-    defaultIds = getDefaultIds(getId())
-  })
-
   afterEach(cleanup)
 
   test('throws error if no index or item has been passed', () => {
