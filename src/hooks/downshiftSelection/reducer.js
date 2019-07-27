@@ -158,7 +158,7 @@ export default function downshiftSelectionReducer(state, action) {
       }
       break
     default:
-      throw new Error()
+      throw new Error('Reducer called without proper action type.')
   }
 
   if (props) {
