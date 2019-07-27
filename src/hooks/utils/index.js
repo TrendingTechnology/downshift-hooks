@@ -1,3 +1,4 @@
+import * as PropTypes from 'prop-types'
 import setAriaLiveMessage from './ariaLiveMessage'
 
 function getDefaultIds(uniqueId) {
@@ -114,6 +115,14 @@ function getItemIndex(index, item, items) {
 
 function noop() {}
 
+function getPropTypesValidator(caller, propTypes) {
+  return function validate(options = {}) {
+    Object.entries(propTypes).forEach(([key]) => {
+      PropTypes.checkPropTypes(propTypes, options, key, caller.name)
+    })
+  }
+}
+
 export {
   getDefaultIds,
   callAllEventHandlers,
@@ -124,4 +133,5 @@ export {
   getState,
   noop,
   getItemIndex,
+  getPropTypesValidator,
 }

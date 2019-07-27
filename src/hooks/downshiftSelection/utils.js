@@ -1,3 +1,4 @@
+import * as PropTypes from 'prop-types'
 import {getNextWrappingIndex} from '../utils'
 
 const actionTypes = {
@@ -102,10 +103,36 @@ const getInitialState = props => ({
   keysSoFar: '',
 })
 
+const propTypes = {
+  items: PropTypes.array.isRequired,
+  itemToString: PropTypes.func,
+  getA11yStatusMessage: PropTypes.func,
+  circularNavigation: PropTypes.bool,
+  highlightedIndex: PropTypes.number,
+  defaultHighlightedIndex: PropTypes.number,
+  initialHighlightedIndex: PropTypes.number,
+  isOpen: PropTypes.bool,
+  defaultIsOpen: PropTypes.bool,
+  initialsOpen: PropTypes.bool,
+  selectedItem: PropTypes.any,
+  initialSelectedItem: PropTypes.any,
+  defaultSelectedItem: PropTypes.any,
+  labelId: PropTypes.string,
+  menuId: PropTypes.string,
+  itemId: PropTypes.func,
+  triggerButtonId: PropTypes.string,
+  stateReducer: PropTypes.func,
+  onSelectedItemChange: PropTypes.func,
+  onHighlightedIndexChange: PropTypes.func,
+  onStateChange: PropTypes.func,
+  onIsOpenChange: PropTypes.func,
+}
+
 export {
   getHighlightedIndexOnOpen,
   getA11yStatusMessage,
   getInitialState,
   actionTypes,
   defaultStateValues,
+  propTypes,
 }

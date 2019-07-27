@@ -1,6 +1,6 @@
 import * as keyboardKey from 'keyboard-key'
 import {fireEvent, cleanup} from '@testing-library/react'
-import {setup, dataTestIds, options, setupHook, getId} from '../testUtils'
+import {setup, dataTestIds, options, getId} from '../testUtils'
 import {getDefaultIds} from '../../utils'
 import {actionTypes} from '../utils'
 
@@ -14,13 +14,6 @@ describe('props', () => {
   afterEach(cleanup)
 
   describe('items', () => {
-    test('if not passed an error will be thrown', () => {
-      const {result} = setupHook({items: undefined})
-      expect(result.error.message).toEqual(
-        'Pass dropdown items as hook parameter!',
-      )
-    })
-
     test('if passed as empty then menu will not open', () => {
       const wrapper = setup({items: [], isOpen: true})
       const menu = wrapper.getByTestId(dataTestIds.menu)

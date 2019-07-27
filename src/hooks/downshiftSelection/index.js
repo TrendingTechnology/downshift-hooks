@@ -1,8 +1,8 @@
+/* eslint-disable max-statements */
 import {useReducer, useRef, useEffect} from 'react'
 import scrollIntoView from 'scroll-into-view-if-needed'
 import * as keyboardKey from 'keyboard-key'
 import {useId} from '@reach/auto-id'
-
 import {
   getDefaultIds,
   callAllEventHandlers,
@@ -10,17 +10,25 @@ import {
   setAriaLiveMessage,
   getState,
   getItemIndex,
+  getPropTypesValidator,
 } from '../utils'
 import downshiftSelectionReducer from './reducer'
 import {
   getA11yStatusMessage as defaultGetA11yStatusMessage,
   actionTypes,
   getInitialState,
+  propTypes,
 } from './utils'
 
 let keyClear = null
 
+const validateUseLocalStorageState = getPropTypesValidator(
+  useDownshiftSelection,
+  propTypes,
+)
+
 function useDownshiftSelection(userProps = {}) {
+  validateUseLocalStorageState(userProps)
   // Props defaults and destructuring.
   const props = {
     itemToString: item => (item ? String(item) : ''),
@@ -51,11 +59,6 @@ function useDownshiftSelection(userProps = {}) {
     // onStateChange,
   } = props
   const defaultIds = getDefaultIds(useId())
-
-  if (items === undefined) {
-    throw new Error('Pass dropdown items as hook parameter!')
-  }
-
   // Initial state depending on controlled props.
   const initialState = getInitialState(props)
 
