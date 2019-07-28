@@ -14,6 +14,15 @@ config.plugins[cjsPluginIndex] = commonjs({
       'useState',
     ],
     'node_modules/keyboard-key/src/keyboardKey.js': ['getKey'],
+    'node_modules/prop-types/index.js': [
+      'func',
+      'string',
+      'any',
+      'bool',
+      'number',
+      'array',
+      'checkPropTypes',
+    ],
   },
 })
 
