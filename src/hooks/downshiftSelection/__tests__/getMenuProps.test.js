@@ -82,7 +82,7 @@ describe('getMenuProps', () => {
     test('are passed down', () => {
       const {result} = setupHook()
 
-      expect(result.current.getTriggerButtonProps({foo: 'bar'})).toHaveProperty(
+      expect(result.current.getToggleButtonProps({foo: 'bar'})).toHaveProperty(
         'foo',
         'bar',
       )
@@ -521,15 +521,15 @@ describe('getMenuProps', () => {
         expect(menu.childNodes).toHaveLength(0)
       })
 
-      test('escape it has the focus moved to triggerButton', () => {
+      test('escape it has the focus moved to toggleButton', () => {
         const wrapper = setup({initialIsOpen: true})
         const menu = wrapper.getByTestId(dataTestIds.menu)
-        const triggerButton = wrapper.getByTestId(dataTestIds.triggerButton)
+        const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
 
         menu.focus()
         fireEvent.keyDown(menu, {keyCode: keyboardKey.Escape})
 
-        expect(document.activeElement).toBe(triggerButton)
+        expect(document.activeElement).toBe(toggleButton)
       })
 
       test('enter it closes the menu and selects highlighted item', () => {
@@ -539,25 +539,25 @@ describe('getMenuProps', () => {
           initialHighlightedIndex,
         })
         const menu = wrapper.getByTestId(dataTestIds.menu)
-        const triggerButton = wrapper.getByTestId(dataTestIds.triggerButton)
+        const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
 
         fireEvent.keyDown(menu, {keyCode: keyboardKey.Enter})
 
         expect(menu.childNodes).toHaveLength(0)
-        expect(triggerButton.textContent).toEqual(
+        expect(toggleButton.textContent).toEqual(
           options[initialHighlightedIndex],
         )
       })
 
-      test('enter it has the focus moved to triggerButton', () => {
+      test('enter it has the focus moved to toggleButton', () => {
         const wrapper = setup({initialIsOpen: true})
         const menu = wrapper.getByTestId(dataTestIds.menu)
-        const triggerButton = wrapper.getByTestId(dataTestIds.triggerButton)
+        const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
 
         menu.focus()
         fireEvent.keyDown(menu, {keyCode: keyboardKey.Enter})
 
-        expect(document.activeElement).toBe(triggerButton)
+        expect(document.activeElement).toBe(toggleButton)
       })
 
       // Special case test.
@@ -568,25 +568,25 @@ describe('getMenuProps', () => {
           initialHighlightedIndex,
         })
         const menu = wrapper.getByTestId(dataTestIds.menu)
-        const triggerButton = wrapper.getByTestId(dataTestIds.triggerButton)
+        const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
 
         fireEvent.keyDown(menu, {keyCode: keyboardKey.Tab, shiftKey: true})
 
         expect(menu.childNodes).toHaveLength(0)
-        expect(triggerButton.textContent).toEqual(
+        expect(toggleButton.textContent).toEqual(
           options[initialHighlightedIndex],
         )
       })
 
-      test('shift+tab it has the focus moved to triggerButton', () => {
+      test('shift+tab it has the focus moved to toggleButton', () => {
         const wrapper = setup({initialIsOpen: true})
         const menu = wrapper.getByTestId(dataTestIds.menu)
-        const triggerButton = wrapper.getByTestId(dataTestIds.triggerButton)
+        const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
 
         menu.focus()
         fireEvent.keyDown(menu, {keyCode: keyboardKey.Tab, shiftKey: true})
 
-        expect(document.activeElement).toBe(triggerButton)
+        expect(document.activeElement).toBe(toggleButton)
       })
     })
 
@@ -598,12 +598,12 @@ describe('getMenuProps', () => {
           initialHighlightedIndex,
         })
         const menu = wrapper.getByTestId(dataTestIds.menu)
-        const triggerButton = wrapper.getByTestId(dataTestIds.triggerButton)
+        const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
 
         fireEvent.blur(menu)
 
         expect(menu.childNodes).toHaveLength(0)
-        expect(triggerButton.textContent).toEqual(
+        expect(toggleButton.textContent).toEqual(
           options[initialHighlightedIndex],
         )
       })

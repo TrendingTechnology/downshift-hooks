@@ -14,7 +14,7 @@ describe('returnFunctions', () => {
       expect(result.current.getMenuProps).toBeInstanceOf(Function)
       expect(result.current.getItemProps).toBeInstanceOf(Function)
       expect(result.current.getLabelProps).toBeInstanceOf(Function)
-      expect(result.current.getTriggerButtonProps).toBeInstanceOf(Function)
+      expect(result.current.getToggleButtonProps).toBeInstanceOf(Function)
     })
   })
 
@@ -48,8 +48,8 @@ describe('returnFunctions', () => {
       act(() => {
         const {ref: menuRef} = result.current.getMenuProps()
         menuRef({focus: noop})
-        const {ref: triggerButtonRef} = result.current.getTriggerButtonProps()
-        triggerButtonRef({focus: noop})
+        const {ref: toggleButtonRef} = result.current.getToggleButtonProps()
+        toggleButtonRef({focus: noop})
         result.current.openMenu()
         result.current.closeMenu()
       })
@@ -62,8 +62,8 @@ describe('returnFunctions', () => {
       act(() => {
         const {ref: menuRef} = result.current.getMenuProps()
         menuRef({focus: noop})
-        const {ref: triggerButtonRef} = result.current.getTriggerButtonProps()
-        triggerButtonRef({focus: noop})
+        const {ref: toggleButtonRef} = result.current.getToggleButtonProps()
+        toggleButtonRef({focus: noop})
         result.current.closeMenu()
       })
 
@@ -86,8 +86,8 @@ describe('returnFunctions', () => {
       const {result} = setupHook({})
 
       act(() => {
-        const {ref: triggerButtonRef} = result.current.getTriggerButtonProps()
-        triggerButtonRef({focus: noop})
+        const {ref: toggleButtonRef} = result.current.getToggleButtonProps()
+        toggleButtonRef({focus: noop})
         const {ref: menuRef} = result.current.getMenuProps()
         menuRef({focus: noop})
         result.current.openMenu()

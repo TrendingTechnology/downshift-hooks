@@ -6,7 +6,7 @@ function getDefaultIds(uniqueId) {
     label: `downshift-label-${uniqueId}`,
     menu: `downshift-menu-${uniqueId}`,
     item: index => `downshift-item-${uniqueId}-${index}`,
-    triggerButton: `downshift-trigger-button-${uniqueId}`,
+    toggleButton: `downshift-toggle-button-${uniqueId}`,
   }
 
   return result

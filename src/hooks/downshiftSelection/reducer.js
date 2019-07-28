@@ -93,20 +93,20 @@ export default function downshiftSelectionReducer(state, action) {
         }
       }
       break
-    case actionTypes.TriggerButtonKeyDownArrowDown: {
+    case actionTypes.ToggleButtonKeyDownArrowDown: {
       changes = {
         isOpen: true,
         highlightedIndex: getHighlightedIndexOnOpen(props, state, 1),
       }
       break
     }
-    case actionTypes.TriggerButtonKeyDownArrowUp:
+    case actionTypes.ToggleButtonKeyDownArrowUp:
       changes = {
         isOpen: true,
         highlightedIndex: getHighlightedIndexOnOpen(props, state, -1),
       }
       break
-    case actionTypes.TriggerButtonClick:
+    case actionTypes.ToggleButtonClick:
     case actionTypes.FunctionToggleMenu:
       changes = {
         isOpen: !state.isOpen,

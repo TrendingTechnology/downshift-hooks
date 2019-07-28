@@ -43,7 +43,7 @@ jest.mock('@reach/auto-id', () => {
 const defaultIds = getDefaultIds(useId())
 
 const dataTestIds = {
-  triggerButton: 'trigger-button-id',
+  toggleButton: 'toggle-button-id',
   menu: 'menu-id',
   item: index => `item-id-${index}`,
 }
@@ -56,7 +56,7 @@ const DropdownSelection = props => {
   const {
     isOpen,
     selectedItem,
-    getTriggerButtonProps,
+    getToggleButtonProps,
     getLabelProps,
     getMenuProps,
     highlightedIndex,
@@ -68,8 +68,8 @@ const DropdownSelection = props => {
       {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
       <label {...getLabelProps()}>Choose an element:</label>
       <button
-        data-testid={dataTestIds.triggerButton}
-        {...getTriggerButtonProps()}
+        data-testid={dataTestIds.toggleButton}
+        {...getToggleButtonProps()}
       >
         {selectedItem || 'Elements'}
       </button>

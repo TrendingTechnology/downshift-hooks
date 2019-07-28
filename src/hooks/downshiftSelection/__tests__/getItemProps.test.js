@@ -209,12 +209,12 @@ describe('getItemProps', () => {
         const wrapper = setup({initialIsOpen: true})
         const item = wrapper.getByTestId(dataTestIds.item(index))
         const menu = wrapper.getByTestId(dataTestIds.menu)
-        const triggerButton = wrapper.getByTestId(dataTestIds.triggerButton)
+        const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
 
         fireEvent.click(item)
 
         expect(menu.childNodes).toHaveLength(0)
-        expect(triggerButton.textContent).toEqual(options[index])
+        expect(toggleButton.textContent).toEqual(options[index])
       })
     })
   })

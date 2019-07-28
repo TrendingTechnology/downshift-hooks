@@ -11,7 +11,7 @@ The `useDownshiftSelection` hook provides functionality and accessibility to Sel
 
 ## Plain HTML
 
-A dropdown created with HTML elements such as `<label>` for label, `<ul>` and `<li>` for the items list, and `<button>` for the trigger button.
+A dropdown created with HTML elements such as `<label>` for label, `<ul>` and `<li>` for the items list, and `<button>` for the toggle button.
 
 ### Playground
 
@@ -58,7 +58,7 @@ A dropdown created with HTML elements such as `<label>` for label, `<ul>` and `<
       const {
         isOpen,
         selectedItem,
-        getTriggerButtonProps,
+        getToggleButtonProps,
         getLabelProps,
         getMenuProps,
         highlightedIndex,
@@ -67,7 +67,7 @@ A dropdown created with HTML elements such as `<label>` for label, `<ul>` and `<
       return (
         <div>
           <label {...getLabelProps()}>Choose an element:</label>
-          <button {...getTriggerButtonProps()}>
+          <button {...getToggleButtonProps()}>
             {selectedItem || 'Elements'}
           </button>
           <ul {...getMenuProps()} style={menuStyles}>
@@ -105,7 +105,7 @@ const DropdownSelection = () => {
   const {
     isOpen,
     selectedItem,
-    getTriggerButtonProps,
+    getToggleButtonProps,
     getLabelProps,
     getMenuProps,
     highlightedIndex,
@@ -114,7 +114,7 @@ const DropdownSelection = () => {
   return (
     <div>
       <label {...getLabelProps()}>Choose an element:</label>
-      <button {...getTriggerButtonProps()}>
+      <button {...getToggleButtonProps()}>
         {selectedItem || 'Elements'}
       </button>
       <ul {...getMenuProps()} style={menuStyles}>
@@ -140,7 +140,7 @@ const DropdownSelection = () => {
 
 ## StardustUI
 
-A dropdown created with StardustUI components such as `<Label>` for label, `<List>` and `<ListItem>` for the items list, and `<Button>` for the trigger button.
+A dropdown created with StardustUI components such as `<Label>` for label, `<List>` and `<ListItem>` for the items list, and `<Button>` for the toggle button.
 
 ### Playground
 
@@ -215,14 +215,14 @@ import {
       const {
         isOpen,
         selectedItem,
-        getTriggerButtonProps,
+        getToggleButtonProps,
         getLabelProps,
         getMenuProps,
         highlightedIndex,
         getItemProps,
       } = useDownshiftSelection({items: options, itemToString: item => item.header})
-      const triggerButtonProps = getTriggerButtonProps({
-        refKey: 'triggerButtonRef',
+      const toggleButtonProps = getToggleButtonProps({
+        refKey: 'toggleButtonRef',
       })
       const menuProps = getMenuProps({
         refKey: 'menuRef',
@@ -231,12 +231,12 @@ import {
       return (
         <Provider theme={themes.teams}>
           <Text {...getLabelProps()} content={'Your role model:'} />
-          <Ref innerRef={triggerButtonProps.triggerButtonRef}>
+          <Ref innerRef={toggleButtonProps.toggleButtonRef}>
             <StardustButton
               content={selectedItem && selectedItem.header || 'Choose your hero'}
               icon="arrow right"
               iconPosition="after"
-              {...triggerButtonProps}
+              {...toggleButtonProps}
             />
           </Ref>
           <Ref innerRef={menuProps.menuRef}>
@@ -284,14 +284,14 @@ const DropdownSelectionStardustUI = () => {
   const {
     isOpen,
     selectedItem,
-    getTriggerButtonProps,
+    getToggleButtonProps,
     getLabelProps,
     getMenuProps,
     highlightedIndex,
     getItemProps,
   } = useDownshiftSelection({items: options, itemToString: item => item.header})
-  const triggerButtonProps = getTriggerButtonProps({
-    refKey: 'triggerButtonRef',
+  const toggleButtonProps = getToggleButtonProps({
+    refKey: 'toggleButtonRef',
   })
   const menuProps = getMenuProps({
     refKey: 'menuRef',
@@ -301,12 +301,12 @@ const DropdownSelectionStardustUI = () => {
     <Provider theme={themes.teams}>
       <Text {...getLabelProps()} content={'Who do you want to be?'} />
       <br />
-      <Ref innerRef={triggerButtonProps.triggerButtonRef}>
+      <Ref innerRef={toggleButtonProps.toggleButtonRef}>
         <Button
           content={selectedItem && selectedItem.header || 'Choose your hero'}
           icon="arrow right"
           iconPosition="after"
-          {...triggerButtonProps}
+          {...toggleButtonProps}
         />
       </Ref>
       <Ref innerRef={menuProps.menuRef}>
@@ -340,7 +340,7 @@ const DropdownSelectionStardustUI = () => {
 
 ## MaterialUI
 
-A dropdown created with MaterialUI components such as `<FormLabel>` for label, `<List>` and `<ListItem>` for the items list, and `<Button>` for the trigger button.
+A dropdown created with MaterialUI components such as `<FormLabel>` for label, `<List>` and `<ListItem>` for the items list, and `<Button>` for the toggle button.
 
 ### Playground
 
@@ -419,7 +419,7 @@ import DirectionsCar from '@material-ui/icons/DirectionsCar'
     const {
       isOpen,
       selectedItem,
-      getTriggerButtonProps,
+      getToggleButtonProps,
       getLabelProps,
       getMenuProps,
       highlightedIndex,
@@ -428,8 +428,8 @@ import DirectionsCar from '@material-ui/icons/DirectionsCar'
       items: options,
       itemToString: item => item.primary,
     })
-    const triggerButtonProps = getTriggerButtonProps({
-      refKey: 'triggerButtonRef',
+    const toggleButtonProps = getToggleButtonProps({
+      refKey: 'toggleButtonRef',
     })
     const menuProps = getMenuProps({
       refKey: 'menuRef',
@@ -441,8 +441,8 @@ import DirectionsCar from '@material-ui/icons/DirectionsCar'
           variant="contained"
           color="secondary"
           className={classes.button}
-          ref={triggerButtonProps.triggerButtonRef}
-          {...triggerButtonProps}
+          ref={toggleButtonProps.toggleButtonRef}
+          {...toggleButtonProps}
         >
           {selectedItem ? selectedItem.primary : 'Folders'}
           <ExpandMoreIcon className={classes.rightIcon} />
@@ -481,7 +481,7 @@ const options = [{primary, secondary, icon}, ...] // your items here.
 const {
   isOpen,
   selectedItem,
-  getTriggerButtonProps,
+  getToggleButtonProps,
   getLabelProps,
   getMenuProps,
   highlightedIndex,
@@ -490,8 +490,8 @@ const {
   items: options,
   itemToString: item => item.primary,
 })
-const triggerButtonProps = getTriggerButtonProps({
-  refKey: 'triggerButtonRef',
+const toggleButtonProps = getToggleButtonProps({
+  refKey: 'toggleButtonRef',
 })
 const menuProps = getMenuProps({
   refKey: 'menuRef',
@@ -504,8 +504,8 @@ return (
       variant="contained"
       color="secondary"
       className={classes.button}
-      ref={triggerButtonProps.triggerButtonRef}
-      {...triggerButtonProps}
+      ref={toggleButtonProps.toggleButtonRef}
+      {...toggleButtonProps}
     >
       {selectedItem ? selectedItem.primary : 'Folders'}
       <ExpandMoreIcon className={classes.rightIcon} />

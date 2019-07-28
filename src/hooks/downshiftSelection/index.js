@@ -49,7 +49,7 @@ function useDownshiftSelection(userProps = {}) {
     labelId: labelIdFromProps,
     menuId: menuIdFromProps,
     itemId: itemIdFromProps,
-    triggerButtonId: triggerButtonIdFromProps,
+    toggleButtonId: toggleButtonIdFromProps,
     // reducer
     stateReducer,
     // onChange props
@@ -75,10 +75,10 @@ function useDownshiftSelection(userProps = {}) {
   const labelId = labelIdFromProps || defaultIds.label
   const itemId = itemIdFromProps || defaultIds.item
   const menuId = menuIdFromProps || defaultIds.menu
-  const triggerButtonId = triggerButtonIdFromProps || defaultIds.triggerButton
+  const toggleButtonId = toggleButtonIdFromProps || defaultIds.toggleButton
 
   // Refs
-  const triggerButtonRef = useRef(null)
+  const toggleButtonRef = useRef(null)
   const menuRef = useRef(null)
   const itemRefs = useRef()
   itemRefs.current = []
@@ -145,9 +145,9 @@ function useDownshiftSelection(userProps = {}) {
     // Focuses menu on open.
     if (isOpen) {
       menuRef.current.focus()
-      // Focuses triggerButton on close.
+      // Focuses toggleButton on close.
     } else if (document.activeElement === menuRef.current) {
-      triggerButtonRef.current.focus()
+      toggleButtonRef.current.focus()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen])
@@ -218,18 +218,18 @@ function useDownshiftSelection(userProps = {}) {
       }
     },
   }
-  const triggerButtonKeyDownHandlers = {
+  const toggleButtonKeyDownHandlers = {
     ArrowDown(event) {
       event.preventDefault()
       dispatch({
-        type: actionTypes.TriggerButtonKeyDownArrowDown,
+        type: actionTypes.ToggleButtonKeyDownArrowDown,
         props,
       })
     },
     ArrowUp(event) {
       event.preventDefault()
       dispatch({
-        type: actionTypes.TriggerButtonKeyDownArrowUp,
+        type: actionTypes.ToggleButtonKeyDownArrowUp,
         props,
       })
     },
@@ -248,27 +248,27 @@ function useDownshiftSelection(userProps = {}) {
       })
     }
   }
-  // Focus going back to the triggerButton is something we control (Escape, Enter, Click).
-  // We are triggering special actions for these cases in reducer, not MenuBlur.
-  // Since Shift-Tab also lands focus on triggerButton, we will handle it as exception and call MenuBlur.
+  // Focus going back to the toggleButton is something we control (Escape, Enter, Click).
+  // We are toggleing special actions for these cases in reducer, not MenuBlur.
+  // Since Shift-Tab also lands focus on toggleButton, we will handle it as exception and call MenuBlur.
   const menuHandleBlur = event => {
-    if (event.relatedTarget !== triggerButtonRef.current) {
+    if (event.relatedTarget !== toggleButtonRef.current) {
       dispatch({
         type: actionTypes.MenuBlur,
         props,
       })
     }
   }
-  const triggerButtonHandleClick = () => {
+  const toggleButtonHandleClick = () => {
     dispatch({
-      type: actionTypes.TriggerButtonClick,
+      type: actionTypes.ToggleButtonClick,
       props,
     })
   }
-  const triggerButtonHandleKeyDown = event => {
+  const toggleButtonHandleKeyDown = event => {
     const key = keyboardKey.getKey(event)
-    if (key && triggerButtonKeyDownHandlers[key]) {
-      triggerButtonKeyDownHandlers[key](event)
+    if (key && toggleButtonKeyDownHandlers[key]) {
+      toggleButtonKeyDownHandlers[key](event)
     }
   }
   const itemHandleMouseOver = index => {
@@ -339,22 +339,22 @@ function useDownshiftSelection(userProps = {}) {
     onKeyDown: callAllEventHandlers(onKeyDown, menuHandleKeyDown),
     onBlur: callAllEventHandlers(onBlur, menuHandleBlur),
   })
-  const getTriggerButtonProps = ({
+  const getToggleButtonProps = ({
     onClick,
     onKeyDown,
     refKey = 'ref',
     ref,
     ...rest
   } = {}) => ({
-    [refKey]: callAll(ref, triggerButtonNode => {
-      triggerButtonRef.current = triggerButtonNode
+    [refKey]: callAll(ref, toggleButtonNode => {
+      toggleButtonRef.current = toggleButtonNode
     }),
-    id: triggerButtonId,
+    id: toggleButtonId,
     'aria-haspopup': 'listbox',
     'aria-expanded': isOpen,
-    'aria-labelledby': `${labelId} ${triggerButtonId}`,
-    onClick: callAllEventHandlers(onClick, triggerButtonHandleClick),
-    onKeyDown: callAllEventHandlers(onKeyDown, triggerButtonHandleKeyDown),
+    'aria-labelledby': `${labelId} ${toggleButtonId}`,
+    onClick: callAllEventHandlers(onClick, toggleButtonHandleClick),
+    onKeyDown: callAllEventHandlers(onKeyDown, toggleButtonHandleKeyDown),
     ...rest,
   })
   const getItemProps = ({
@@ -389,7 +389,7 @@ function useDownshiftSelection(userProps = {}) {
 
   return {
     // prop getters.
-    getTriggerButtonProps,
+    getToggleButtonProps,
     getLabelProps,
     getMenuProps,
     getItemProps,

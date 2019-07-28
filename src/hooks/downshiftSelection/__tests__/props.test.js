@@ -46,9 +46,9 @@ describe('props', () => {
 
     test('reports that no results are available if items list is empty', () => {
       const wrapper = setup({items: []})
-      const triggerButton = wrapper.getByTestId(dataTestIds.triggerButton)
+      const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
 
-      fireEvent.click(triggerButton)
+      fireEvent.click(toggleButton)
       expect(document.getElementById('a11y-status-message').textContent).toBe(
         'No results are available',
       )
@@ -56,9 +56,9 @@ describe('props', () => {
 
     test('reports that one result is available if one item is shown', () => {
       const wrapper = setup({items: ['bla']})
-      const triggerButton = wrapper.getByTestId(dataTestIds.triggerButton)
+      const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
 
-      fireEvent.click(triggerButton)
+      fireEvent.click(toggleButton)
       expect(
         document.getElementById('a11y-status-message').textContent,
       ).toEqual(
@@ -68,9 +68,9 @@ describe('props', () => {
 
     test('reports the number of results available if more than one item are shown', () => {
       const wrapper = setup({items: ['bla', 'blabla']})
-      const triggerButton = wrapper.getByTestId(dataTestIds.triggerButton)
+      const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
 
-      fireEvent.click(triggerButton)
+      fireEvent.click(toggleButton)
       expect(
         document.getElementById('a11y-status-message').textContent,
       ).toEqual(
@@ -80,10 +80,10 @@ describe('props', () => {
 
     test('is empty on menu close', () => {
       const wrapper = setup({items: ['bla', 'blabla'], initialIsOpen: true})
-      const triggerButton = wrapper.getByTestId(dataTestIds.triggerButton)
+      const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
       jest.runAllTimers()
 
-      fireEvent.click(triggerButton)
+      fireEvent.click(toggleButton)
       expect(
         document.getElementById('a11y-status-message').textContent,
       ).toEqual('')
@@ -91,9 +91,9 @@ describe('props', () => {
 
     test('is removed after 500ms as a cleanup', () => {
       const wrapper = setup()
-      const triggerButton = wrapper.getByTestId(dataTestIds.triggerButton)
+      const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
 
-      fireEvent.click(triggerButton)
+      fireEvent.click(toggleButton)
       jest.runAllTimers()
 
       expect(
@@ -103,9 +103,9 @@ describe('props', () => {
 
     test('is replaced with the user provided one', () => {
       const wrapper = setup({getA11yStatusMessage: () => 'custom message'})
-      const triggerButton = wrapper.getByTestId(dataTestIds.triggerButton)
+      const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
 
-      fireEvent.click(triggerButton)
+      fireEvent.click(toggleButton)
       expect(
         document.getElementById('a11y-status-message').textContent,
       ).toEqual('custom message')
@@ -121,9 +121,9 @@ describe('props', () => {
     test('is called with the correct props', () => {
       const getA11yStatusMessage = jest.fn()
       const wrapper = setup({getA11yStatusMessage})
-      const triggerButton = wrapper.getByTestId(dataTestIds.triggerButton)
+      const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
 
-      fireEvent.click(triggerButton)
+      fireEvent.click(toggleButton)
       expect(getA11yStatusMessage).toHaveBeenCalledWith(
         expect.objectContaining({
           items: expect.any(Array),
@@ -171,11 +171,11 @@ describe('props', () => {
     test('controls the state property if passed', () => {
       const wrapper = setup({isOpen: true})
       const menu = wrapper.getByTestId(dataTestIds.menu)
-      const triggerButton = wrapper.getByTestId(dataTestIds.triggerButton)
+      const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
 
       expect(menu.childNodes).toHaveLength(options.length)
 
-      fireEvent.click(triggerButton)
+      fireEvent.click(toggleButton)
       expect(menu.childNodes).toHaveLength(options.length)
 
       expect(menu.childNodes).toHaveLength(options.length)
@@ -190,19 +190,19 @@ describe('props', () => {
       const selectedItem = options[2]
       const wrapper = setup({selectedItem, initialIsOpen: true})
       const menu = wrapper.getByTestId(dataTestIds.menu)
-      const triggerButton = wrapper.getByTestId(dataTestIds.triggerButton)
+      const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
       const item = wrapper.getByTestId(dataTestIds.item(3))
 
-      expect(triggerButton.textContent).toEqual(options[2])
+      expect(toggleButton.textContent).toEqual(options[2])
 
       fireEvent.keyDown(menu, {keyCode: keyboardKey.ArrowDown})
       fireEvent.keyDown(menu, {keyCode: keyboardKey.Enter})
 
-      expect(triggerButton.textContent).toEqual(options[2])
+      expect(toggleButton.textContent).toEqual(options[2])
 
-      fireEvent.click(triggerButton)
+      fireEvent.click(toggleButton)
       fireEvent.click(item)
-      expect(triggerButton.textContent).toEqual(options[2])
+      expect(toggleButton.textContent).toEqual(options[2])
     })
   })
 
@@ -210,12 +210,12 @@ describe('props', () => {
     test('is called at each state change', () => {
       const stateReducer = jest.fn((s, a) => a.changes)
       const wrapper = setup({stateReducer})
-      const triggerButton = wrapper.getByTestId(dataTestIds.triggerButton)
+      const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
       const menu = wrapper.getByTestId(dataTestIds.menu)
 
       expect(stateReducer).not.toHaveBeenCalled()
 
-      fireEvent.click(triggerButton)
+      fireEvent.click(toggleButton)
       expect(stateReducer).toHaveBeenCalledTimes(2)
 
       fireEvent.keyDown(menu, {key: 'c'})
@@ -224,7 +224,7 @@ describe('props', () => {
       fireEvent.keyDown(menu, {keyCode: keyboardKey.ArrowUp})
       expect(stateReducer).toHaveBeenCalledTimes(4)
 
-      fireEvent.click(triggerButton)
+      fireEvent.click(toggleButton)
       expect(stateReducer).toHaveBeenCalledTimes(5)
     })
 
@@ -236,10 +236,10 @@ describe('props', () => {
         return changes
       })
       const wrapper = setup({stateReducer})
-      const triggerButton = wrapper.getByTestId(dataTestIds.triggerButton)
+      const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
       const menu = wrapper.getByTestId(dataTestIds.menu)
 
-      fireEvent.click(triggerButton)
+      fireEvent.click(toggleButton)
       expect(menu.getAttribute('aria-activedescendant')).toBe(
         defaultIds.item(highlightedIndex),
       )
@@ -251,9 +251,9 @@ describe('props', () => {
         return a.changes
       })
       const wrapper = setup({stateReducer})
-      const triggerButton = wrapper.getByTestId(dataTestIds.triggerButton)
+      const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
 
-      fireEvent.click(triggerButton)
+      fireEvent.click(toggleButton)
     })
 
     test('receives state, changes and type', () => {
@@ -270,9 +270,9 @@ describe('props', () => {
         return a.changes
       })
       const wrapper = setup({stateReducer})
-      const triggerButton = wrapper.getByTestId(dataTestIds.triggerButton)
+      const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
 
-      fireEvent.click(triggerButton)
+      fireEvent.click(toggleButton)
     })
   })
 
@@ -326,9 +326,9 @@ describe('props', () => {
       const onStateChange = jest.fn()
       const wrapper = setup({onStateChange})
       const menu = wrapper.getByTestId(dataTestIds.menu)
-      const triggerButton = wrapper.getByTestId(dataTestIds.triggerButton)
+      const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
 
-      fireEvent.click(triggerButton)
+      fireEvent.click(toggleButton)
       expect(onStateChange).toHaveBeenCalledWith(
         expect.objectContaining({
           isOpen: true,
