@@ -40,23 +40,13 @@ function useDownshiftSelection(userProps = {}) {
     items,
     itemToString,
     getA11yStatusMessage,
-    // highlightedIndex
-    // isOpen
     initialIsOpen,
     defaultIsOpen,
-    // selectedItem
-    // ids
     labelId: labelIdFromProps,
     menuId: menuIdFromProps,
     itemId: itemIdFromProps,
     toggleButtonId: toggleButtonIdFromProps,
-    // reducer
     stateReducer,
-    // onChange props
-    // onSelectedItemChange,
-    // onIsOpenChange,
-    // onHighlightedIndexChange,
-    // onStateChange,
   } = props
   const defaultIds = getDefaultIds(useId())
   // Initial state depending on controlled props.
