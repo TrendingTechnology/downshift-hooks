@@ -22,13 +22,13 @@ import {
 
 let keyClear = null
 
-const validateUseLocalStorageState = getPropTypesValidator(
+const validatePropTypes = getPropTypesValidator(
   useDownshiftSelection,
   propTypes,
 )
 
 function useDownshiftSelection(userProps = {}) {
-  validateUseLocalStorageState(userProps)
+  validatePropTypes(userProps)
   // Props defaults and destructuring.
   const props = {
     itemToString: item => (item ? String(item) : ''),

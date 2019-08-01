@@ -17,44 +17,44 @@ A dropdown created with HTML elements such as `<label>` for label, `<ul>` and `<
 
 <Playground style={{height: '200px'}}>
   {() => {
+    const options = [
+      'Neptunium',
+      'Plutonium',
+      'Americium',
+      'Curium',
+      'Berkelium',
+      'Californium',
+      'Einsteinium',
+      'Fermium',
+      'Mendelevium',
+      'Nobelium',
+      'Lawrencium',
+      'Rutherfordium',
+      'Dubnium',
+      'Seaborgium',
+      'Bohrium',
+      'Hassium',
+      'Meitnerium',
+      'Darmstadtium',
+      'Roentgenium',
+      'Copernicium',
+      'Nihonium',
+      'Flerovium',
+      'Moscovium',
+      'Livermorium',
+      'Tennessine',
+      'Oganesson',
+    ]
+    const menuStyles = {
+      maxHeight: '200px',
+      overflowY: 'auto',
+      width: '200px',
+      position: 'absolute',
+      margin: 0,
+      borderTop: 0,
+      background: 'white',
+    }
     const DropdownSelection = () => {
-      const options = [
-        'Neptunium',
-        'Plutonium',
-        'Americium',
-        'Curium',
-        'Berkelium',
-        'Californium',
-        'Einsteinium',
-        'Fermium',
-        'Mendelevium',
-        'Nobelium',
-        'Lawrencium',
-        'Rutherfordium',
-        'Dubnium',
-        'Seaborgium',
-        'Bohrium',
-        'Hassium',
-        'Meitnerium',
-        'Darmstadtium',
-        'Roentgenium',
-        'Copernicium',
-        'Nihonium',
-        'Flerovium',
-        'Moscovium',
-        'Livermorium',
-        'Tennessine',
-        'Oganesson',
-      ]
-      const menuStyles = {
-        maxHeight: '200px',
-        overflowY: 'auto',
-        width: '200px',
-        position: 'absolute',
-        margin: 0,
-        borderTop: 0,
-        background: 'white',
-      }
       const {
         isOpen,
         selectedItem,
@@ -156,7 +156,6 @@ import {
 
 <Playground style={{height: '300px'}}>
   {() => {
-    const DropdownSelectionStardustUI = () => {
     const menuStyles = {
       maxHeight: '250px',
       overflowY: 'auto',
@@ -212,6 +211,7 @@ import {
         content: 'Graphic Designer',
       },
     ]
+    const DropdownSelectionStardustUI = () => {
       const {
         isOpen,
         selectedItem,
@@ -247,7 +247,7 @@ import {
                   return (
                     <Ref innerRef={itemProps.itemRef}>
                       <StardustList.Item
-                        key={option.header}
+                        key={`${option.header}-${index}`}
                         media={<StardustImage src={option.image} avatar />}
                         header={option.header}
                         content={option.content}
@@ -416,55 +416,57 @@ import DirectionsCar from '@material-ui/icons/DirectionsCar'
         icon: DirectionsCar,
       },
     ]
-    const {
-      isOpen,
-      selectedItem,
-      getToggleButtonProps,
-      getLabelProps,
-      getMenuProps,
-      highlightedIndex,
-      getItemProps,
-    } = useDownshiftSelection({
-      items: options,
-      itemToString: item => item.primary,
-    })
-    const toggleButtonProps = getToggleButtonProps({
-      refKey: 'toggleButtonRef',
-    })
-    const menuProps = getMenuProps({
-      refKey: 'menuRef',
-    })
-    return (
-      <>
-        <FormLabel {...getLabelProps()}>My Cloud:</FormLabel>
-        <Button
-          variant="contained"
-          color="secondary"
-          className={classes.button}
-          ref={toggleButtonProps.toggleButtonRef}
-          {...toggleButtonProps}
-        >
-          {selectedItem ? selectedItem.primary : 'Folders'}
-          <ExpandMoreIcon className={classes.rightIcon} />
-        </Button>
-        <List className={classes.root} ref={menuProps.menuRef} {...menuProps}>
-          {isOpen && options.map((option, index) => {
-            const itemProps = getItemProps({item: option, index, refKey: 'itemRef'})
-            return (
-              <ListItem className={index === highlightedIndex && classes.highlighted} ref={itemProps.itemRef} {...itemProps}>
-                <ListItemAvatar>
-                  <Avatar>
-                    {React.createElement(option.icon)}
-                  </Avatar>
-                </ListItemAvatar>
-                <ListItemText primary={option.primary} secondary={option.secondary} />
-              </ListItem>
-            )
-          })}
-        </List>
-      </>
-    )
-
+    const DropdownSelectionMaterialUI = () => {
+      const {
+        isOpen,
+        selectedItem,
+        getToggleButtonProps,
+        getLabelProps,
+        getMenuProps,
+        highlightedIndex,
+        getItemProps,
+      } = useDownshiftSelection({
+        items: options,
+        itemToString: item => item.primary,
+      })
+      const toggleButtonProps = getToggleButtonProps({
+        refKey: 'toggleButtonRef',
+      })
+      const menuProps = getMenuProps({
+        refKey: 'menuRef',
+      })
+      return (
+        <>
+          <FormLabel {...getLabelProps()}>My Cloud:</FormLabel>
+          <Button
+            variant="contained"
+            color="secondary"
+            className={classes.button}
+            ref={toggleButtonProps.toggleButtonRef}
+            {...toggleButtonProps}
+          >
+            {selectedItem ? selectedItem.primary : 'Folders'}
+            <ExpandMoreIcon className={classes.rightIcon} />
+          </Button>
+          <List className={classes.root} ref={menuProps.menuRef} {...menuProps}>
+            {isOpen && options.map((option, index) => {
+              const itemProps = getItemProps({item: option, index, refKey: 'itemRef'})
+              return (
+                <ListItem className={index === highlightedIndex && classes.highlighted} ref={itemProps.itemRef} {...itemProps}>
+                  <ListItemAvatar>
+                    <Avatar>
+                      {React.createElement(option.icon)}
+                    </Avatar>
+                  </ListItemAvatar>
+                  <ListItemText primary={option.primary} secondary={option.secondary} />
+                </ListItem>
+              )
+            })}
+          </List>
+        </>
+      )
+    }
+    return <DropdownSelectionMaterialUI />
 }}
 
 </Playground>
