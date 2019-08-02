@@ -1,6 +1,6 @@
 {
   "name": "downshift-hooks",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "A set of hooks to build simple, flexible, WAI-ARIA compliant React dropdown components.",
   "main": "dist/downshift-hooks.cjs.js",
   "module": "dist/downshift-hooks.esm.js",
