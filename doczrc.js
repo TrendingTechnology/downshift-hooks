@@ -4,15 +4,12 @@ export default {
   menu: [
     {
       name: 'Getting started',
-      menu: [
-        'Downshift hooks',
-      ],
+      menu: ['Downshift hooks'],
     },
     {
       name: 'Dropdown',
-      menu: [
-        'Selection',
-      ],
+      menu: ['Selection'],
     },
   ],
+  public: './public',
 }
