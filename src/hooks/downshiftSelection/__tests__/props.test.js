@@ -13,6 +13,19 @@ describe('props', () => {
 
       expect(menu.childNodes).toHaveLength(0)
     })
+
+    test('passed as objects should work with custom itemToString', () => {
+      const wrapper = setup({
+        items: [{str: 'aaa'}, {str: 'bbb'}],
+        itemToString: item => item.str,
+        initialIsOpen: true,
+      })
+
+      fireEvent.click(wrapper.getByTestId(dataTestIds.item(0)))
+      expect(document.getElementById('a11y-status-message').textContent).toBe(
+        'aaa has been selected.',
+      )
+    })
   })
 
   describe('itemToString', () => {

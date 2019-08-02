@@ -71,22 +71,28 @@ const DropdownSelection = props => {
         data-testid={dataTestIds.toggleButton}
         {...getToggleButtonProps()}
       >
-        {selectedItem || 'Elements'}
+        {(selectedItem && selectedItem instanceof Object
+          ? props.itemToString(selectedItem)
+          : selectedItem) || 'Elements'}
       </button>
       <ul data-testid={dataTestIds.menu} {...getMenuProps()}>
         {isOpen &&
-          items.map((item, index) => (
-            <li
-              data-testid={dataTestIds.item(index)}
-              style={
-                highlightedIndex === index ? {backgroundColor: 'blue'} : {}
-              }
-              key={`${item}${index}`}
-              {...getItemProps({item, index})}
-            >
-              {item}
-            </li>
-          ))}
+          items.map((item, index) => {
+            const stringItem =
+              item instanceof Object ? props.itemToString(item) : item
+            return (
+              <li
+                data-testid={dataTestIds.item(index)}
+                style={
+                  highlightedIndex === index ? {backgroundColor: 'blue'} : {}
+                }
+                key={`${stringItem}${index}`}
+                {...getItemProps({item, index})}
+              >
+                {stringItem}
+              </li>
+            )
+          })}
       </ul>
     </div>
   )
