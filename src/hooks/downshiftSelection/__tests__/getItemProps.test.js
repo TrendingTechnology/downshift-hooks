@@ -216,6 +216,22 @@ describe('getItemProps', () => {
         expect(menu.childNodes).toHaveLength(0)
         expect(toggleButton.textContent).toEqual(options[index])
       })
+
+      test('it selects the item and resets to user defined defaults', () => {
+        const index = 1
+        const wrapper = setup({defaultIsOpen: true, defaultHighlightedIndex: 2})
+        const item = wrapper.getByTestId(dataTestIds.item(index))
+        const menu = wrapper.getByTestId(dataTestIds.menu)
+        const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
+
+        fireEvent.click(item)
+
+        expect(toggleButton.textContent).toEqual(options[index])
+        expect(menu.childNodes).toHaveLength(options.length)
+        expect(menu.getAttribute('aria-activedescendant')).toBe(
+          defaultIds.item(2),
+        )
+      })
     })
   })
 
