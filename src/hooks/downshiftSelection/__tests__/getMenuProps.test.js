@@ -549,6 +549,26 @@ describe('getMenuProps', () => {
         )
       })
 
+      test('enter selects highlighted item and resets to user defaults', () => {
+        const defaultHighlightedIndex = 2
+        const wrapper = setup({
+          defaultHighlightedIndex,
+          defaultIsOpen: true,
+        })
+        const menu = wrapper.getByTestId(dataTestIds.menu)
+        const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
+
+        fireEvent.keyDown(menu, {keyCode: keyboardKey.Enter})
+
+        expect(toggleButton.textContent).toEqual(
+          options[defaultHighlightedIndex],
+        )
+        expect(menu.childNodes).toHaveLength(options.length)
+        expect(menu.getAttribute('aria-activedescendant')).toBe(
+          defaultIds.item(defaultHighlightedIndex),
+        )
+      })
+
       test('enter it has the focus moved to toggleButton', () => {
         const wrapper = setup({initialIsOpen: true})
         const menu = wrapper.getByTestId(dataTestIds.menu)

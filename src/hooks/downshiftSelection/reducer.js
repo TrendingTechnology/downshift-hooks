@@ -1,8 +1,8 @@
 import {getNextWrappingIndex, getItemIndexByCharacterKey} from '../utils'
 import {
-  actionTypes,
+  stateChangeTypes,
   getHighlightedIndexOnOpen,
-  defaultStateValues,
+  getDefaultValue,
 } from './utils'
 
 // eslint-disable-next-line complexity
@@ -11,19 +11,19 @@ export default function downshiftSelectionReducer(state, action) {
   let changes
 
   switch (type) {
-    case actionTypes.ItemHover:
+    case stateChangeTypes.ItemHover:
       changes = {
         highlightedIndex: action.index,
       }
       break
-    case actionTypes.ItemClick:
+    case stateChangeTypes.ItemClick:
       changes = {
-        isOpen: false,
-        highlightedIndex: -1,
+        isOpen: getDefaultValue(props, 'isOpen'),
+        highlightedIndex: getDefaultValue(props, 'highlightedIndex'),
         selectedItem: props.items[action.index],
       }
       break
-    case actionTypes.MenuBlur:
+    case stateChangeTypes.MenuBlur:
       changes = {
         isOpen: false,
         highlightedIndex: -1,
@@ -32,7 +32,7 @@ export default function downshiftSelectionReducer(state, action) {
         }),
       }
       break
-    case actionTypes.MenuKeyDownArrowDown:
+    case stateChangeTypes.MenuKeyDownArrowDown:
       changes = {
         highlightedIndex: getNextWrappingIndex(
           shiftKey ? 5 : 1,
@@ -42,7 +42,7 @@ export default function downshiftSelectionReducer(state, action) {
         ),
       }
       break
-    case actionTypes.MenuKeyDownArrowUp:
+    case stateChangeTypes.MenuKeyDownArrowUp:
       changes = {
         highlightedIndex: getNextWrappingIndex(
           shiftKey ? -5 : -1,
@@ -52,30 +52,30 @@ export default function downshiftSelectionReducer(state, action) {
         ),
       }
       break
-    case actionTypes.MenuKeyDownHome:
+    case stateChangeTypes.MenuKeyDownHome:
       changes = {
         highlightedIndex: 0,
       }
       break
-    case actionTypes.MenuKeyDownEnd:
+    case stateChangeTypes.MenuKeyDownEnd:
       changes = {
         highlightedIndex: props.items.length - 1,
       }
       break
-    case actionTypes.MenuKeyDownEscape:
+    case stateChangeTypes.MenuKeyDownEscape:
       changes = {
         isOpen: false,
         highlightedIndex: -1,
       }
       break
-    case actionTypes.MenuKeyDownEnter:
+    case stateChangeTypes.MenuKeyDownEnter:
       changes = {
-        isOpen: false,
-        highlightedIndex: -1,
+        isOpen: getDefaultValue(props, 'isOpen'),
+        highlightedIndex: getDefaultValue(props, 'highlightedIndex'),
         selectedItem: props.items[state.highlightedIndex],
       }
       break
-    case actionTypes.MenuKeyDownCharacter:
+    case stateChangeTypes.MenuKeyDownCharacter:
       {
         const lowercasedKey = action.key
         const keysSoFar = `${state.keysSoFar}${lowercasedKey}`
@@ -93,21 +93,21 @@ export default function downshiftSelectionReducer(state, action) {
         }
       }
       break
-    case actionTypes.ToggleButtonKeyDownArrowDown: {
+    case stateChangeTypes.ToggleButtonKeyDownArrowDown: {
       changes = {
         isOpen: true,
         highlightedIndex: getHighlightedIndexOnOpen(props, state, 1),
       }
       break
     }
-    case actionTypes.ToggleButtonKeyDownArrowUp:
+    case stateChangeTypes.ToggleButtonKeyDownArrowUp:
       changes = {
         isOpen: true,
         highlightedIndex: getHighlightedIndexOnOpen(props, state, -1),
       }
       break
-    case actionTypes.ToggleButtonClick:
-    case actionTypes.FunctionToggleMenu:
+    case stateChangeTypes.ToggleButtonClick:
+    case stateChangeTypes.FunctionToggleMenu:
       changes = {
         isOpen: !state.isOpen,
         highlightedIndex: state.isOpen
@@ -115,46 +115,37 @@ export default function downshiftSelectionReducer(state, action) {
           : getHighlightedIndexOnOpen(props, state, 0),
       }
       break
-    case actionTypes.FunctionOpenMenu:
+    case stateChangeTypes.FunctionOpenMenu:
       changes = {
         isOpen: true,
         highlightedIndex: getHighlightedIndexOnOpen(props, state, 0),
       }
       break
-    case actionTypes.FunctionCloseMenu:
+    case stateChangeTypes.FunctionCloseMenu:
       changes = {
         isOpen: false,
       }
       break
-    case actionTypes.FunctionSetHighlightedIndex:
+    case stateChangeTypes.FunctionSetHighlightedIndex:
       changes = {
         highlightedIndex: action.highlightedIndex,
       }
       break
-    case actionTypes.FunctionSetSelectedItem:
+    case stateChangeTypes.FunctionSetSelectedItem:
       changes = {
         selectedItem: action.selectedItem,
       }
       break
-    case actionTypes.FunctionClearKeysSoFar:
+    case stateChangeTypes.FunctionClearKeysSoFar:
       changes = {
         keysSoFar: '',
       }
       break
-    case actionTypes.FunctionReset:
+    case stateChangeTypes.FunctionReset:
       changes = {
-        highlightedIndex:
-          props.defaultHighlightedIndex === undefined
-            ? defaultStateValues.highlightedIndex
-            : props.defaultHighlightedIndex,
-        isOpen:
-          props.defaultIsOpen === undefined
-            ? defaultStateValues.isOpen
-            : props.defaultIsOpen,
-        selectedItem:
-          props.defaultSelectedItem === undefined
-            ? defaultStateValues.selectedItem
-            : props.defaultSelectedItem,
+        highlightedIndex: getDefaultValue(props, 'highlightedIndex'),
+        isOpen: getDefaultValue(props, 'isOpen'),
+        selectedItem: getDefaultValue(props, 'selectedItem'),
       }
       break
     default:
@@ -162,16 +153,25 @@ export default function downshiftSelectionReducer(state, action) {
   }
 
   if (props) {
-    if (props.onIsOpenChange && changes.isOpen !== undefined) {
+    if (
+      props.onIsOpenChange &&
+      changes.isOpen !== undefined &&
+      changes.isOpen !== state.isOpen
+    ) {
       props.onIsOpenChange(changes)
     }
     if (
       props.onHighlightedIndexChange &&
-      changes.highlightedIndex !== undefined
+      changes.highlightedIndex !== undefined &&
+      changes.highlightedIndex !== state.highlightedIndex
     ) {
       props.onHighlightedIndexChange(changes)
     }
-    if (props.onSelectedItemChange && changes.selectedItem !== undefined) {
+    if (
+      props.onSelectedItemChange &&
+      changes.selectedItem !== undefined &&
+      changes.selectedItem !== state.selectedItem
+    ) {
       props.onSelectedItemChange(changes)
     }
     if (props.onStateChange && changes !== undefined) {

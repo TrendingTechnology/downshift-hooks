@@ -1,7 +1,7 @@
 import * as keyboardKey from 'keyboard-key'
 import {fireEvent, cleanup} from '@testing-library/react'
 import {setup, dataTestIds, options, defaultIds} from '../testUtils'
-import {actionTypes} from '../utils'
+import {stateChangeTypes} from '../utils'
 
 describe('props', () => {
   afterEach(cleanup)
@@ -260,7 +260,7 @@ describe('props', () => {
 
     test('receives a downshift action type', () => {
       const stateReducer = jest.fn((s, a) => {
-        expect(actionTypes).toHaveProperty(a.type)
+        expect(stateChangeTypes).toHaveProperty(a.type)
         return a.changes
       })
       const wrapper = setup({stateReducer})
@@ -290,7 +290,7 @@ describe('props', () => {
   })
 
   describe('onSelectedItemChange', () => {
-    test('is called at each selectedItem change', () => {
+    test('is called at selectedItem change', () => {
       const onSelectedItemChange = jest.fn()
       const wrapper = setup({initialIsOpen: true, onSelectedItemChange})
       const item = wrapper.getByTestId(dataTestIds.item(0))
@@ -301,6 +301,19 @@ describe('props', () => {
           selectedItem: options[0],
         }),
       )
+    })
+
+    test('is not called at if selectedItem is the same', () => {
+      const onSelectedItemChange = jest.fn()
+      const wrapper = setup({
+        initialIsOpen: true,
+        initialSelectedItem: options[0],
+        onSelectedItemChange,
+      })
+      const item = wrapper.getByTestId(dataTestIds.item(0))
+
+      fireEvent.click(item)
+      expect(onSelectedItemChange).not.toHaveBeenCalled()
     })
   })
 
@@ -317,6 +330,22 @@ describe('props', () => {
         }),
       )
     })
+
+    test('is not called if highlightedIndex is the same', () => {
+      const onHighlightedIndexChange = jest.fn()
+      const wrapper = setup({
+        initialIsOpen: true,
+        initialHighlightedIndex: 0,
+        onHighlightedIndexChange,
+      })
+      const menu = wrapper.getByTestId(dataTestIds.menu)
+
+      fireEvent.keyDown(menu, {keyCode: keyboardKey.ArrowUp})
+      expect(onHighlightedIndexChange).not.toHaveBeenCalled()
+
+      fireEvent.keyDown(menu, {keyCode: keyboardKey.Home})
+      expect(onHighlightedIndexChange).not.toHaveBeenCalled()
+    })
   })
 
   describe('onIsOpenChange', () => {
@@ -331,6 +360,15 @@ describe('props', () => {
           isOpen: false,
         }),
       )
+    })
+
+    test('is not called at if isOpen is the same', () => {
+      const onIsOpenChange = jest.fn()
+      const wrapper = setup({defaultIsOpen: true, onIsOpenChange})
+      const item = wrapper.getByTestId(dataTestIds.item(0))
+
+      fireEvent.click(item)
+      expect(onIsOpenChange).not.toHaveBeenCalledWith()
     })
   })
 

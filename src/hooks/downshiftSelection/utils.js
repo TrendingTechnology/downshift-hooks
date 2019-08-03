@@ -1,7 +1,7 @@
 import * as PropTypes from 'prop-types'
 import {getNextWrappingIndex} from '../utils'
 
-const actionTypes = {
+const stateChangeTypes = {
   MenuKeyDownArrowDown: 'MenuKeyDownArrowDown',
   MenuKeyDownArrowUp: 'MenuKeyDownArrowUp',
   MenuKeyDownEscape: 'MenuKeyDownEscape',
@@ -54,10 +54,10 @@ const getHighlightedIndexOnOpen = (props, state, offset) => {
   const {selectedItem, highlightedIndex} = state
 
   // initialHighlightedIndex will give value to highlightedIndex on initial state only.
-  if (initialHighlightedIndex && highlightedIndex > -1) {
+  if (initialHighlightedIndex !== undefined && highlightedIndex > -1) {
     return initialHighlightedIndex
   }
-  if (defaultHighlightedIndex) {
+  if (defaultHighlightedIndex !== undefined) {
     return defaultHighlightedIndex
   }
   if (selectedItem) {
@@ -77,6 +77,16 @@ const getHighlightedIndexOnOpen = (props, state, offset) => {
   return offset < 0 ? items.length - 1 : 0
 }
 
+const getDefaultValue = (props, propKey) => {
+  const defaultPropKey = `default${propKey
+    .slice(0, 1)
+    .toUpperCase()}${propKey.slice(1)}`
+  if (props[defaultPropKey] !== undefined) {
+    return props[defaultPropKey]
+  }
+  return defaultStateValues[propKey]
+}
+
 const getInitialValue = (props, propKey) => {
   if (props[propKey] !== undefined) {
     return props[propKey]
@@ -87,13 +97,7 @@ const getInitialValue = (props, propKey) => {
   if (props[initialPropKey] !== undefined) {
     return props[initialPropKey]
   }
-  const defaultPropKey = `default${propKey
-    .slice(0, 1)
-    .toUpperCase()}${propKey.slice(1)}`
-  if (props[defaultPropKey] !== undefined) {
-    return props[defaultPropKey]
-  }
-  return defaultStateValues[propKey]
+  return getDefaultValue(props, propKey)
 }
 
 const getInitialState = props => ({
@@ -113,7 +117,7 @@ const propTypes = {
   initialHighlightedIndex: PropTypes.number,
   isOpen: PropTypes.bool,
   defaultIsOpen: PropTypes.bool,
-  initialsOpen: PropTypes.bool,
+  initialIsOpen: PropTypes.bool,
   selectedItem: PropTypes.any,
   initialSelectedItem: PropTypes.any,
   defaultSelectedItem: PropTypes.any,
@@ -132,7 +136,8 @@ export {
   getHighlightedIndexOnOpen,
   getA11yStatusMessage,
   getInitialState,
-  actionTypes,
+  stateChangeTypes,
   defaultStateValues,
   propTypes,
+  getDefaultValue,
 }

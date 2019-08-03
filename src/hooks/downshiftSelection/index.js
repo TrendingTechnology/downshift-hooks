@@ -15,7 +15,7 @@ import {
 import downshiftSelectionReducer from './reducer'
 import {
   getA11yStatusMessage as defaultGetA11yStatusMessage,
-  actionTypes,
+  stateChangeTypes,
   getInitialState,
   propTypes,
 } from './utils'
@@ -116,7 +116,7 @@ function useDownshiftSelection(userProps = {}) {
     }
     keyClear = setTimeout(() => {
       dispatch({
-        type: actionTypes.FunctionClearKeysSoFar,
+        type: stateChangeTypes.FunctionClearKeysSoFar,
         props,
       })
     }, 500)
@@ -159,7 +159,7 @@ function useDownshiftSelection(userProps = {}) {
     ArrowDown(event) {
       event.preventDefault()
       dispatch({
-        type: actionTypes.MenuKeyDownArrowDown,
+        type: stateChangeTypes.MenuKeyDownArrowDown,
         props,
         shiftKey: event.shiftKey,
       })
@@ -167,7 +167,7 @@ function useDownshiftSelection(userProps = {}) {
     ArrowUp(event) {
       event.preventDefault()
       dispatch({
-        type: actionTypes.MenuKeyDownArrowUp,
+        type: stateChangeTypes.MenuKeyDownArrowUp,
         props,
         shiftKey: event.shiftKey,
       })
@@ -175,26 +175,26 @@ function useDownshiftSelection(userProps = {}) {
     Home(event) {
       event.preventDefault()
       dispatch({
-        type: actionTypes.MenuKeyDownHome,
+        type: stateChangeTypes.MenuKeyDownHome,
         props,
       })
     },
     End(event) {
       event.preventDefault()
       dispatch({
-        type: actionTypes.MenuKeyDownEnd,
+        type: stateChangeTypes.MenuKeyDownEnd,
         props,
       })
     },
     Escape() {
       dispatch({
-        type: actionTypes.MenuKeyDownEscape,
+        type: stateChangeTypes.MenuKeyDownEscape,
         props,
       })
     },
     Enter() {
       dispatch({
-        type: actionTypes.MenuKeyDownEnter,
+        type: stateChangeTypes.MenuKeyDownEnter,
         props,
       })
     },
@@ -202,7 +202,7 @@ function useDownshiftSelection(userProps = {}) {
       // The exception that calls MenuBlur.
       if (event.shiftKey) {
         dispatch({
-          type: actionTypes.MenuBlur,
+          type: stateChangeTypes.MenuBlur,
           props,
         })
       }
@@ -212,14 +212,14 @@ function useDownshiftSelection(userProps = {}) {
     ArrowDown(event) {
       event.preventDefault()
       dispatch({
-        type: actionTypes.ToggleButtonKeyDownArrowDown,
+        type: stateChangeTypes.ToggleButtonKeyDownArrowDown,
         props,
       })
     },
     ArrowUp(event) {
       event.preventDefault()
       dispatch({
-        type: actionTypes.ToggleButtonKeyDownArrowUp,
+        type: stateChangeTypes.ToggleButtonKeyDownArrowUp,
         props,
       })
     },
@@ -232,7 +232,7 @@ function useDownshiftSelection(userProps = {}) {
       menuKeyDownHandlers[key](event)
     } else if (/^\S{1}$/.test(key)) {
       dispatch({
-        type: actionTypes.MenuKeyDownCharacter,
+        type: stateChangeTypes.MenuKeyDownCharacter,
         key,
         props,
       })
@@ -244,14 +244,14 @@ function useDownshiftSelection(userProps = {}) {
   const menuHandleBlur = event => {
     if (event.relatedTarget !== toggleButtonRef.current) {
       dispatch({
-        type: actionTypes.MenuBlur,
+        type: stateChangeTypes.MenuBlur,
         props,
       })
     }
   }
   const toggleButtonHandleClick = () => {
     dispatch({
-      type: actionTypes.ToggleButtonClick,
+      type: stateChangeTypes.ToggleButtonClick,
       props,
     })
   }
@@ -263,14 +263,14 @@ function useDownshiftSelection(userProps = {}) {
   }
   const itemHandleMouseOver = index => {
     dispatch({
-      type: actionTypes.ItemHover,
+      type: stateChangeTypes.ItemHover,
       props,
       index,
     })
   }
   const itemHandleClick = index => {
     dispatch({
-      type: actionTypes.ItemClick,
+      type: stateChangeTypes.ItemClick,
       props,
       index,
     })
@@ -279,36 +279,36 @@ function useDownshiftSelection(userProps = {}) {
   // returns
   const toggleMenu = () => {
     dispatch({
-      type: actionTypes.FunctionToggleMenu,
+      type: stateChangeTypes.FunctionToggleMenu,
       props,
     })
   }
   const closeMenu = () => {
     dispatch({
-      type: actionTypes.FunctionCloseMenu,
+      type: stateChangeTypes.FunctionCloseMenu,
     })
   }
   const openMenu = () => {
     dispatch({
-      type: actionTypes.FunctionOpenMenu,
+      type: stateChangeTypes.FunctionOpenMenu,
       props,
     })
   }
   const setHighlightedIndex = newHighlightedIndex => {
     dispatch({
-      type: actionTypes.FunctionSetHighlightedIndex,
+      type: stateChangeTypes.FunctionSetHighlightedIndex,
       highlightedIndex: newHighlightedIndex,
     })
   }
   const setSelectedItem = newSelectedItem => {
     dispatch({
-      type: actionTypes.FunctionSetSelectedItem,
+      type: stateChangeTypes.FunctionSetSelectedItem,
       selectedItem: newSelectedItem,
     })
   }
   const reset = () => {
     dispatch({
-      type: actionTypes.FunctionReset,
+      type: stateChangeTypes.FunctionReset,
       props,
     })
   }
