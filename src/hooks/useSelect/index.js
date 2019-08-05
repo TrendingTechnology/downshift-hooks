@@ -12,7 +12,7 @@ import {
   getItemIndex,
   getPropTypesValidator,
 } from '../utils'
-import downshiftSelectionReducer from './reducer'
+import downshiftSelectReducer from './reducer'
 import {
   getA11yStatusMessage as defaultGetA11yStatusMessage,
   stateChangeTypes,
@@ -23,11 +23,11 @@ import {
 let keyClear = null
 
 const validatePropTypes = getPropTypesValidator(
-  useDownshiftSelection,
+  useSelect,
   propTypes,
 )
 
-function useDownshiftSelection(userProps = {}) {
+function useSelect(userProps = {}) {
   validatePropTypes(userProps)
   // Props defaults and destructuring.
   const props = {
@@ -57,7 +57,7 @@ function useDownshiftSelection(userProps = {}) {
     {isOpen, highlightedIndex, selectedItem, keysSoFar},
     dispatch,
   ] = useReducer((state, action) => {
-    const changes = downshiftSelectionReducer(state, action)
+    const changes = downshiftSelectReducer(state, action)
     return getState(stateReducer(state, {...action, changes}), props)
   }, initialState)
 
@@ -399,4 +399,4 @@ function useDownshiftSelection(userProps = {}) {
   }
 }
 
-export default useDownshiftSelection
+export default useSelect

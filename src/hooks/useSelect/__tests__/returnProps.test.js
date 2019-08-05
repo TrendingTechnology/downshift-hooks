@@ -4,7 +4,7 @@ import {noop} from '../../utils'
 import {options, setupHook} from '../testUtils'
 import {defaultStateValues} from '../utils'
 
-describe('returnFunctions', () => {
+describe('returnProps', () => {
   afterEach(cleanup)
 
   describe('prop getters', () => {

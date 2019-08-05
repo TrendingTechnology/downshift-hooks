@@ -3,7 +3,7 @@ import {useId} from '@reach/auto-id'
 import {render} from '@testing-library/react'
 import {renderHook} from '@testing-library/react-hooks'
 import {getDefaultIds} from '../utils'
-import useDownshiftSelection from '.'
+import useSelect from '.'
 
 const options = [
   'Neptunium',
@@ -49,10 +49,10 @@ const dataTestIds = {
 }
 
 const setupHook = props => {
-  return renderHook(() => useDownshiftSelection({items: options, ...props}))
+  return renderHook(() => useSelect({items: options, ...props}))
 }
 
-const DropdownSelection = props => {
+const DropdownSelect = props => {
   const {
     isOpen,
     selectedItem,
@@ -62,7 +62,7 @@ const DropdownSelection = props => {
     highlightedIndex,
     getItemProps,
     items,
-  } = useDownshiftSelection({items: options, ...props})
+  } = useSelect({items: options, ...props})
   return (
     <div>
       {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
@@ -98,6 +98,6 @@ const DropdownSelection = props => {
   )
 }
 
-const setup = props => render(<DropdownSelection {...props} />)
+const setup = props => render(<DropdownSelect {...props} />)
 
 export {dataTestIds, setup, options, setupHook, defaultIds}

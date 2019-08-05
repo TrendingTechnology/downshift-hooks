@@ -6,7 +6,7 @@ import {
 } from './utils'
 
 // eslint-disable-next-line complexity
-export default function downshiftSelectionReducer(state, action) {
+export default function downshiftSelectReducer(state, action) {
   const {type, props, shiftKey} = action
   let changes
 

@@ -8,7 +8,7 @@ export default {
     },
     {
       name: 'Dropdown',
-      menu: ['Selection'],
+      menu: ['Select'],
     },
   ],
   public: './public',

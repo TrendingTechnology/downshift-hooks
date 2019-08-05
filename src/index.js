@@ -1,8 +1,8 @@
-import useDownshiftSelection from './hooks/downshiftSelection'
-import {stateChangeTypes as selectionStateChangeTypes} from './hooks/downshiftSelection/utils'
+import useSelect from './hooks/useSelect'
+import {stateChangeTypes as selectStateChangeTypes} from './hooks/useSelect/utils'
 
 const stateChangeTypes = {
-  selection: selectionStateChangeTypes,
+  select: selectStateChangeTypes,
 }
 
-export {useDownshiftSelection, stateChangeTypes}
+export {useSelect, stateChangeTypes}
