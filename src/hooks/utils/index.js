@@ -1,12 +1,13 @@
 import * as PropTypes from 'prop-types'
 import setAriaLiveMessage from './ariaLiveMessage'
 
-function getDefaultIds(uniqueId) {
+function getDefaultIds(downshiftId, userId) {
+  const uniqueId = userId === undefined ? `downshift-${downshiftId}` : userId
   const result = {
-    label: `downshift-label-${uniqueId}`,
-    menu: `downshift-menu-${uniqueId}`,
-    item: index => `downshift-item-${uniqueId}-${index}`,
-    toggleButton: `downshift-toggle-button-${uniqueId}`,
+    label: `${uniqueId}-label`,
+    menu: `${uniqueId}-menu`,
+    item: index => `${uniqueId}-item-${index}`,
+    toggleButton: `${uniqueId}-toggle-button`,
   }
 
   return result

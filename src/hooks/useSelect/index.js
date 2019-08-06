@@ -22,10 +22,7 @@ import {
 
 let keyClear = null
 
-const validatePropTypes = getPropTypesValidator(
-  useSelect,
-  propTypes,
-)
+const validatePropTypes = getPropTypesValidator(useSelect, propTypes)
 
 function useSelect(userProps = {}) {
   validatePropTypes(userProps)
@@ -37,6 +34,7 @@ function useSelect(userProps = {}) {
     ...userProps,
   }
   const {
+    id,
     items,
     itemToString,
     getA11yStatusMessage,
@@ -48,7 +46,7 @@ function useSelect(userProps = {}) {
     toggleButtonId: toggleButtonIdFromProps,
     stateReducer,
   } = props
-  const defaultIds = getDefaultIds(useId())
+  const defaultIds = getDefaultIds(useId(), id)
   // Initial state depending on controlled props.
   const initialState = getInitialState(props)
 

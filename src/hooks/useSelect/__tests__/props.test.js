@@ -6,6 +6,15 @@ import {stateChangeTypes} from '../utils'
 describe('props', () => {
   afterEach(cleanup)
 
+  describe('id', () => {
+    test('if passed will override downshift default', () => {
+      const wrapper = setup({items: [], id: 'my-custom-little-id'})
+      const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
+
+      expect(toggleButton.getAttribute('id')).toContain('my-custom-little-id')
+    })
+  })
+
   describe('items', () => {
     test('if passed as empty then menu will not open', () => {
       const wrapper = setup({items: [], isOpen: true})
