@@ -14,7 +14,7 @@ describe('getToggleButtonProps', () => {
       const toggleButtonProps = result.current.getToggleButtonProps()
 
       expect(toggleButtonProps['aria-labelledby']).toEqual(
-        `${defaultIds.label} ${defaultIds.toggleButton}`,
+        `${defaultIds.labelId} ${defaultIds.toggleButtonId}`,
       )
     })
 
@@ -35,7 +35,7 @@ describe('getToggleButtonProps', () => {
       const {result} = setupHook()
       const toggleButtonProps = result.current.getToggleButtonProps()
 
-      expect(toggleButtonProps.id).toEqual(defaultIds.toggleButton)
+      expect(toggleButtonProps.id).toEqual(defaultIds.toggleButtonId)
     })
 
     test('assign custom value passed by user to id', () => {
@@ -217,7 +217,7 @@ describe('getToggleButtonProps', () => {
         fireEvent.click(toggleButton)
 
         expect(menu.getAttribute('aria-activedescendant')).toBe(
-          defaultIds.item(selectedIndex),
+          defaultIds.itemId(selectedIndex),
         )
       })
 
@@ -230,7 +230,7 @@ describe('getToggleButtonProps', () => {
         fireEvent.click(toggleButton)
 
         expect(menu.getAttribute('aria-activedescendant')).toBe(
-          defaultIds.item(initialHighlightedIndex),
+          defaultIds.itemId(initialHighlightedIndex),
         )
 
         fireEvent.click(toggleButton)
@@ -248,14 +248,14 @@ describe('getToggleButtonProps', () => {
         fireEvent.click(toggleButton)
 
         expect(menu.getAttribute('aria-activedescendant')).toBe(
-          defaultIds.item(defaultHighlightedIndex),
+          defaultIds.itemId(defaultHighlightedIndex),
         )
 
         fireEvent.click(toggleButton)
         fireEvent.click(toggleButton)
 
         expect(menu.getAttribute('aria-activedescendant')).toBe(
-          defaultIds.item(defaultHighlightedIndex),
+          defaultIds.itemId(defaultHighlightedIndex),
         )
       })
 
@@ -268,14 +268,14 @@ describe('getToggleButtonProps', () => {
         fireEvent.click(toggleButton)
 
         expect(menu.getAttribute('aria-activedescendant')).toBe(
-          defaultIds.item(highlightedIndex),
+          defaultIds.itemId(highlightedIndex),
         )
 
         fireEvent.click(toggleButton)
         fireEvent.click(toggleButton)
 
         expect(menu.getAttribute('aria-activedescendant')).toBe(
-          defaultIds.item(highlightedIndex),
+          defaultIds.itemId(highlightedIndex),
         )
       })
 
@@ -309,7 +309,7 @@ describe('getToggleButtonProps', () => {
           fireEvent.keyDown(toggleButton, {keyCode: keyboardKey.ArrowUp})
 
           expect(menu.getAttribute('aria-activedescendant')).toBe(
-            defaultIds.item(options.length - 1),
+            defaultIds.itemId(options.length - 1),
           )
         })
 
@@ -322,7 +322,7 @@ describe('getToggleButtonProps', () => {
           fireEvent.keyDown(toggleButton, {keyCode: keyboardKey.ArrowUp})
 
           expect(menu.getAttribute('aria-activedescendant')).toBe(
-            defaultIds.item(selectedIndex - 1),
+            defaultIds.itemId(selectedIndex - 1),
           )
         })
 
@@ -335,14 +335,14 @@ describe('getToggleButtonProps', () => {
           fireEvent.keyDown(toggleButton, {keyCode: keyboardKey.ArrowUp})
 
           expect(menu.getAttribute('aria-activedescendant')).toBe(
-            defaultIds.item(initialHighlightedIndex),
+            defaultIds.itemId(initialHighlightedIndex),
           )
 
           fireEvent.keyDown(menu, {keyCode: keyboardKey.Escape})
           fireEvent.keyDown(toggleButton, {keyCode: keyboardKey.ArrowUp})
 
           expect(menu.getAttribute('aria-activedescendant')).toBe(
-            defaultIds.item(options.length - 1),
+            defaultIds.itemId(options.length - 1),
           )
         })
 
@@ -355,14 +355,14 @@ describe('getToggleButtonProps', () => {
           fireEvent.keyDown(toggleButton, {keyCode: keyboardKey.ArrowUp})
 
           expect(menu.getAttribute('aria-activedescendant')).toBe(
-            defaultIds.item(defaultHighlightedIndex),
+            defaultIds.itemId(defaultHighlightedIndex),
           )
 
           fireEvent.keyDown(menu, {keyCode: keyboardKey.Escape})
           fireEvent.keyDown(toggleButton, {keyCode: keyboardKey.ArrowUp})
 
           expect(menu.getAttribute('aria-activedescendant')).toBe(
-            defaultIds.item(defaultHighlightedIndex),
+            defaultIds.itemId(defaultHighlightedIndex),
           )
         })
 
@@ -399,7 +399,7 @@ describe('getToggleButtonProps', () => {
           fireEvent.keyDown(toggleButton, {keyCode: keyboardKey.ArrowDown})
 
           expect(menu.getAttribute('aria-activedescendant')).toBe(
-            defaultIds.item(0),
+            defaultIds.itemId(0),
           )
         })
 
@@ -412,7 +412,7 @@ describe('getToggleButtonProps', () => {
           fireEvent.keyDown(toggleButton, {keyCode: keyboardKey.ArrowDown})
 
           expect(menu.getAttribute('aria-activedescendant')).toBe(
-            defaultIds.item(selectedIndex + 1),
+            defaultIds.itemId(selectedIndex + 1),
           )
         })
 
@@ -425,14 +425,14 @@ describe('getToggleButtonProps', () => {
           fireEvent.keyDown(toggleButton, {keyCode: keyboardKey.ArrowDown})
 
           expect(menu.getAttribute('aria-activedescendant')).toBe(
-            defaultIds.item(initialHighlightedIndex),
+            defaultIds.itemId(initialHighlightedIndex),
           )
 
           fireEvent.keyDown(menu, {keyCode: keyboardKey.Escape})
           fireEvent.keyDown(toggleButton, {keyCode: keyboardKey.ArrowDown})
 
           expect(menu.getAttribute('aria-activedescendant')).toBe(
-            defaultIds.item(0),
+            defaultIds.itemId(0),
           )
         })
 
@@ -445,14 +445,14 @@ describe('getToggleButtonProps', () => {
           fireEvent.keyDown(toggleButton, {keyCode: keyboardKey.ArrowDown})
 
           expect(menu.getAttribute('aria-activedescendant')).toBe(
-            defaultIds.item(defaultHighlightedIndex),
+            defaultIds.itemId(defaultHighlightedIndex),
           )
 
           fireEvent.keyDown(menu, {keyCode: keyboardKey.Escape})
           fireEvent.keyDown(toggleButton, {keyCode: keyboardKey.ArrowDown})
 
           expect(menu.getAttribute('aria-activedescendant')).toBe(
-            defaultIds.item(defaultHighlightedIndex),
+            defaultIds.itemId(defaultHighlightedIndex),
           )
         })
 

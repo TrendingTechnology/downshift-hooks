@@ -8,7 +8,7 @@ describe('getLabelProps', () => {
     const {result} = setupHook()
     const labelProps = result.current.getLabelProps()
 
-    expect(labelProps.id).toEqual(defaultIds.label)
+    expect(labelProps.id).toEqual(defaultIds.labelId)
   })
 
   test('should have custom id if set by the user', () => {

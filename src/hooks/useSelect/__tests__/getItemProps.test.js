@@ -39,7 +39,7 @@ describe('getItemProps', () => {
       const {result} = setupHook()
       const itemProps = result.current.getItemProps({index: 0})
 
-      expect(itemProps.id).toEqual(`${defaultIds.item(0)}`)
+      expect(itemProps.id).toEqual(`${defaultIds.itemId(0)}`)
     })
 
     test('assign custom value passed by user to id', () => {
@@ -176,7 +176,7 @@ describe('getItemProps', () => {
         fireEvent.mouseOver(item)
 
         expect(menu.getAttribute('aria-activedescendant')).toBe(
-          defaultIds.item(index),
+          defaultIds.itemId(index),
         )
         expect(item.getAttribute('aria-selected')).toBe('true')
       })
@@ -197,7 +197,7 @@ describe('getItemProps', () => {
         fireEvent.mouseOver(item)
 
         expect(menu.getAttribute('aria-activedescendant')).not.toBe(
-          defaultIds.item(previousIndex),
+          defaultIds.itemId(previousIndex),
         )
         expect(previousItem.getAttribute('aria-selected')).toBeNull()
       })
@@ -229,7 +229,7 @@ describe('getItemProps', () => {
         expect(toggleButton.textContent).toEqual(options[index])
         expect(menu.childNodes).toHaveLength(options.length)
         expect(menu.getAttribute('aria-activedescendant')).toBe(
-          defaultIds.item(2),
+          defaultIds.itemId(2),
         )
       })
     })

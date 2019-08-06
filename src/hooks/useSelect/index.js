@@ -34,19 +34,13 @@ function useSelect(userProps = {}) {
     ...userProps,
   }
   const {
-    id,
     items,
     itemToString,
     getA11yStatusMessage,
     initialIsOpen,
     defaultIsOpen,
-    labelId: labelIdFromProps,
-    menuId: menuIdFromProps,
-    itemId: itemIdFromProps,
-    toggleButtonId: toggleButtonIdFromProps,
     stateReducer,
   } = props
-  const defaultIds = getDefaultIds(useId(), id)
   // Initial state depending on controlled props.
   const initialState = getInitialState(props)
 
@@ -60,10 +54,10 @@ function useSelect(userProps = {}) {
   }, initialState)
 
   // IDs generation.
-  const labelId = labelIdFromProps || defaultIds.label
-  const itemId = itemIdFromProps || defaultIds.item
-  const menuId = menuIdFromProps || defaultIds.menu
-  const toggleButtonId = toggleButtonIdFromProps || defaultIds.toggleButton
+  const {labelId, itemId, menuId, toggleButtonId} = getDefaultIds(
+    useId(),
+    props,
+  )
 
   // Refs
   const toggleButtonRef = useRef(null)
