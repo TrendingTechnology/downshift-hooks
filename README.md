@@ -6,26 +6,19 @@ A set of hooks to build simple, flexible, WAI-ARIA compliant React dropdown comp
 
 ## The problem
 
-You need an autocomplete/dropdown/select experience in your application and you
-want it to be accessible. You also want it to be simple and flexible to account
-for your use cases.
+You need an autocomplete/dropdown/select experience in your application and you want it to be accessible. You also want it to be simple and flexible to account for your use cases.
 
 ## This solution
 
 This set of hooks is inspired by [downshift][downshift] and aims to provide functionality and accessibility to dropdown and combobox components.
 
-At the moment, the first hook developed is `Selection` means to implement the [collapsible dropdown][collapsible-dropdown] ARIA design pattern.
+At the moment, the first hook developed is `useSelect()` and it means to implement the [select dropdown][select-dropdown] ARIA design pattern. Another future 3 new hooks should be implemented: `useAutocomplete()`, `useMultipleSelect()` and `useMultipleAutocomplete()`. Having one hook for each different widget allows the user to write little additional stateful logic (hopefully none) in order to make them accessible and functional. That being said, the hooks still follow the vanilla `Downshift` principle of being completely customisable.
 
-In the future a set of 3 new hooks should be implemented: `Search`, `Multiple Selection` and `Multiple Search`. These 4 cases have different patterns 
-specified by ARIA and users will only use each one at a time, so it makes sense to have separate hooks for each.
-
-The API will be as similar as possible for each of these hooks and will follow the one already present in Downshift. Differences will appear only when
-the design pattern requires for them to do so.
+The API will be as similar as possible for each of these hooks and will follow the one already present in Downshift. Differences will appear only when the design pattern requires for them to do so.
 
 ## Installation
 
-This module is distributed via [npm][npm] which is bundled with [node][node] and
-should be installed as one of your project's `dependencies`:
+This module is distributed via [npm][npm] which is bundled with [node][node] and should be installed as one of your project's `dependencies`:
 
 ```
 npm install --save downshift-hooks
@@ -33,22 +26,18 @@ npm install --save downshift-hooks
 
 ## Hooks
 
-### Selection
+### useSelect()
 
-For collapsible dropdown with a single selection, [click here][selection-readme].
+For a select dropdown [click here][selection-readme].
 
 ## Roadmap and contributions
 
 Next steps:
-- complete testing for the Selection hook.
-- create Search hook (the old Downshift default component) for the combobox design pattern.
-- create Multiple versions for Selection and Search.
+- complete testing for the `useSelect()` hook.
+- create `useAutocomplete()` hook (the old Downshift default component) for the combobox design pattern.
+- create `multiple` versions for `useSelect()` and `useAutocomplete()`.
 
-Share your opinion about having separate hooks for each component case. Help me out with ideas, feature prioritisation, code quality, documentation and anything else by creating Issues in this repositiory. Much appreciated!
-
-## Documentation
-
-TODO
+Share your opinion about having separate hooks for each component case. Help out with ideas, feature prioritisation, code quality, documentation and anything else by creating Issues in this repositiory. Much appreciated!
 
 ## LICENSE
 
@@ -57,5 +46,5 @@ MIT
 [npm]: https://www.npmjs.com/
 [node]: https://nodejs.org
 [downshift]: https://github.com/downshift-js/downshift
-[collapsible-dropdown]: https://www.w3.org/TR/wai-aria-practices/examples/listbox/listbox-collapsible.html
-[selection-readme]: https://github.com/silviuavram/downshift-hooks/blob/master/src/hooks/downshiftSelection/README.md
+[select-dropdown]: https://www.w3.org/TR/wai-aria-practices/examples/listbox/listbox-collapsible.html
+[select-readme]: https://github.com/silviuavram/downshift-hooks/blob/master/src/hooks/downshiftSelection/README.md
