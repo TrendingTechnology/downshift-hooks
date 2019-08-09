@@ -28,7 +28,7 @@ npm install --save downshift-hooks
 
 ### useSelect()
 
-For a select dropdown [click here][selection-readme].
+For a select dropdown [click here][select-readme].
 
 ## Roadmap and contributions
 
@@ -47,4 +47,4 @@ MIT
 [node]: https://nodejs.org
 [downshift]: https://github.com/downshift-js/downshift
 [select-dropdown]: https://www.w3.org/TR/wai-aria-practices/examples/listbox/listbox-collapsible.html
-[select-readme]: https://github.com/silviuavram/downshift-hooks/blob/master/src/hooks/downshiftSelection/README.md
+[select-readme]: https://github.com/silviuavram/downshift-hooks/blob/master/src/hooks/useSelect/README.md
