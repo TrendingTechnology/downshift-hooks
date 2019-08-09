@@ -604,6 +604,7 @@ const ui = (
           event.nativeEvent.preventDownshiftDefault = true
 
           // your handler code
+        }
       },
     })}
   />
