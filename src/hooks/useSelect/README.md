@@ -576,11 +576,16 @@ You can provide your own event handlers to `useSelect` which will be called befo
 ```javascript
 const items = [...] // items here.
 const {getMenuProps} = useSelect({items})
-const getMenuProps({
-  onKeyDown: event => {
-    // your custom keyDown handler here.
-  }
-})
+const ui = (
+  /* button, label, ... */
+  <ul
+    {...getMenuProps({
+      onKeyDown: event => {
+        // your custom keyDown handler here.
+      },
+    })}
+  />
+)
 ```
 
 If you would like to prevent the default handler behavior in some cases, you can set the event's `preventDownshiftDefault` property to `true`:
@@ -588,17 +593,21 @@ If you would like to prevent the default handler behavior in some cases, you can
 ```javascript
 const items = [...] // items here.
 const {getMenuProps} = useSelect({items})
-const getMenuProps({
-  onKeyDown: event => {
-    // your custom keyDown handler here.
-    if (event.key === 'Enter') {
-      // Prevent Downshift's default 'Enter' behavior.
-      event.nativeEvent.preventDownshiftDefault = true
+const ui = (
+  /* button, label, ... */
+  <ul
+    {...getMenuProps({
+      onKeyDown: event => {
+        // your custom keyDown handler here.
+        if (event.key === 'Enter') {
+          // Prevent Downshift's default 'Enter' behavior.
+          event.nativeEvent.preventDownshiftDefault = true
 
-      // your handler code
-    }
-  }
-})
+          // your handler code
+      },
+    })}
+  />
+)
 ```
 
 If you would like to completely override Downshift's behavior for a handler, in favor of your own, you can bypass prop getters:
@@ -607,11 +616,11 @@ If you would like to completely override Downshift's behavior for a handler, in 
 const items = [...] // items here.
 const {getMenuProps} = useSelect({items})
 const ui = (
-  {/* button, label, ... */}
+  /* button, label, ... */
   <ul
     {...getMenuProps()}
     onKeyDown={event => {
-      // your handler code
+      // your custom keyDown handler here.
     }}
   />
 )
